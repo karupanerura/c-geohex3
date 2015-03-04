@@ -3,7 +3,7 @@ CMAKE_POLICY(SET CMP0003 NEW)
 
 PROJECT(geohex)
 
-SET(CMAKE_C_FLAGS "-O2 -g -Wall -Wno-unused-function ${CMAKE_C_FLAGS}")
+SET(CMAKE_C_FLAGS "-O2 -g -Wall -Wno-unused-function -std=gnu99 ${CMAKE_C_FLAGS}")
 
 INCLUDE_DIRECTORIES(include deps/picotest)
 
