@@ -310,36 +310,36 @@ geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, con
   const double h_k    = _deg();
   const double h_size = geohex_hexsize(level);
 
-	double h_x = coordinate.x;
-	double h_y = coordinate.y;
+  double h_x = coordinate.x;
+  double h_y = coordinate.y;
 
-	const double unit_x = 6 * h_size;
-	const double unit_y = 6 * h_size * h_k;
+  const double unit_x = 6 * h_size;
+  const double unit_y = 6 * h_size * h_k;
 
-	const double            h_lat = (h_k * h_x * unit_x + h_y * unit_y) / 2;
-	const double            h_lon = (h_lat - h_y * unit_y) / h_k;
-	const geohex_location_t z_loc = geohex_coordinate2location(geohex_coordinate(h_lon, h_lat));
+  const double            h_lat = (h_k * h_x * unit_x + h_y * unit_y) / 2;
+  const double            h_lon = (h_lat - h_y * unit_y) / h_k;
+  const geohex_location_t z_loc = geohex_coordinate2location(geohex_coordinate(h_lon, h_lat));
 
-	double z_loc_x = z_loc.lng;
-	double z_loc_y = z_loc.lat;
+  double z_loc_x = z_loc.lng;
+  double z_loc_y = z_loc.lat;
 
-	const double max_hsteps = geohex_pow3(level + 2);
-	const double hsteps     = abs(h_x - h_y);
-	if (hsteps == max_hsteps) {
-		if (h_x > h_y) {
+  const double max_hsteps = geohex_pow3(level + 2);
+  const double hsteps     = abs(h_x - h_y);
+  if (hsteps == max_hsteps) {
+    if (h_x > h_y) {
       double tmp = h_x;
       h_x = h_y;
       h_y = tmp;
-		}
-		z_loc_x = -180;
-	}
+    }
+    z_loc_x = -180;
+  }
 
-	char code3_x[GEOHEX_DEC3_BUFSIZE/2];
-	char code3_y[GEOHEX_DEC3_BUFSIZE/2];
+  char code3_x[GEOHEX_DEC3_BUFSIZE/2];
+  char code3_y[GEOHEX_DEC3_BUFSIZE/2];
 
-	double mod_x = h_x;
-	double mod_y = h_y;
-	for (int i = 0; i <= level + 2; i++) {
+  double mod_x = h_x;
+  double mod_y = h_y;
+  for (int i = 0; i <= level + 2; i++) {
     const double h_pow = geohex_pow3(level + 2 - i);
 
     if (mod_x >= ceil(h_pow / 2)) {
@@ -376,7 +376,7 @@ geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, con
         code3_y[0] = 1;
       }
     }
-	}
+  }
 
   char h_code[GEOHEX_DEC9_BUFSIZE];
   for (unsigned int i = 0; i <= level + 2; i++) {
@@ -404,10 +404,10 @@ geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, con
     .size       = h_size
   };
   geohex.code[0] = GEOHEX_HASH_KEY[(int)floor(global_code/30)];
-	geohex.code[1] = GEOHEX_HASH_KEY[global_code%30];
+  geohex.code[1] = GEOHEX_HASH_KEY[global_code%30];
   strncpy(geohex.code + 2, h_code + 3, GEOHEX_MAX_LEVEL);
   geohex.code[strlen(h_code)] = '\0';
-	return geohex;
+  return geohex;
 }
 
 geohex_coordinate_t geohex_adjust_coordinate(const geohex_coordinate_t coordinate, const size_t level) {
