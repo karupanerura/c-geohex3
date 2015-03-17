@@ -4,6 +4,9 @@ compiler:
   - gcc
   - clang
 
+env:
+  - VERBOSE=1
+
 script:
   - cmake .
   - make
