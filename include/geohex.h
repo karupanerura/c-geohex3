@@ -13,14 +13,13 @@
 #define GEOHEX_DEC3_BUFSIZE        64
 
 typedef struct _geohex_location_s {
-  double lat;
-  double lng;
+  long double lat;
+  long double lng;
 } geohex_location_t;
 
 typedef struct _geohex_coordinate_s {
-  double x;
-  double y;
-  bool   rev;
+  long x;
+  long y;
 } geohex_coordinate_t;
 
 struct _geohex_location_lrpair_s {
@@ -39,11 +38,11 @@ typedef struct _geohex_s {
   geohex_coordinate_t coordinate;
   char                code[GEOHEX_MAX_LEVEL + 3];
   size_t              level;
-  double              size;
+  long double         size;
 } geohex_t;
 
-inline geohex_coordinate_t geohex_coordinate (const double x, const double y) {
-  const geohex_coordinate_t coordinate = { .x = x, .y = y, .rev = false };
+inline geohex_coordinate_t geohex_coordinate (const long x, const long y) {
+  const geohex_coordinate_t coordinate = { .x = x, .y = y };
   return coordinate;
 }
 

@@ -1,3 +1,6 @@
+#ifndef _MACRO_H
+#define _MACRO_H
+
 #define GEOHEX_MACRO_CAT_l(x, y) x##y
 #define GEOHEX_MACRO_CAT(x, y) GEOHEX_MACRO_CAT_l(x, y)
 
@@ -528,3 +531,5 @@
 #define GEOHEX_MACRO_POW_0(a, b) (1)
 #define GEOHEX_MACRO_POW_X(a, b) (GEOHEX_MACRO_JOIN(a, *, b))
 #define GEOHEX_MACRO_POW(a, b)   GEOHEX_MACRO_CAT(GEOHEX_MACRO_POW_, GEOHEX_MACRO_IF(b, X, 0))((a), b)
+
+#endif

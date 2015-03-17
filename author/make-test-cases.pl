@@ -28,12 +28,9 @@ sub main {
         my $url = sprintf $URL_FORMAT, $case;
         print STDERR "Download: $url\n";
 
-        my $res = $ua->get($url);
-        die "Failed: $res->{reason}" unless $res->{success};
-
         my $path = File::Spec->catfile($dir, "$case.json");
-        open my $fh, '>', $path or die $!;
-        print $fh $res->{content};
+        my $res = $ua->mirror($url, $path);
+        die "Failed: $res->{reason}" unless $res->{success};
     }
 
     # parse & generate
@@ -70,19 +67,17 @@ void coord2hex (void);
 void coord2xy (void);
 
 int main (void) {
-  subtest("XY2HEX",    xy2hex);
-  subtest("code2HEX",  code2hex);
-  subtest("code2XY",   code2xy);
-  subtest("coord2HEX", coord2hex);
-  subtest("coord2XY",  coord2xy);
+  subtest("XY2HEX(geohex_get_zone_by_coordinate)",        xy2hex);
+  subtest("code2HEX(geohex_get_zone_by_code)",            code2hex);
+  subtest("code2XY(geohex_get_zone_by_code)",             code2xy);
+  subtest("coord2HEX(geohex_get_zone_by_location)",       coord2hex);
+  subtest("coord2XY(geohex_get_coordinate_by_location)",  coord2xy);
   return done_testing();
 }
 
-inline bool cmp_num (const double got, const double expected) {
-  const static double level = 10;
-  const double got2         = floor(got      * level) / level;
-  const double expected2    = floor(expected * level) / level;
-  return got2 == expected2;
+inline bool cmp_num (const long double got, const long double expected) {
+  const static long double diff = 0.000000000001L;
+  return got == expected || (expected - diff < got && got < expected + diff);
 }
 
 inline void str_is (const char* got, const char* expected, const char* msg) {
@@ -94,13 +89,13 @@ inline void str_is (const char* got, const char* expected, const char* msg) {
 inline void location_is (const geohex_location_t got, const geohex_location_t expected, const char* msg) {
   const bool ok = cmp_num(got.lat, expected.lat) && cmp_num(got.lng, expected.lng);
   ok(ok);
-  if (!ok) note("%s: expected: lat:%lf,lng:%lf, but got: lat:%lf,lng:%lf", msg, expected.lat, expected.lng, got.lat, got.lng);
+  if (!ok) note("%s: expected: lat:%Lf,lng:%Lf, but got: lat:%Lf,lng:%Lf", msg, expected.lat, expected.lng, got.lat, got.lng);
 }
 
 inline void coordinate_is (const geohex_coordinate_t got, const geohex_coordinate_t expected, const char* msg) {
-  const bool ok = cmp_num(got.x, expected.x) && cmp_num(got.y, expected.y);
+  const bool ok = got.x == expected.x && got.y == expected.y;
   ok(ok);
-  if (!ok) note("%s: expected: x:%lf,y:%lf, but got: x:%lf,y:%lf", msg, expected.x, expected.y, got.x, got.y);
+  if (!ok) note("%s: expected: x:%ld,y:%ld, but got: x:%ld,y:%ld", msg, expected.x, expected.y, got.x, got.y);
 }
 
 $src
@@ -113,7 +108,7 @@ sub gen_XY2HEX {
     my @src;
     for my $row (@$testdata) {
         my ($level, $x, $y, $geohex) = @$row;
-        push @src => qq{str_is(geohex_get_zone_by_coordinate(geohex_coordinate($x, $y), $level).code, "$geohex", "x:$x,y:$y,level:$level: $geohex");};
+        push @src => qq{str_is(geohex_get_zone_by_coordinate(geohex_coordinate(${x}L, ${y}L), $level).code, "$geohex", "x:$x,y:$y,level:$level: $geohex");};
     }
 
     return sprintf <<'EOD', join "\n  ", @src;
@@ -129,7 +124,7 @@ sub gen_code2HEX {
     my @src;
     for my $row (@$testdata) {
         my ($geohex, $lat, $lng) = @$row;
-        push @src => qq{location_is(geohex_get_zone_by_code("$geohex").location, geohex_location($lat, $lng), "$geohex: lat:$lat,lng:$lng");};
+        push @src => qq{location_is(geohex_get_zone_by_code("$geohex").location, geohex_location(${lat}L, ${lng}L), "$geohex: lat:$lat,lng:$lng");};
     }
 
     return sprintf <<'EOD', join "\n  ", @src;
@@ -145,7 +140,7 @@ sub gen_code2XY {
     my @src;
     for my $row (@$testdata) {
         my ($geohex, $x, $y) = @$row;
-        push @src => qq{coordinate_is(geohex_get_zone_by_code("$geohex").coordinate, geohex_coordinate($x, $y), "$geohex: x:$x,y:$y");};
+        push @src => qq{coordinate_is(geohex_get_zone_by_code("$geohex").coordinate, geohex_coordinate(${x}L, ${y}L), "$geohex: x:$x,y:$y");};
     }
 
     return sprintf <<'EOD', join "\n  ", @src;
@@ -161,7 +156,7 @@ sub gen_coord2HEX {
     my @src;
     for my $row (@$testdata) {
         my ($level, $lat, $lng, $geohex) = @$row;
-        push @src => qq{str_is(geohex_get_zone_by_location(geohex_location($lat, $lng), $level).code, "$geohex", "lat:$lat,lng:$lng,level:$level: $geohex");};
+        push @src => qq{str_is(geohex_get_zone_by_location(geohex_location(${lat}L, ${lng}L), $level).code, "$geohex", "lat:$lat,lng:$lng,level:$level: $geohex");};
     }
 
     return sprintf <<'EOD', join "\n  ", @src;
@@ -177,7 +172,7 @@ sub gen_coord2XY {
     my @src;
     for my $row (@$testdata) {
         my ($level, $lat, $lng, $x, $y) = @$row;
-        push @src => qq{coordinate_is(geohex_get_coordinate_by_location(geohex_location($lat, $lng), $level), geohex_coordinate($x, $y), "lat:$lat,lng:$lng,level:$level: x:$x,y:$y");};
+        push @src => qq{coordinate_is(geohex_get_coordinate_by_location(geohex_location(${lat}L, ${lng}L), $level), geohex_coordinate(${x}L, ${y}L), "lat:$lat,lng:$lng,level:$level: x:$x,y:$y");};
     }
 
     return sprintf <<'EOD', join "\n  ", @src;
