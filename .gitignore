@@ -4,4 +4,5 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 libgeohex.a
+examples-get-zone-by-code
 test-bin

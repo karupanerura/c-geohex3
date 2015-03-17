@@ -12,6 +12,9 @@ INCLUDE_DIRECTORIES(include deps/picotest)
 
 ADD_LIBRARY(geohex STATIC lib/geohex.c)
 
+ADD_EXECUTABLE(examples-get-zone-by-code examples/get-zone-by-code.c)
+TARGET_LINK_LIBRARIES(examples-get-zone-by-code geohex)
+
 ADD_EXECUTABLE(test-bin test.c deps/picotest/picotest.c)
 TARGET_LINK_LIBRARIES(test-bin geohex)
 
