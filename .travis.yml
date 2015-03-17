@@ -1,11 +1,8 @@
 language: c
 
 compiler:
-  - gcc
+  # - gcc # FIXME
   - clang
-
-env:
-  - VERBOSE=1
 
 script:
   - cmake .
