@@ -41,6 +41,12 @@ typedef struct _geohex_s {
   long double         size;
 } geohex_t;
 
+typedef enum _geohex_verify_result_enum {
+  GEOHEX_VERIFY_RESULT_SUCCESS,
+  GEOHEX_VERIFY_RESULT_INVALID_CODE,
+  GEOHEX_VERIFY_RESULT_INVALID_LEVEL
+} geohex_verify_result_t;
+
 inline geohex_coordinate_t geohex_coordinate (const long x, const long y) {
   const geohex_coordinate_t coordinate = { .x = x, .y = y };
   return coordinate;
@@ -55,6 +61,7 @@ inline size_t geohex_calc_level_by_code(const char *code) {
   return strlen(code) - 2;
 }
 
+extern geohex_verify_result_t geohex_verify_code(const char *code);
 extern geohex_coordinate_t geohex_location2coordinate(const geohex_location_t location);
 extern geohex_location_t   geohex_coordinate2location(const geohex_coordinate_t coordinate);
 extern geohex_t            geohex_get_zone_by_location(const geohex_location_t location, size_t level);

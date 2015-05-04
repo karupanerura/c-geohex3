@@ -182,6 +182,28 @@ geohex_polygon_t geohex_get_hex_polygon (const geohex_t *geohex) {
   return polygon;
 }
 
+geohex_verify_result_t geohex_verify_code(const char *code) {
+  // check length
+  const size_t len = strlen(code);
+  if (len < 2) return GEOHEX_VERIFY_RESULT_INVALID_CODE;
+
+  // check area code
+  if (strchr(GEOHEX_HASH_KEY, code[0]) == NULL) return GEOHEX_VERIFY_RESULT_INVALID_CODE;
+  if (strchr(GEOHEX_HASH_KEY, code[1]) == NULL) return GEOHEX_VERIFY_RESULT_INVALID_CODE;
+
+  // check level
+  const size_t level = geohex_calc_level_by_code(code);
+  if (level > GEOHEX_MAX_LEVEL) return GEOHEX_VERIFY_RESULT_INVALID_LEVEL;
+
+  // check num
+  const static char* valid_numbers = "012345678";
+  for (unsigned int i = 2; i < len; i++) {
+    if (strchr(valid_numbers, code[i]) == NULL) return GEOHEX_VERIFY_RESULT_INVALID_CODE;
+  }
+
+  return GEOHEX_VERIFY_RESULT_SUCCESS;
+}
+
 geohex_t geohex_get_zone_by_location (const geohex_location_t location, const size_t level) {
   const geohex_coordinate_t coordinate = geohex_get_coordinate_by_location(location, level);
   return geohex_get_zone_by_coordinate(coordinate, level);
