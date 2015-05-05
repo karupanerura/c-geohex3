@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "picotest.h"
-#include "geohex.h"
+#include "geohex3.h"
 
 void xy2hex (void);
 void code2hex (void);

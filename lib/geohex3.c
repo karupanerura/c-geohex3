@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "macro.h"
-#include "geohex.h"
+#include "geohex3.h"
 
 static const char*       GEOHEX_HASH_KEY  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 static const long double GEOHEX_HASH_BASE = 20037508.34L;

@@ -3,6 +3,6 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
-libgeohex.a
+libgeohex3.a
 examples-get-zone-by-code
 test-bin
