@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/karupanerura/c-geohex.svg?branch=master)](https://travis-ci.org/karupanerura/c-geohex)
+[![Build Status](https://travis-ci.org/karupanerura/c-geohex3.svg?branch=master)](https://travis-ci.org/karupanerura/c-geohex3)
 
-# c-geohex
+# c-geohex3
 
-GeoHex implement in C99.
+GeoHex v3 implementation in C99.
 
 # What is GeoHex?
 
@@ -20,8 +20,8 @@ http://geohex.net/
 ## SETUP
 
 ```bash
-git clone https://github.com/karupanerura/c-geohex.git
-cd c-geohex
+git clone https://github.com/karupanerura/c-geohex3.git
+cd c-geohex3
 git submodule update --init
 ```
 
@@ -36,4 +36,10 @@ make
 
 ```bash
 make test
+```
+
+## INSTALL
+
+```bash
+sudo -H make install
 ```
