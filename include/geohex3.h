@@ -47,6 +47,8 @@ typedef enum _geohex_verify_result_enum {
   GEOHEX_VERIFY_RESULT_INVALID_LEVEL
 } geohex_verify_result_t;
 
+typedef size_t geohex_level_t;
+
 inline geohex_coordinate_t geohex_coordinate (const long x, const long y) {
   const geohex_coordinate_t coordinate = { .x = x, .y = y };
   return coordinate;
@@ -57,19 +59,19 @@ inline geohex_location_t geohex_location (const double lat, const double lng) {
   return location;
 }
 
-inline size_t geohex_calc_level_by_code(const char *code) {
+inline geohex_level_t geohex_calc_level_by_code(const char *code) {
   return strlen(code) - 2;
 }
 
 extern geohex_verify_result_t geohex_verify_code(const char *code);
 extern geohex_coordinate_t geohex_location2coordinate(const geohex_location_t location);
 extern geohex_location_t   geohex_coordinate2location(const geohex_coordinate_t coordinate);
-extern geohex_t            geohex_get_zone_by_location(const geohex_location_t location, size_t level);
-extern geohex_t            geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, size_t level);
+extern geohex_t            geohex_get_zone_by_location(const geohex_location_t location, geohex_level_t level);
+extern geohex_t            geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, geohex_level_t level);
 extern geohex_t            geohex_get_zone_by_code(const char *code);
-extern geohex_coordinate_t geohex_get_coordinate_by_location(const geohex_location_t location, size_t level);
+extern geohex_coordinate_t geohex_get_coordinate_by_location(const geohex_location_t location, geohex_level_t level);
 extern geohex_coordinate_t geohex_get_coordinate_by_code(const char *code);
-extern geohex_coordinate_t geohex_adjust_coordinate(const geohex_coordinate_t coordinate, size_t level);
+extern geohex_coordinate_t geohex_adjust_coordinate(const geohex_coordinate_t coordinate, geohex_level_t level);
 extern geohex_polygon_t    geohex_get_hex_polygon (const geohex_t *geohex);
 extern double              geohex_get_hex_size (const geohex_t *geohex);
 
