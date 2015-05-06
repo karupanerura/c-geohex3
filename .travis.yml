@@ -1,12 +1,25 @@
 language: c
+sudo: false
 
 compiler:
   # - gcc # FIXME
   - clang
 
 script:
-  - cmake .
+  - cmake -DCMAKE_INSTALL_PREFIX=local .
   - make
   - make test
 
-sudo: false
+script:
+  - make install
+  - zip libgeohex3.zip local/*
+
+deploy:
+  provider: releases
+  api_key:
+    secure: H38129iHrt9NCfNa1er6wuVdgRhtiPe3bPOwDUTktPNGZVkvu7/pu32symbwI1B16Kb7FsOBcTvDYDaGTXslerPjv7quijo1K+1+jko1T0a3kkgf8XVmZQRrnSSLOXilyJztuJTNF9fYJ4KXrn0o4XBTla4P8/zAK84rc8SkOzo=
+  file: "libgeohex3.zip"
+  skip_cleanup: true
+  on:
+    repo: karupanerura/c-geohex3
+    tags: true
