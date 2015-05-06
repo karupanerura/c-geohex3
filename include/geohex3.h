@@ -6,6 +6,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define GEOHEX3_MAJOR_VERSION 0
+#define GEOHEX3_MINOR_VERSION 0
+#define GEOHEX3_PATCH_VERSION 1
+#define GEOHEX3_VERSION       "0.01"
+
 #define GEOHEX3_MIN_LEVEL           0
 #define GEOHEX3_MAX_LEVEL           15
 #define GEOHEX3_GLOBAL_CODE_BUFSIZE 4
