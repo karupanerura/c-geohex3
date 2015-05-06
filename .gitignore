@@ -5,4 +5,5 @@ cmake_install.cmake
 install_manifest.txt
 libgeohex3.a
 examples-get-zone-by-code
+examples-get-hex-polygon-by-code
 t/*.t

@@ -15,6 +15,9 @@ ADD_LIBRARY(geohex3 STATIC lib/geohex3.c)
 ADD_EXECUTABLE(examples-get-zone-by-code examples/get-zone-by-code.c)
 TARGET_LINK_LIBRARIES(examples-get-zone-by-code geohex3)
 
+ADD_EXECUTABLE(examples-get-hex-polygon-by-code examples/get-hex-polygon-by-code.c)
+TARGET_LINK_LIBRARIES(examples-get-hex-polygon-by-code geohex3)
+
 ADD_EXECUTABLE(t/official.t t/official.c deps/picotest/picotest.c)
 TARGET_LINK_LIBRARIES(t/official.t geohex3)
 
