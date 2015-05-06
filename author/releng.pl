@@ -38,7 +38,7 @@ if ($version =~ /\A([0-9])\.([0-9])([0-9])\z/m) {
     $readme_body =~ s/(?<=^VERSION: )[0-9]\.[0-9][0-9]/$version/m;
     spew($readme_path, $readme_body);
 
-    system 'git', 'commit', -m => "tagged version as $version";
+    system 'git', 'commit', '-a', -m => "tagged version as $version";
     system 'git', 'tag', $version;
     system 'git', 'push';
     system 'git', 'push', '--tags';
