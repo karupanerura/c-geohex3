@@ -10,7 +10,7 @@ script:
   - make
   - make test
   - make install
-  - zip libgeohex3.zip local
+  - zip -r libgeohex3.zip local
 
 deploy:
   provider: releases
