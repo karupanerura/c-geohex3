@@ -32,6 +32,10 @@ inline geohex_coordinate_ld_t _geohex_adjust_long_double_coordinate(const geohex
   return _geohex_coordinate_ld((long double)coordinate.x, (long double)coordinate.y);
 }
 
+geohex_coordinate_t geohex_get_coordinate_by_location(const geohex_location_t location, geohex_level_t level);
+geohex_coordinate_t geohex_get_coordinate_by_code(const char *code);
+geohex_coordinate_t geohex_adjust_coordinate(const geohex_coordinate_t coordinate, geohex_level_t level);
+
 // for performance :)
 static const long double GEOHEX_CALCED_HEX_SIZE[] = {
   GEOHEX_HASH_BASE / GEOHEX_MACRO_POW(3.0L,  3), //  0
