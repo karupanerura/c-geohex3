@@ -8,8 +8,8 @@
 
 #define GEOHEX3_MAJOR_VERSION 0
 #define GEOHEX3_MINOR_VERSION 0
-#define GEOHEX3_PATCH_VERSION 2
-#define GEOHEX3_VERSION       "0.02"
+#define GEOHEX3_PATCH_VERSION 3
+#define GEOHEX3_VERSION       "0.03"
 
 #define GEOHEX3_MIN_LEVEL           0
 #define GEOHEX3_MAX_LEVEL           15
