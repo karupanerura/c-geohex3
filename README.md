@@ -4,6 +4,8 @@
 
 GeoHex v3 implementation in C99.
 
+VERSION: 0.03
+
 # What is GeoHex?
 
 https://sites.google.com/site/geohexdocs/
