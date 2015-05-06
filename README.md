@@ -50,21 +50,23 @@ int main (int argc, char *argv[]) {
 
 SEE DETAIL: [geohex3.h](https://github.com/karupanerura/c-geohex3/blob/master/include/geohex3.h)
 
-## geohex_location_t
+## Struct
+
+### geohex_location_t
 
 Details of struct:
 
 * lat: `long double` - latitude
 * lng: `long double` - longitude
 
-## geohex_coordinate_t
+### geohex_coordinate_t
 
 Details of struct:
 
 * x: `long`
 * y: `long`
 
-## geohex_polygon_t
+### geohex_polygon_t
 
 Details of struct:
 
@@ -78,7 +80,7 @@ Details of struct:
   * left:  `geohex_location_t`
   * right: `geohex_location_t`
 
-## geohex_t
+### geohex_t
 
 Details of struct:
 
@@ -88,7 +90,9 @@ Details of struct:
 * level: `geohex_level_t`
 * size: `long double`
 
-## geohex_verify_result_t
+## Enum
+
+### geohex_verify_result_t
 
 Enum value. Result of verifing geohex's code.
 
@@ -96,7 +100,9 @@ Enum value. Result of verifing geohex's code.
 * GEOHEX_VERIFY_RESULT_INVALID_CODE:  Invalid code format.
 * GEOHEX_VERIFY_RESULT_INVALID_LEVEL: Invalid geohex's level. (0-15 is valid.)
 
-## geohex_level_t
+## Others
+
+### geohex_level_t
 
 Alias of `size_t`.
 Because geohex's level is defined as `strlen(code) - 2`.
@@ -105,47 +111,51 @@ Because geohex's level is defined as `strlen(code) - 2`.
 
 SEE DETAIL: [geohex3.h](https://github.com/karupanerura/c-geohex3/blob/master/include/geohex3.h)
 
-## inline geohex_coordinate_t geohex_coordinate(const long x, const long y);
+## Constructor
 
-Creates `geohex_coordinate_t`. (constructor)
+### inline geohex_coordinate_t geohex_coordinate(const long x, const long y);
+
+Creates `geohex_coordinate_t`.
 
 ```c
 geohex_coordinate_t coordinate = geohex_coordinate(123L, 123L);
 ```
 
-## inline geohex_location_t geohex_location(const double lat, const double lng);
+### inline geohex_location_t geohex_location(const double lat, const double lng);
 
-Creates `geohex_location_t`. (constructor)
+Creates `geohex_location_t`.
 
 ```c
 geohex_location_t location = geohex_location(40.5814792855475L, 134.296601127877L);
 ```
 
-## geohex_t geohex_get_zone_by_location(const geohex_location_t location, geohex_level_t level);
+### geohex_t geohex_get_zone_by_location(const geohex_location_t location, geohex_level_t level);
 
-Creates `geohex_t` by location. (constructor)
+Creates `geohex_t` by location.
 
 ```c
 geohex_t geohex = geohex_get_zone_by_location(geohex_location(40.5814792855475L, 134.296601127877L), 7);
 ```
 
-## geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, geohex_level_t level);
+### geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, geohex_level_t level);
 
-Creates `geohex_t` by coordinate. (constructor)
+Creates `geohex_t` by coordinate.
 
 ```c
 geohex_t geohex = geohex_get_zone_by_coordinate(geohex_coordinate(123L, 123L), 7);
 ```
 
-## geohex_t geohex_get_zone_by_code(const char *code);
+### geohex_t geohex_get_zone_by_code(const char *code);
 
-Creates `geohex_t` by geohex's code. (constructor)
+Creates `geohex_t` by geohex's code.
 
 ```c
 geohex_t geohex = geohex_get_zone_by_code("XE1234");
 ```
 
-## inline geohex_level_t geohex_calc_level_by_code(const char *code);
+## Utility
+
+### inline geohex_level_t geohex_calc_level_by_code(const char *code);
 
 Calc geohex level.
 
@@ -153,7 +163,7 @@ Calc geohex level.
 geohex_level_t level = geohex_calc_level_by_code("XE2345"); // => 4
 ```
 
-## geohex_verify_result_t geohex_verify_code(const char *code);
+### geohex_verify_result_t geohex_verify_code(const char *code);
 
 Verify geohex code.
 
@@ -172,7 +182,9 @@ case GEOHEX_VERIFY_RESULT_INVALID_LEVEL:
 }
 ```
 
-## geohex_coordinate_t geohex_location2coordinate(const geohex_location_t location);
+## Converter
+
+### geohex_coordinate_t geohex_location2coordinate(const geohex_location_t location);
 
 Convert `geohex_location_t` to `geohex_coordinate_t`.
 
@@ -180,7 +192,7 @@ Convert `geohex_location_t` to `geohex_coordinate_t`.
 geohex_coordinate_t coordinate = geohex_location2coordinate(geohex_location(40.5814792855475L, 134.296601127877L));
 ```
 
-## geohex_location_t geohex_coordinate2location(const geohex_coordinate_t coordinate);
+### geohex_location_t geohex_coordinate2location(const geohex_coordinate_t coordinate);
 
 Convert `geohex_coordinate_t` to `geohex_location_t`.
 
@@ -188,9 +200,10 @@ Convert `geohex_coordinate_t` to `geohex_location_t`.
 geohex_coordinate_t coordinate = geohex_coordinate2location(geohex_coordinate(123L, 123L));
 ```
 
-## geohex_polygon_t geohex_get_hex_polygon(const geohex_t *geohex);
+### geohex_polygon_t geohex_get_hex_polygon(const geohex_t *geohex);
 
-Calc vertex location of geohex's polygon.
+Convert `geohex_t` to `geohex_polygon_t`.
+(calc vertex location of geohex's polygon.)
 
 ```c
 geohex_t geohex = geohex_get_zone_by_code("XE1234");
