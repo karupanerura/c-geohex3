@@ -1,16 +1,16 @@
-#ifndef GEOHEX_H
-#define GEOHEX_H
+#ifndef GEOHEX3_H
+#define GEOHEX3_H
 
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define GEOHEX_MIN_LEVEL           0
-#define GEOHEX_MAX_LEVEL           15
-#define GEOHEX_GLOBAL_CODE_BUFSIZE 4
-#define GEOHEX_DEC9_BUFSIZE        32
-#define GEOHEX_DEC3_BUFSIZE        64
+#define GEOHEX3_MIN_LEVEL           0
+#define GEOHEX3_MAX_LEVEL           15
+#define GEOHEX3_GLOBAL_CODE_BUFSIZE 4
+#define GEOHEX3_DEC9_BUFSIZE        32
+#define GEOHEX3_DEC3_BUFSIZE        64
 
 typedef struct _geohex_location_s {
   long double lat;
@@ -36,15 +36,15 @@ typedef struct _geohex_polygon_s {
 typedef struct _geohex_s {
   geohex_location_t   location;
   geohex_coordinate_t coordinate;
-  char                code[GEOHEX_MAX_LEVEL + 3];
+  char                code[GEOHEX3_MAX_LEVEL + 3];
   size_t              level;
   long double         size;
 } geohex_t;
 
 typedef enum _geohex_verify_result_enum {
-  GEOHEX_VERIFY_RESULT_SUCCESS,
-  GEOHEX_VERIFY_RESULT_INVALID_CODE,
-  GEOHEX_VERIFY_RESULT_INVALID_LEVEL
+  GEOHEX3_VERIFY_RESULT_SUCCESS,
+  GEOHEX3_VERIFY_RESULT_INVALID_CODE,
+  GEOHEX3_VERIFY_RESULT_INVALID_LEVEL
 } geohex_verify_result_t;
 
 typedef size_t geohex_level_t;

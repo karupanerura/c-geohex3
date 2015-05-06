@@ -111,7 +111,7 @@ sub gen_XY2HEX {
     push @src => '// verify';
     for my $row (@$testdata) {
         my (undef, undef, undef, $geohex) = @$row;
-        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX_VERIFY_RESULT_SUCCESS);};
+        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX3_VERIFY_RESULT_SUCCESS);};
     }
     push @src => '';
 
@@ -137,7 +137,7 @@ sub gen_code2HEX {
     push @src => '// verify';
     for my $row (@$testdata) {
         my ($geohex) = @$row;
-        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX_VERIFY_RESULT_SUCCESS);};
+        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX3_VERIFY_RESULT_SUCCESS);};
     }
     push @src => '';
 
@@ -162,7 +162,7 @@ sub gen_code2XY {
     push @src => '// verify';
     for my $row (@$testdata) {
         my ($geohex) = @$row;
-        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX_VERIFY_RESULT_SUCCESS);};
+        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX3_VERIFY_RESULT_SUCCESS);};
     }
     push @src => '';
 
@@ -187,7 +187,7 @@ sub gen_coord2HEX {
     push @src => '// verify';
     for my $row (@$testdata) {
         my (undef, undef, undef, $geohex) = @$row;
-        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX_VERIFY_RESULT_SUCCESS);};
+        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX3_VERIFY_RESULT_SUCCESS);};
     }
     push @src => '';
 
