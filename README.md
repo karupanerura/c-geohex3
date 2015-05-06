@@ -48,6 +48,42 @@ int main (int argc, char *argv[]) {
 
 ```
 
+
+# Dependencies
+
+* picotest
+* cmake
+* prove
+
+# Cheat Sheet
+
+## SETUP
+
+```bash
+git clone https://github.com/karupanerura/c-geohex3.git
+cd c-geohex3
+git submodule update --init
+```
+
+## BUILD
+
+```bash
+cmake .
+make
+```
+
+## TEST
+
+```bash
+make test
+```
+
+## INSTALL
+
+```bash
+sudo -H make install
+```
+
 # Types
 
 SEE DETAIL: [geohex3.h](https://github.com/karupanerura/c-geohex3/blob/master/include/geohex3.h)
@@ -212,37 +248,11 @@ geohex_t geohex = geohex_get_zone_by_code("XE1234");
 geohex_polygon_t polygon = geohex_get_hex_polygon(&geohex);
 ```
 
-# Dependencies
+# LICENCE
 
-* picotest
-* cmake
-* prove
+MIT Licence.
+(GeoHex is MIT Licence too.)
 
-# Cheat Sheet
+# AUTHOR
 
-## SETUP
-
-```bash
-git clone https://github.com/karupanerura/c-geohex3.git
-cd c-geohex3
-git submodule update --init
-```
-
-## BUILD
-
-```bash
-cmake .
-make
-```
-
-## TEST
-
-```bash
-make test
-```
-
-## INSTALL
-
-```bash
-sudo -H make install
-```
+karupanerura
