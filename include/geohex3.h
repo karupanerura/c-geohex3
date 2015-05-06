@@ -71,4 +71,7 @@ extern geohex_t            geohex_get_zone_by_coordinate(const geohex_coordinate
 extern geohex_t            geohex_get_zone_by_code(const char *code);
 extern geohex_polygon_t    geohex_get_hex_polygon (const geohex_t *geohex);
 
+// XXX: for test
+extern geohex_coordinate_t geohex_get_coordinate_by_location(const geohex_location_t location, geohex_level_t level);
+
 #endif
