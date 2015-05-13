@@ -2,7 +2,7 @@ language: c
 sudo: false
 
 compiler:
-  # - gcc # FIXME
+  - gcc
   - clang
 
 script:

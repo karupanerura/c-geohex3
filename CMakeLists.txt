@@ -12,6 +12,7 @@ SET(CMAKE_SHARED_LINKER_FLAGS "-lm ${CMAKE_SHARED_LINKER_FLAGS}")
 INCLUDE_DIRECTORIES(include)
 
 ADD_LIBRARY(geohex3 STATIC lib/geohex3.c)
+TARGET_LINK_LIBRARIES(geohex3 m)
 
 ADD_EXECUTABLE(examples-get-zone-by-code examples/get-zone-by-code.c)
 TARGET_LINK_LIBRARIES(examples-get-zone-by-code geohex3)

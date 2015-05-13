@@ -6,8 +6,8 @@
 #include "macro.h"
 #include "geohex3.h"
 
+#define GEOHEX3_HASH_BASE 20037508.34L
 static const char*       GEOHEX3_HASH_KEY  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-static const long double GEOHEX3_HASH_BASE = 20037508.34L;
 static const long double GEOHEX3_HASH_DEG  = (long double)M_PI / 6.0L;
 
 inline long _indexOfKey(const int chr) {
