@@ -10,7 +10,7 @@
 static const char*       GEOHEX3_HASH_KEY  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 static const long double GEOHEX3_HASH_DEG  = (long double)M_PI / 6.0L;
 
-inline long _indexOfKey(const int chr) {
+static long _indexOfKey(const int chr) {
   return (long)(strchr(GEOHEX3_HASH_KEY, chr) - GEOHEX3_HASH_KEY);
 }
 
