@@ -54,9 +54,20 @@ typedef enum _geohex_verify_result_enum {
 
 typedef size_t geohex_level_t;
 
-extern geohex_coordinate_t geohex_coordinate (const long x, const long y);
-extern geohex_location_t geohex_location (const double lat, const double lng);
-extern geohex_level_t geohex_calc_level_by_code(const char *code);
+static inline geohex_coordinate_t geohex_coordinate (const long x, const long y) {
+  const geohex_coordinate_t coordinate = { .x = x, .y = y };
+  return coordinate;
+}
+
+static inline geohex_location_t geohex_location (const double lat, const double lng) {
+  const geohex_location_t location = { .lat = lat, .lng = lng };
+  return location;
+}
+
+static inline geohex_level_t geohex_calc_level_by_code(const char *code) {
+  return strlen(code) - 2;
+}
+
 extern geohex_verify_result_t geohex_verify_code(const char *code);
 extern geohex_coordinate_t geohex_location2coordinate(const geohex_location_t location);
 extern geohex_location_t   geohex_coordinate2location(const geohex_coordinate_t coordinate);
