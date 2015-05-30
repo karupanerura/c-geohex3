@@ -156,19 +156,20 @@ geohex_location_t geohex_coordinate2location(const geohex_coordinate_t coordinat
 }
 
 geohex_polygon_t geohex_get_hex_polygon (const geohex_t *geohex) {
-  const long double deg = _deg();
+  const geohex_coordinate_ld_t coordinate = _geohex_location2coordinate(geohex->location);
+  const long double h_x = coordinate.x;
+  const long double h_y = coordinate.y;
 
-  const long double h_x    = (long double)geohex->coordinate.x;
-  const long double h_y    = (long double)geohex->coordinate.y;
+  const long double h_deg  = tanl(60.0L * (long double)M_PI / 180.0L);
   const long double h_size = geohex->size;
 
-  const long double top_lat        = _geohex_coordinate2location(_geohex_coordinate_ld(h_x,                 h_y + deg * h_size)).lat;
-  const long double center_lat     = _geohex_coordinate2location(_geohex_coordinate_ld(h_x,                 h_y               )).lat;
-  const long double bottom_lat     = _geohex_coordinate2location(_geohex_coordinate_ld(h_x,                 h_y - deg * h_size)).lat;
-  const long double left_lng       = _geohex_coordinate2location(_geohex_coordinate_ld(h_x - 2.0L * h_size, h_y               )).lng;
-  const long double right_lng      = _geohex_coordinate2location(_geohex_coordinate_ld(h_x + 2.0L * h_size, h_y               )).lng;
-  const long double base_left_lng  = _geohex_coordinate2location(_geohex_coordinate_ld(h_x - 1.0L * h_size, h_y               )).lng;
-  const long double base_right_lng = _geohex_coordinate2location(_geohex_coordinate_ld(h_x + 1.0L * h_size, h_y               )).lng;
+  const long double center_lat     = geohex->location.lat;
+  const long double top_lat        = _geohex_coordinate2location(_geohex_coordinate_ld(h_x, h_y - h_deg * h_size)).lat;
+  const long double bottom_lat     = _geohex_coordinate2location(_geohex_coordinate_ld(h_x, h_y + h_deg * h_size)).lat;
+  const long double left_lng       = _geohex_coordinate2location(_geohex_coordinate_ld(h_x - 2.0L * h_size, h_y)).lng;
+  const long double right_lng      = _geohex_coordinate2location(_geohex_coordinate_ld(h_x + 2.0L * h_size, h_y)).lng;
+  const long double base_left_lng  = _geohex_coordinate2location(_geohex_coordinate_ld(h_x - 1.0L * h_size, h_y)).lng;
+  const long double base_right_lng = _geohex_coordinate2location(_geohex_coordinate_ld(h_x + 1.0L * h_size, h_y)).lng;
 
   geohex_polygon_t polygon;
   polygon.top.right    = geohex_location(top_lat,    base_right_lng);
