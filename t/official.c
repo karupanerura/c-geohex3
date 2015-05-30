@@ -14,6 +14,7 @@ void code2hex (void);
 void code2xy (void);
 void coord2hex (void);
 void coord2xy (void);
+void code2coords (void);
 
 int main (void) {
   subtest("XY2HEX(geohex_get_zone_by_coordinate)",        xy2hex);
@@ -21,27 +22,28 @@ int main (void) {
   subtest("code2XY(geohex_get_zone_by_code)",             code2xy);
   subtest("coord2HEX(geohex_get_zone_by_location)",       coord2hex);
   subtest("coord2XY(geohex_get_coordinate_by_location)",  coord2xy);
+  subtest("code2coords(geohex_get_hex_polygon)",          code2coords);
   return done_testing();
 }
 
-inline bool cmp_num (const long double got, const long double expected) {
+static inline bool cmp_num (const long double got, const long double expected) {
   const static long double diff = 0.000000000001L;
   return got == expected || (expected - diff < got && got < expected + diff);
 }
 
-inline void str_is (const char* got, const char* expected, const char* msg) {
+static inline void str_is (const char* got, const char* expected, const char* msg) {
   const bool ok = strcmp(got, expected) == 0;
   ok(ok);
   if (!ok) note("%s: expected: %s, but got: %s", msg, expected, got);
 }
 
-inline void location_is (const geohex_location_t got, const geohex_location_t expected, const char* msg) {
+static inline void location_is (const geohex_location_t got, const geohex_location_t expected, const char* msg) {
   const bool ok = cmp_num(got.lat, expected.lat) && cmp_num(got.lng, expected.lng);
   ok(ok);
   if (!ok) note("%s: expected: lat:%Lf,lng:%Lf, but got: lat:%Lf,lng:%Lf", msg, expected.lat, expected.lng, got.lat, got.lng);
 }
 
-inline void coordinate_is (const geohex_coordinate_t got, const geohex_coordinate_t expected, const char* msg) {
+static inline void coordinate_is (const geohex_coordinate_t got, const geohex_coordinate_t expected, const char* msg) {
   const bool ok = got.x == expected.x && got.y == expected.y;
   ok(ok);
   if (!ok) note("%s: expected: x:%ld,y:%ld, but got: x:%ld,y:%ld", msg, expected.x, expected.y, got.x, got.y);
@@ -5287,5 +5289,6959 @@ void coord2xy (void) {
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(84.5025950013051L, -179.977406289673L), 15), geohex_coordinate(43529418L, 172653371L), "lat:84.5025950013051,lng:-179.977406289673,level:15: x:43529418,y:172653371");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(84.8609006021274L, 178.967906210327L), 15), geohex_coordinate(174694024L, 46294332L), "lat:84.8609006021274,lng:178.967906210327,level:15: x:174694024,y:46294332");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(85.0511250776385L, 89.3795299530029L), 15), geohex_coordinate(143901099L, 79776171L), "lat:85.0511250776385,lng:89.3795299530029,level:15: x:143901099,y:79776171");
+}
+
+void code2coords (void) {
+  // verify
+  ok(geohex_verify_code("XM") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ3") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI8") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EX2") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU1") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK4") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI3") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI1") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU0") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU7") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH8") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY0") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb3") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM4") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ0") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SW6") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV3") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX0") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX8") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aZ2") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO4") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aB6") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK1") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK3") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA4") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA0") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV8") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI76") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI55") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO07") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO05") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU06") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU13") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH32") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK51") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI47") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI53") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU08") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OC58") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XL60") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM56") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS62") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX03") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ38") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ04") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ18") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OU88") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY53") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA04") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb17") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb34") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb86") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH58") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK63") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO07") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO42") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK02") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD31") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bE73") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb33") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO84") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO47") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aB61") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA08") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX55") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX04") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("YF58") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV40") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RX15") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OU40") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV56") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI771") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO045") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO056") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO077") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV778") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV568") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ335") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU570") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU868") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK468") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY443") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY004") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb526") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH588") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI440") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI622") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU340") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU026") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM454") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS624") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX038") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XU630") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ342") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ580") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY864") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY145") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA032") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI758") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV428") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV385") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX355") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX568") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD744") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD515") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb337") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO808") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO428") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO474") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO073") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aB648") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("YG168") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV7511") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV7541") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0532") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO3203") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU6235") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU1425") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK7172") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ0737") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb0200") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb8608") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH4405") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI2651") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OC2121") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU7871") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU4212") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK4362") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OX2538") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY5663") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OG6663") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ0631") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV8518") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK3246") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK1825") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aB6727") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TR1202") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD4054") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX4486") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA5685") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM4881") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XU6302") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX0337") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM6425") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS6270") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV80302") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV80373") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO08354") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO05758") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU31135") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU45042") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ35087") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK06445") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb80457") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH80422") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI74753") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI80240") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU01265") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU86344") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY77334") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY15454") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA04170") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS62113") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS68342") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM78145") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM48257") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX03156") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ47685") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV40654") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI71873") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX40264") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA44552") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD47117") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK51615") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK71615") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO38458") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO58484") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV553581") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI802417") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI750110") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO018862") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO053505") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO074664") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ351822") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU412420") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU708101") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK847038") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH501658") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI842644") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI836575") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU316588") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU175485") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb711277") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY728344") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA016372") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU408880") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM442337") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS387785") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX037037") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ173676") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV321726") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PC828583") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI713375") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD080050") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX817100") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA712478") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK166315") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK873482") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO433402") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO586342") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb335332") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV8032788") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI7714524") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0514686") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0517300") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0732687") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0732768") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU4031833") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU8072131") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU8255485") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ3800810") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK1624776") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK7464515") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb5316746") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb4033527") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH4540858") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI4351804") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI8387484") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU0706771") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU4884047") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU8251271") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA0565644") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY8320288") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY3556486") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ8016814") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ1746604") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS6242083") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM5643552") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XU6303820") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM7851800") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX0345653") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM6306347") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU8827707") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ4253332") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI8776718") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PF2148656") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA4587731") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV4335020") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV5843218") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX0682573") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX8100870") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD4424804") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bE6100113") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK5027217") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK7070414") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO6240542") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO7775738") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO5821675") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb3371862") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV54870250") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV78253862") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI57758513") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI75600226") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO05603615") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO07152160") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU41063674") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU72201265") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ34762511") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb38241503") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK48511367") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI32042116") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI71565064") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH45442518") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY33228746") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA03278283") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU42174351") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU47122108") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM32230826") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM56301016") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS61272751") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM60832123") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XU63124187") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX03173236") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ38755703") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ57757416") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fc51504013") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OW22586402") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PC52458806") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV20852101") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX46486040") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA62754057") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD28367162") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK05722747") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK83151057") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO31130720") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO51331450") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb33488116") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV804240512") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI708565326") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI754848748") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO055580431") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO053480025") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO073506567") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ347013544") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU413474586") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU354580674") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK474555348") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb484868583") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH147081657") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI730641802") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI576514101") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY041035522") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY537117080") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA402570238") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU058877078") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU832828267") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ382714446") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ028668414") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS383657231") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM602176827") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM482452815") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX033123366") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI860616105") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RX114077466") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV355072242") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("YG413103084") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA486483578") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX426174078") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX747576237") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK184816376") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO310523631") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO423806423") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb303856635") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO815178640") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV1700305142") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV5482764471") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV7560068257") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI5263615540") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI7265571616") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI7505181555") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI5736546251") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0273028158") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0536546500") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0716764500") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU4016113514") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU4827777232") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU7445272188") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK1777354303") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ3420476772") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb4334484641") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH5856584625") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI1730824803") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI7234521114") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU3851424320") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU8152020110") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA0426257051") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY4244664644") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY7353226324") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY3444432334") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU8136543688") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU8831183154") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS6206841033") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM0565771230") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM4863207510") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX0330807788") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM6054354111") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ1548687734") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ7555070851") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI7581576564") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RX1535370770") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV7031782060") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SW6431665682") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX1617612856") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX7255422107") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA7323011017") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK0130411728") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK8071386820") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO4434206021") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb3372146218") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV57264048634") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI57246068382") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO05443747884") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO04773823048") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO04773823048") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO07200264504") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ34837816828") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU18781747622") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU47467037811") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb05827021141") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK72311284586") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH51383310718") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI47416263465") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI87045185255") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU07002763476") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU85663663436") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU84201138888") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS62147032100") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM30178015132") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM60054311737") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM44560457183") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM56456700534") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX03131786872") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ16386410216") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI78178446320") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RX13217487787") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV40163034106") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX41314430862") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA47238521110") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK11857485652") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK43222807032") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO03574622544") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO54114446763") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb33540877533") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV803254745602") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI803456424553") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO053652024200") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO053654462750") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO071704644727") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CY281612610161") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU181655132036") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU832016181016") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("FY636801583240") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK446658243285") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH058068815001") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI410587505268") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI871735246286") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU460311054340") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU533828300764") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY313181386161") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY803527038734") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA043284261600") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ060785824214") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS625060382624") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM317558565378") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XL822458403751") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XP251226173262") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI745463230145") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RU681285781273") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV352321156833") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA412658306821") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX413323833627") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD023073480358") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK570232153327") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK800808780528") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO328348003525") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO563763855337") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb337212207184") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV8046354823266") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI5803560714155") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0482706175341") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0482731186381") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0485035421662") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0485060618642") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0485068654767") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0712537663424") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO0712564265481") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU4501241604860") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU8407181150325") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ3061211527483") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb4625116215430") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK7250326542858") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH4221515066426") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI4421818162227") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI8724851414563") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU4074815410453") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU8810462030471") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA0414822216031") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY4236836048713") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY7001555744550") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM4117607703260") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS6246856326218") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XL5887834871345") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XX0066438378463") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ4537105130820") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI8337351073052") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RX1135780670728") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV4163853373183") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX4034808877353") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA4726354081160") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD0853382488383") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK2756770452053") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK7434850466772") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO0846631354832") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO4805277813220") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb3356324634667") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV80717180121576") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI56436210413512") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI56773820550701") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI80611150250021") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO05167224507116") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO05405867244763") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO07170215584802") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO07170226100057") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO07170227640163") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU16473602511456") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU40673078217161") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ31831222362536") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb31200035818717") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK44243402806508") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY01571576207503") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY56733420402656") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH84065825033010") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI50342481388451") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI78081171860100") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU30541311610415") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU44828780263624") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA07571045254517") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS38383877824230") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM31385143063872") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XL82447011727335") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XP22503400845082") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ13526267300787") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI78437338044154") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RU68880348017456") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV13411223332736") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX38226176387034") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA35122807551718") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD32858648748733") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK18678460283758") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK35253726505866") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO35083224064751") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO45177603556405") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb33563401287846") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb33563422636071") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV801644720107680") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV801672224571144") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("BV752066087034602") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CI584051202811030") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO053702425073344") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO053474671871414") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO048672464801367") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("DO048680771383421") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("CZ312460160330640") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU482446631807432") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("EU443120677000135") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OK486263022716030") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("Fb563137601173436") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GH405610617770460") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI428447007470857") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("GI714676472576137") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU430846555413857") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("QU455868523435074") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XM314886135481601") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PS624076167125758") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XL828827023882162") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("XP252183615213788") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY441655876848342") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OY450583438341310") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PA007023204648554") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("OI754343508378851") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("RX153284780083552") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("PZ541437131806627") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("SV081012647253500") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("ZA162768706170274") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("aX538661552510561") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bD475537206875044") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK573170435224014") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TK720137660817775") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO078855632751174") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO448407012467243") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("TO801157747467437") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+  ok(geohex_verify_code("bb337184418811744") == GEOHEX3_VERIFY_RESULT_SUCCESS);
+
+  // code2coords
+  {
+    note("geohex: XM");
+    geohex_t zone = geohex_get_zone_by_code("XM");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.4929492879726L, 146.666666666667L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.4929492879726L, 133.333333333333L), "top.left");
+    location_is(polygon.middle.right, geohex_location(32.7050565948485L, 153.333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(32.7050565948485L, 126.666666666667L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(41.8706764000141L, 146.666666666667L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(41.8706764000141L, 133.333333333333L), "bottom.left");
+  }
+  {
+    note("geohex: OY");
+    geohex_t zone = geohex_get_zone_by_code("OY");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-11.4696249513643L, 6.66666666666667L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-11.4696249513643L, -6.66666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(0L, 13.3333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(0L, -13.3333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(11.4696249513643L, 6.66666666666667L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(11.4696249513643L, -6.66666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: GI");
+    geohex_t zone = geohex_get_zone_by_code("GI");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-22.4929492879726L, -173.333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-22.4929492879726L, -186.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-11.4696249513643L, -166.666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-11.4696249513643L, -193.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(0L, -173.333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(0L, -186.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: QU");
+    geohex_t zone = geohex_get_zone_by_code("QU");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(1.27222187258541e-14L, -173.333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(1.27222187258541e-14L, -186.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(11.4696249513643L, -166.666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(11.4696249513643L, -193.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.4929492879726L, -173.333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.4929492879726L, -186.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: GH");
+    geohex_t zone = geohex_get_zone_by_code("GH");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-32.7050565948485L, -153.333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-32.7050565948485L, -166.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-22.4929492879726L, -146.666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-22.4929492879726L, -173.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.4696249513643L, -153.333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.4696249513643L, -166.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: EU");
+    geohex_t zone = geohex_get_zone_by_code("EU");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-79.8208663803628L, -173.333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-79.8208663803628L, -186.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.564295156692L, -166.666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.564295156692L, -193.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-74.8171611748047L, -173.333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-74.8171611748047L, -186.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: CI");
+    geohex_t zone = geohex_get_zone_by_code("CI");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-86.2754112576219L, 126.666666666667L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-86.2754112576219L, 113.333333333333L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.4445925866876L, 133.333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.4445925866876L, 106.666666666667L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.4289312717818L, 126.666666666667L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.4289312717818L, 113.333333333333L), "bottom.left");
+  }
+  {
+    note("geohex: BV");
+    geohex_t zone = geohex_get_zone_by_code("BV");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-86.2754112576219L, -73.3333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-86.2754112576219L, -86.6666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.4445925866876L, -66.6666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.4445925866876L, -93.3333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.4289312717818L, -73.3333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.4289312717818L, -86.6666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: Fb");
+    geohex_t zone = geohex_get_zone_by_code("Fb");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-56.765999116369L, -93.3333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-56.765999116369L, -106.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.8887630323615L, -86.6666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.8887630323615L, -113.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-41.8706764000141L, -93.3333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-41.8706764000141L, -106.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: SV");
+    geohex_t zone = geohex_get_zone_by_code("SV");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(62.5793731923105L, -73.3333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(62.5793731923105L, -86.6666666666666L), "top.left");
+    location_is(polygon.middle.right, geohex_location(67.4423781033328L, -66.6666666666666L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(67.4423781033328L, -93.3333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(71.4806668681882L, -73.3333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(71.4806668681882L, -86.6666666666666L), "bottom.left");
+  }
+  {
+    note("geohex: TO");
+    geohex_t zone = geohex_get_zone_by_code("TO");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.1877023714706L, -173.333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.1877023714706L, -186.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.4289312717818L, -166.666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.4289312717818L, -193.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.4445925866876L, -173.333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.4445925866876L, -186.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: TK");
+    geohex_t zone = geohex_get_zone_by_code("TK");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(79.8208663803628L, -173.333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(79.8208663803628L, -186.666666666667L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.6715381665137L, -166.666666666667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.6715381665137L, -193.333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.1877023714706L, -173.333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.1877023714706L, -186.666666666667L), "bottom.left");
+  }
+  {
+    note("geohex: bD");
+    geohex_t zone = geohex_get_zone_by_code("bD");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.6715381665137L, -33.3333333333333L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.6715381665137L, -46.6666666666666L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.1877023714706L, -26.6666666666666L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.1877023714706L, -53.3333333333333L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.4289312717818L, -33.3333333333333L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.4289312717818L, -46.6666666666666L), "bottom.left");
+  }
+  {
+    note("geohex: ZA");
+    geohex_t zone = geohex_get_zone_by_code("ZA");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(71.4806668681882L, 126.666666666667L), "top.right");
+    location_is(polygon.top.left,     geohex_location(71.4806668681882L, 113.333333333333L), "top.left");
+    location_is(polygon.middle.right, geohex_location(74.8171611748047L, 133.333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(74.8171611748047L, 106.666666666667L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.564295156692L, 126.666666666667L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.564295156692L, 113.333333333333L), "bottom.left");
+  }
+  {
+    note("geohex: aX");
+    geohex_t zone = geohex_get_zone_by_code("aX");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(74.8171611748047L, 26.6666666666667L), "top.right");
+    location_is(polygon.top.left,     geohex_location(74.8171611748047L, 13.3333333333333L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.564295156692L, 33.3333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.564295156692L, 6.66666666666665L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(79.8208663803628L, 26.6666666666667L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(79.8208663803628L, 13.3333333333333L), "bottom.left");
+  }
+  {
+    note("geohex: PZ");
+    geohex_t zone = geohex_get_zone_by_code("PZ");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(32.7050565948485L, 46.6666666666667L), "top.right");
+    location_is(polygon.top.left,     geohex_location(32.7050565948485L, 33.3333333333333L), "top.left");
+    location_is(polygon.middle.right, geohex_location(41.8706764000141L, 53.3333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(41.8706764000141L, 26.6666666666667L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(49.8887630323615L, 46.6666666666667L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(49.8887630323615L, 33.3333333333333L), "bottom.left");
+  }
+  {
+    note("geohex: OK");
+    geohex_t zone = geohex_get_zone_by_code("OK");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-56.765999116369L, 66.6666666666666L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-56.765999116369L, 53.3333333333333L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.8887630323615L, 73.3333333333333L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.8887630323615L, 46.6666666666666L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-41.8706764000141L, 66.6666666666666L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-41.8706764000141L, 53.3333333333333L), "bottom.left");
+  }
+  {
+    note("geohex: CZ3");
+    geohex_t zone = geohex_get_zone_by_code("CZ3");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-79.117671767354L, -11.1111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-79.117671767354L, -15.5555555555555L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.3665252517046L, -8.88888888888888L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.3665252517046L, -17.7777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.564295156692L, -11.1111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.564295156692L, -15.5555555555555L), "bottom.left");
+  }
+  {
+    note("geohex: CI8");
+    geohex_t zone = geohex_get_zone_by_code("CI8");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1284264049787L, 122.222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1284264049787L, 117.777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.7903734685558L, 124.444444444444L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.7903734685558L, 115.555555555556L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.4289312717818L, 122.222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.4289312717818L, 117.777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: DO0");
+    geohex_t zone = geohex_get_zone_by_code("DO0");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.4445925866875L, -177.777777777778L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.4445925866875L, -182.222222222222L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1284264049787L, -175.555555555556L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1284264049787L, -184.444444444444L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.7903734685558L, -177.777777777778L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.7903734685558L, -182.222222222222L), "bottom.left");
+  }
+  {
+    note("geohex: EX2");
+    geohex_t zone = geohex_get_zone_by_code("EX2");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-75.7931846054884L, -171.111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-75.7931846054884L, -175.555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-74.8171611748047L, -168.888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-74.8171611748047L, -177.777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-73.775768209176L, -171.111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-73.775768209176L, -175.555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: EU1");
+    geohex_t zone = geohex_get_zone_by_code("EU1");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-79.1176717673541L, 175.555555555556L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-79.1176717673541L, 171.111111111111L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.3665252517047L, 177.777777777778L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.3665252517047L, 168.888888888889L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.564295156692L, 175.555555555556L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.564295156692L, 171.111111111111L), "bottom.left");
+  }
+  {
+    note("geohex: OK4");
+    geohex_t zone = geohex_get_zone_by_code("OK4");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-52.3052216727475L, 62.2222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-52.3052216727475L, 57.7777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.8887630323615L, 64.4444444444445L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.8887630323615L, 55.5555555555556L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.3449700820465L, 62.2222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.3449700820465L, 57.7777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: GI3");
+    geohex_t zone = geohex_get_zone_by_code("GI3");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-18.8930183495882L, -171.111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-18.8930183495882L, -175.555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-15.2140034644785L, -168.888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-15.2140034644785L, -177.777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.4696249513643L, -171.111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.4696249513643L, -175.555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: GI1");
+    geohex_t zone = geohex_get_zone_by_code("GI1");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-18.8930183495882L, 175.555555555556L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-18.8930183495882L, 171.111111111111L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-15.2140034644785L, 177.777777777778L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-15.2140034644785L, 168.888888888889L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.4696249513643L, 175.555555555556L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.4696249513643L, 171.111111111111L), "bottom.left");
+  }
+  {
+    note("geohex: QU0");
+    geohex_t zone = geohex_get_zone_by_code("QU0");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(0L, -177.777777777778L), "top.right");
+    location_is(polygon.top.left,     geohex_location(0L, -182.222222222222L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.84611006144169L, -175.555555555556L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.84611006144169L, -184.444444444444L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(7.67494760129784L, -177.777777777778L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(7.67494760129784L, -182.222222222222L), "bottom.left");
+  }
+  {
+    note("geohex: QU7");
+    geohex_t zone = geohex_get_zone_by_code("QU7");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(11.4696249513643L, -171.111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(11.4696249513643L, -175.555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(15.2140034644785L, -168.888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(15.2140034644785L, -177.777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(18.8930183495882L, -171.111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(18.8930183495882L, -175.555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: GH8");
+    geohex_t zone = geohex_get_zone_by_code("GH8");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-18.8930183495882L, -157.777777777778L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-18.8930183495882L, -162.222222222222L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-15.2140034644785L, -155.555555555556L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-15.2140034644785L, -164.444444444444L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.4696249513643L, -157.777777777778L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.4696249513643L, -162.222222222222L), "bottom.left");
+  }
+  {
+    note("geohex: OY0");
+    geohex_t zone = geohex_get_zone_by_code("OY0");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-11.4696249513643L, 2.22222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-11.4696249513643L, -2.22222222222222L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-7.67494760129784L, 4.44444444444444L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-7.67494760129784L, -4.44444444444444L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-3.84611006144169L, 2.22222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-3.84611006144169L, -2.22222222222222L), "bottom.left");
+  }
+  {
+    note("geohex: Fb3");
+    geohex_t zone = geohex_get_zone_by_code("Fb3");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-54.5966358085242L, -91.1111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-54.5966358085242L, -95.5555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-52.3052216727475L, -88.8888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-52.3052216727475L, -97.7777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-49.8887630323615L, -91.1111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-49.8887630323615L, -95.5555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: XM4");
+    geohex_t zone = geohex_get_zone_by_code("XM4");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(29.4085702268386L, 142.222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(29.4085702268386L, 137.777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(32.7050565948485L, 144.444444444444L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(32.7050565948485L, 135.555555555556L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.8841275913257L, 142.222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.8841275913257L, 137.777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: PZ0");
+    geohex_t zone = geohex_get_zone_by_code("PZ0");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(32.7050565948485L, 42.2222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(32.7050565948485L, 37.7777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.8841275913258L, 44.4444444444445L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.8841275913258L, 35.5555555555556L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(38.9405407349711L, 42.2222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(38.9405407349711L, 37.7777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: SW6");
+    geohex_t zone = geohex_get_zone_by_code("SW6");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(70.2184522534529L, -84.4444444444445L), "top.right");
+    location_is(polygon.top.left,     geohex_location(70.2184522534529L, -88.8888888888889L), "top.left");
+    location_is(polygon.middle.right, geohex_location(71.4806668681882L, -82.2222222222222L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(71.4806668681882L, -91.1111111111111L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(72.6649954378075L, -84.4444444444445L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(72.6649954378075L, -88.8888888888889L), "bottom.left");
+  }
+  {
+    note("geohex: SV3");
+    geohex_t zone = geohex_get_zone_by_code("SV3");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(64.2998370349224L, -71.1111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(64.2998370349224L, -75.5555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(65.9192675132544L, -68.8888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(65.9192675132544L, -77.7777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(67.4423781033328L, -71.1111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(67.4423781033328L, -75.5555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: aX0");
+    geohex_t zone = geohex_get_zone_by_code("aX0");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(74.8171611748047L, 22.2222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(74.8171611748047L, 17.7777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.7931846054884L, 24.4444444444444L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.7931846054884L, 15.5555555555555L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.7076757831938L, 22.2222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.7076757831938L, 17.7777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: aX8");
+    geohex_t zone = geohex_get_zone_by_code("aX8");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.3665252517047L, 22.2222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.3665252517047L, 17.7777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(79.1176717673541L, 24.4444444444444L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(79.1176717673541L, 15.5555555555555L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(79.8208663803629L, 22.2222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(79.8208663803629L, 17.7777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: aZ2");
+    geohex_t zone = geohex_get_zone_by_code("aZ2");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.0950821454212L, -31.1111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.0950821454212L, -35.5555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.6715381665137L, -28.8888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.6715381665137L, -37.7777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.2109240990719L, -31.1111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.2109240990719L, -35.5555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: TO4");
+    geohex_t zone = geohex_get_zone_by_code("TO4");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.0424969734017L, -177.777777777778L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.0424969734017L, -182.222222222222L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.4289312717818L, -175.555555555556L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.4289312717818L, -184.444444444444L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.7903734685558L, -177.777777777778L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.7903734685558L, -182.222222222222L), "bottom.left");
+  }
+  {
+    note("geohex: aB6");
+    geohex_t zone = geohex_get_zone_by_code("aB6");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.7155789635238L, 175.555555555556L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.7155789635238L, 171.111111111111L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.1877023714706L, 177.777777777778L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.1877023714706L, 168.888888888889L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.6293613243906L, 175.555555555556L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.6293613243906L, 171.111111111111L), "bottom.left");
+  }
+  {
+    note("geohex: TK1");
+    geohex_t zone = geohex_get_zone_by_code("TK1");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(80.4790708574883L, 175.555555555556L), "top.right");
+    location_is(polygon.top.left,     geohex_location(80.4790708574883L, 171.111111111111L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.0950821454213L, 177.777777777778L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.0950821454213L, 168.888888888889L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.6715381665137L, 175.555555555556L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.6715381665137L, 171.111111111111L), "bottom.left");
+  }
+  {
+    note("geohex: TK3");
+    geohex_t zone = geohex_get_zone_by_code("TK3");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(80.4790708574883L, -171.111111111111L), "top.right");
+    location_is(polygon.top.left,     geohex_location(80.4790708574883L, -175.555555555556L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.0950821454213L, -168.888888888889L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.0950821454213L, -177.777777777778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.6715381665137L, -171.111111111111L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.6715381665137L, -175.555555555556L), "bottom.left");
+  }
+  {
+    note("geohex: ZA4");
+    geohex_t zone = geohex_get_zone_by_code("ZA4");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(73.775768209176L, 122.222222222222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(73.775768209176L, 117.777777777778L), "top.left");
+    location_is(polygon.middle.right, geohex_location(74.8171611748047L, 124.444444444444L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(74.8171611748047L, 115.555555555556L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.7931846054884L, 122.222222222222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.7931846054884L, 117.777777777778L), "bottom.left");
+  }
+  {
+    note("geohex: PA0");
+    geohex_t zone = geohex_get_zone_by_code("PA0");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(0L, -57.7777777777778L), "top.right");
+    location_is(polygon.top.left,     geohex_location(0L, -62.2222222222222L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.8461100614417L, -55.5555555555556L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.8461100614417L, -64.4444444444445L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(7.67494760129786L, -57.7777777777778L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(7.67494760129786L, -62.2222222222222L), "bottom.left");
+  }
+  {
+    note("geohex: BV8");
+    geohex_t zone = geohex_get_zone_by_code("BV8");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1284264049787L, -77.7777777777777L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1284264049787L, -82.2222222222221L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.7903734685558L, -75.5555555555555L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.7903734685558L, -84.4444444444444L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.4289312717818L, -77.7777777777777L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.4289312717818L, -82.2222222222221L), "bottom.left");
+  }
+  {
+    note("geohex: CI76");
+    geohex_t zone = geohex_get_zone_by_code("CI76");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.2361755730778L, 131.851851851852L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.2361755730778L, 130.37037037037L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1284264049787L, 132.592592592593L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1284264049787L, 129.62962962963L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0182461528016L, 131.851851851852L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0182461528016L, 130.37037037037L), "bottom.left");
+  }
+  {
+    note("geohex: CI55");
+    geohex_t zone = geohex_get_zone_by_code("CI55");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1284264049787L, 111.851851851852L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1284264049787L, 110.37037037037L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0182461528016L, 112.592592592593L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0182461528016L, 109.62962962963L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9055803821142L, 111.851851851852L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9055803821142L, 110.37037037037L), "bottom.left");
+  }
+  {
+    note("geohex: DO07");
+    geohex_t zone = geohex_get_zone_by_code("DO07");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1284264049787L, -177.037037037037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1284264049787L, -178.518518518519L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0182461528016L, -176.296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0182461528016L, -179.259259259259L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9055803821143L, -177.037037037037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9055803821143L, -178.518518518519L), "bottom.left");
+  }
+  {
+    note("geohex: DO05");
+    geohex_t zone = geohex_get_zone_by_code("DO05");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1284264049787L, 178.518518518519L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1284264049787L, 177.037037037037L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0182461528016L, 179.259259259259L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0182461528016L, 176.296296296296L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9055803821142L, 178.518518518519L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9055803821142L, 177.037037037037L), "bottom.left");
+  }
+  {
+    note("geohex: EU06");
+    geohex_t zone = geohex_get_zone_by_code("EU06");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-79.3572482500017L, -174.814814814815L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-79.3572482500017L, -176.296296296296L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-79.117671767354L, -174.074074074074L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-79.117671767354L, -177.037037037037L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.8727686949929L, -174.814814814815L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.8727686949929L, -176.296296296296L), "bottom.left");
+  }
+  {
+    note("geohex: EU13");
+    geohex_t zone = geohex_get_zone_by_code("EU13");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.8727686949929L, 176.296296296296L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.8727686949929L, 174.814814814815L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.6224251800773L, 177.037037037037L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.6224251800773L, 174.074074074074L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.3665252517047L, 176.296296296296L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.3665252517047L, 174.814814814815L), "bottom.left");
+  }
+  {
+    note("geohex: GH32");
+    geohex_t zone = geohex_get_zone_by_code("GH32");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-27.1490456975025L, -157.037037037037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-27.1490456975025L, -158.518518518519L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-26.0016268633643L, -156.296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-26.0016268633643L, -159.259259259259L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-24.8428896902851L, -157.037037037037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-24.8428896902851L, -158.518518518519L), "bottom.left");
+  }
+  {
+    note("geohex: OK51");
+    geohex_t zone = geohex_get_zone_by_code("OK51");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-49.055070190506L, 51.8518518518518L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-49.055070190506L, 50.3703703703704L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-48.2071571029478L, 52.5925925925926L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-48.2071571029478L, 49.6296296296296L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.3449700820465L, 51.8518518518518L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.3449700820465L, 50.3703703703704L), "bottom.left");
+  }
+  {
+    note("geohex: GI47");
+    geohex_t zone = geohex_get_zone_by_code("GI47");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-11.4696249513643L, -177.037037037037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-11.4696249513643L, -178.518518518519L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-10.2095434727833L, -176.296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-10.2095434727833L, -179.259259259259L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-8.94445133154766L, -177.037037037037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-8.94445133154766L, -178.518518518519L), "bottom.left");
+  }
+  {
+    note("geohex: GI53");
+    geohex_t zone = geohex_get_zone_by_code("GI53");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-10.2095434727833L, 176.296296296296L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-10.2095434727833L, 174.814814814815L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-8.94445133154764L, 177.037037037037L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-8.94445133154764L, 174.074074074074L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-7.67494760129782L, 176.296296296296L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-7.67494760129782L, 174.814814814815L), "bottom.left");
+  }
+  {
+    note("geohex: QU08");
+    geohex_t zone = geohex_get_zone_by_code("QU08");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(5.12515391392619L, -179.259259259259L), "top.right");
+    location_is(polygon.top.left,     geohex_location(5.12515391392619L, -180.740740740741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(6.40164208700373L, -178.518518518519L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(6.40164208700373L, -181.481481481481L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(7.67494760129786L, -179.259259259259L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(7.67494760129786L, -180.740740740741L), "bottom.left");
+  }
+  {
+    note("geohex: OC58");
+    geohex_t zone = geohex_get_zone_by_code("OC58");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(5.12515391392619L, -165.925925925926L), "top.right");
+    location_is(polygon.top.left,     geohex_location(5.12515391392619L, -167.407407407407L), "top.left");
+    location_is(polygon.middle.right, geohex_location(6.40164208700373L, -165.185185185185L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(6.40164208700373L, -168.148148148148L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(7.67494760129786L, -165.925925925926L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(7.67494760129786L, -167.407407407407L), "bottom.left");
+  }
+  {
+    note("geohex: XL60");
+    geohex_t zone = geohex_get_zone_by_code("XL60");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(18.8930183495882L, 174.074074074074L), "top.right");
+    location_is(polygon.top.left,     geohex_location(18.8930183495882L, 172.592592592593L), "top.left");
+    location_is(polygon.middle.right, geohex_location(20.1024169233546L, 174.814814814815L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(20.1024169233546L, 171.851851851852L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.3025443312145L, 174.074074074074L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.3025443312145L, 172.592592592593L), "bottom.left");
+  }
+  {
+    note("geohex: XM56");
+    geohex_t zone = geohex_get_zone_by_code("XM56");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(34.8378414723136L, 138.518518518519L), "top.right");
+    location_is(polygon.top.left,     geohex_location(34.8378414723136L, 137.037037037037L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.8841275913258L, 139.259259259259L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.8841275913258L, 136.296296296296L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(36.916771667614L, 138.518518518519L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(36.916771667614L, 137.037037037037L), "bottom.left");
+  }
+  {
+    note("geohex: PS62");
+    geohex_t zone = geohex_get_zone_by_code("PS62");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.3025443312145L, 129.62962962963L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.3025443312145L, 128.148148148148L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.4929492879726L, 130.37037037037L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.4929492879726L, 127.407407407407L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(23.6732010110163L, 129.62962962963L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(23.6732010110163L, 128.148148148148L), "bottom.left");
+  }
+  {
+    note("geohex: XX03");
+    geohex_t zone = geohex_get_zone_by_code("XX03");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(42.8189193212977L, 142.962962962963L), "top.right");
+    location_is(polygon.top.left,     geohex_location(42.8189193212977L, 141.481481481481L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.7528403384023L, 143.703703703704L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.7528403384023L, 140.740740740741L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(44.6724113934194L, 142.962962962963L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(44.6724113934194L, 141.481481481481L), "bottom.left");
+  }
+  {
+    note("geohex: PZ38");
+    geohex_t zone = geohex_get_zone_by_code("PZ38");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(39.9314177389891L, 47.4074074074074L), "top.right");
+    location_is(polygon.top.left,     geohex_location(39.9314177389891L, 45.9259259259259L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.9081556333403L, 48.1481481481482L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.9081556333403L, 45.1851851851852L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(41.8706764000141L, 47.4074074074074L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(41.8706764000141L, 45.9259259259259L), "bottom.left");
+  }
+  {
+    note("geohex: PZ04");
+    geohex_t zone = geohex_get_zone_by_code("PZ04");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(34.8378414723136L, 40.7407407407407L), "top.right");
+    location_is(polygon.top.left,     geohex_location(34.8378414723136L, 39.2592592592593L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.8841275913258L, 41.4814814814815L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.8841275913258L, 38.5185185185185L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(36.916771667614L, 40.7407407407407L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(36.916771667614L, 39.2592592592593L), "bottom.left");
+  }
+  {
+    note("geohex: PZ18");
+    geohex_t zone = geohex_get_zone_by_code("PZ18");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(39.9314177389891L, 34.0740740740741L), "top.right");
+    location_is(polygon.top.left,     geohex_location(39.9314177389891L, 32.5925925925926L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.9081556333403L, 34.8148148148148L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.9081556333403L, 31.8518518518519L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(41.8706764000141L, 34.0740740740741L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(41.8706764000141L, 32.5925925925926L), "bottom.left");
+  }
+  {
+    note("geohex: OU88");
+    geohex_t zone = geohex_get_zone_by_code("OU88");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-13.9724213026311L, 0.740740740740741L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-13.9724213026311L, -0.740740740740741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-12.724108773261L, 1.48148148148148L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-12.724108773261L, -1.48148148148148L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.4696249513643L, 0.740740740740741L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.4696249513643L, -0.740740740740741L), "bottom.left");
+  }
+  {
+    note("geohex: OY53");
+    geohex_t zone = geohex_get_zone_by_code("OY53");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(1.28289338959935L, -3.7037037037037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(1.28289338959935L, -5.18518518518519L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.5651438499496L, -2.96296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.5651438499496L, -5.92592592592593L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(3.8461100614417L, -3.7037037037037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(3.8461100614417L, -5.18518518518519L), "bottom.left");
+  }
+  {
+    note("geohex: PA04");
+    geohex_t zone = geohex_get_zone_by_code("PA04");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.56514384994961L, -59.2592592592593L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.56514384994961L, -60.7407407407407L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.8461100614417L, -58.5185185185185L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.8461100614417L, -61.4814814814815L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(5.1251539139262L, -59.2592592592593L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(5.1251539139262L, -60.7407407407407L), "bottom.left");
+  }
+  {
+    note("geohex: Fb17");
+    geohex_t zone = geohex_get_zone_by_code("Fb17");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-52.3052216727475L, -103.703703703704L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-52.3052216727475L, -105.185185185185L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-51.5137582931174L, -102.962962962963L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-51.5137582931174L, -105.925925925926L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-50.7083005615114L, -103.703703703704L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-50.7083005615114L, -105.185185185185L), "bottom.left");
+  }
+  {
+    note("geohex: Fb34");
+    geohex_t zone = geohex_get_zone_by_code("Fb34");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-53.0827854378808L, -92.5925925925926L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-53.0827854378808L, -94.0740740740741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-52.3052216727475L, -91.8518518518518L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-52.3052216727475L, -94.8148148148148L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-51.5137582931173L, -92.5925925925926L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-51.5137582931173L, -94.0740740740741L), "bottom.left");
+  }
+  {
+    note("geohex: Fb86");
+    geohex_t zone = geohex_get_zone_by_code("Fb86");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-45.5776197587709L, -94.8148148148148L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-45.5776197587709L, -96.2962962962963L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-44.6724113934194L, -94.0740740740741L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-44.6724113934194L, -97.037037037037L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-43.7528403384023L, -94.8148148148148L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-43.7528403384023L, -96.2962962962963L), "bottom.left");
+  }
+  {
+    note("geohex: GH58");
+    geohex_t zone = geohex_get_zone_by_code("GH58");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-17.6748198317407L, -165.925925925926L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-17.6748198317407L, -167.407407407407L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-16.4483118659619L, -165.185185185185L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-16.4483118659619L, -168.148148148148L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-15.2140034644785L, -165.925925925926L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-15.2140034644785L, -167.407407407407L), "bottom.left");
+  }
+  {
+    note("geohex: TK63");
+    geohex_t zone = geohex_get_zone_by_code("TK63");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.291503376622L, -163.703703703704L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.291503376622L, -165.185185185185L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.4836247115026L, -162.962962962963L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.4836247115026L, -165.925925925926L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.6715381665136L, -163.703703703704L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.6715381665136L, -165.185185185185L), "bottom.left");
+  }
+  {
+    note("geohex: TO07");
+    geohex_t zone = geohex_get_zone_by_code("TO07");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.6293613243906L, -177.037037037037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.6293613243906L, -178.518518518519L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.7701501008722L, -176.296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.7701501008722L, -179.259259259259L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.9078394995407L, -177.037037037037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.9078394995407L, -178.518518518519L), "bottom.left");
+  }
+  {
+    note("geohex: TO42");
+    geohex_t zone = geohex_get_zone_by_code("TO42");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.3029788975169L, 176.296296296296L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.3029788975169L, 174.814814814815L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.4289312717818L, 177.037037037037L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.4289312717818L, 174.074074074074L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.5521076214116L, 176.296296296296L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.5521076214116L, 174.814814814815L), "bottom.left");
+  }
+  {
+    note("geohex: TK02");
+    geohex_t zone = geohex_get_zone_by_code("TK02");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(80.2644922878378L, 176.296296296296L), "top.right");
+    location_is(polygon.top.left,     geohex_location(80.2644922878378L, 174.814814814815L), "top.left");
+    location_is(polygon.middle.right, geohex_location(80.4790708574883L, 177.037037037037L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(80.4790708574883L, 174.074074074074L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(80.6889626043584L, 176.296296296296L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(80.6889626043584L, 174.814814814815L), "bottom.left");
+  }
+  {
+    note("geohex: bD31");
+    geohex_t zone = geohex_get_zone_by_code("bD31");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.3828899687718L, -34.8148148148148L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.3828899687718L, -36.2962962962963L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.5510811105676L, -34.074074074074L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.5510811105676L, -37.037037037037L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.7155789635238L, -34.8148148148148L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.7155789635238L, -36.2962962962963L), "bottom.left");
+  }
+  {
+    note("geohex: bE73");
+    geohex_t zone = geohex_get_zone_by_code("bE73");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.5521076214116L, -50.3703703703704L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.5521076214116L, -51.8518518518518L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.672568573839L, -49.6296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.672568573839L, -52.5925925925926L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.7903734685558L, -50.3703703703704L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.7903734685558L, -51.8518518518518L), "bottom.left");
+  }
+  {
+    note("geohex: bb33");
+    geohex_t zone = geohex_get_zone_by_code("bb33");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.9055803821142L, 89.6296296296296L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.9055803821142L, 88.1481481481481L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0182461528016L, 90.3703703703703L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0182461528016L, 87.4074074074074L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.1284264049787L, 89.6296296296296L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.1284264049787L, 88.1481481481481L), "bottom.left");
+  }
+  {
+    note("geohex: TO84");
+    geohex_t zone = geohex_get_zone_by_code("TO84");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0182461528016L, -179.259259259259L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0182461528016L, -180.740740740741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.1284264049787L, -178.518518518519L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.1284264049787L, -181.481481481481L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.2361755730778L, -179.259259259259L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.2361755730778L, -180.740740740741L), "bottom.left");
+  }
+  {
+    note("geohex: TO47");
+    geohex_t zone = geohex_get_zone_by_code("TO47");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.4289312717818L, -177.037037037037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.4289312717818L, -178.518518518519L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.5521076214116L, -176.296296296296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.5521076214116L, -179.259259259259L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.672568573839L, -177.037037037037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.672568573839L, -178.518518518519L), "bottom.left");
+  }
+  {
+    note("geohex: aB61");
+    geohex_t zone = geohex_get_zone_by_code("aB61");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.876463301598L, 171.851851851852L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.876463301598L, 170.37037037037L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.0338122616632L, 172.592592592593L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.0338122616632L, 169.62962962963L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.1877023714706L, 171.851851851852L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.1877023714706L, 170.37037037037L), "bottom.left");
+  }
+  {
+    note("geohex: ZA08");
+    geohex_t zone = geohex_get_zone_by_code("ZA08");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(73.0432163690016L, 120.740740740741L), "top.right");
+    location_is(polygon.top.left,     geohex_location(73.0432163690016L, 119.259259259259L), "top.left");
+    location_is(polygon.middle.right, geohex_location(73.4134223884459L, 121.481481481482L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(73.4134223884459L, 118.518518518519L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(73.775768209176L, 120.740740740741L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(73.775768209176L, 119.259259259259L), "bottom.left");
+  }
+  {
+    note("geohex: aX55");
+    geohex_t zone = geohex_get_zone_by_code("aX55");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.3665252517047L, 11.8518518518518L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.3665252517047L, 10.3703703703704L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.6224251800773L, 12.5925925925926L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.6224251800773L, 9.62962962962962L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.8727686949929L, 11.8518518518518L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.8727686949929L, 10.3703703703704L), "bottom.left");
+  }
+  {
+    note("geohex: aX04");
+    geohex_t zone = geohex_get_zone_by_code("aX04");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.4748662596862L, 20.7407407407408L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.4748662596862L, 19.2592592592593L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.7931846054884L, 21.4814814814815L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.7931846054884L, 18.5185185185185L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.1046674926321L, 20.7407407407408L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.1046674926321L, 19.2592592592593L), "bottom.left");
+  }
+  {
+    note("geohex: YF58");
+    geohex_t zone = geohex_get_zone_by_code("YF58");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.1046674926321L, 34.0740740740741L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.1046674926321L, 32.5925925925926L), "top.left");
+    location_is(polygon.middle.right, geohex_location(76.4094526930952L, 34.8148148148148L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(76.4094526930952L, 31.8518518518519L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.7076757831938L, 34.0740740740741L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.7076757831938L, 32.5925925925926L), "bottom.left");
+  }
+  {
+    note("geohex: SV40");
+    geohex_t zone = geohex_get_zone_by_code("SV40");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(65.9192675132544L, -79.2592592592592L), "top.right");
+    location_is(polygon.top.left,     geohex_location(65.9192675132544L, -80.7407407407407L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.43743994247L, -78.5185185185185L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.43743994247L, -81.4814814814815L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.9450851987393L, -79.2592592592592L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.9450851987393L, -80.7407407407407L), "bottom.left");
+  }
+  {
+    note("geohex: RX15");
+    geohex_t zone = geohex_get_zone_by_code("RX15");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(47.3449700820465L, -108.148148148148L), "top.right");
+    location_is(polygon.top.left,     geohex_location(47.3449700820465L, -109.62962962963L), "top.left");
+    location_is(polygon.middle.right, geohex_location(48.2071571029478L, -107.407407407407L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(48.2071571029478L, -110.37037037037L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(49.055070190506L, -108.148148148148L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(49.055070190506L, -109.62962962963L), "bottom.left");
+  }
+  {
+    note("geohex: OU40");
+    geohex_t zone = geohex_get_zone_by_code("OU40");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-26.0016268633643L, 0.740740740740741L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-26.0016268633643L, -0.740740740740741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-24.8428896902851L, 1.48148148148148L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-24.8428896902851L, -1.48148148148148L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-23.6732010110163L, 0.740740740740741L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-23.6732010110163L, -0.740740740740741L), "bottom.left");
+  }
+  {
+    note("geohex: BV56");
+    geohex_t zone = geohex_get_zone_by_code("BV56");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.2361755730778L, -81.4814814814815L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.2361755730778L, -82.962962962963L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1284264049787L, -80.7407407407407L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1284264049787L, -83.7037037037037L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0182461528016L, -81.4814814814815L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0182461528016L, -82.962962962963L), "bottom.left");
+  }
+  {
+    note("geohex: CI771");
+    geohex_t zone = geohex_get_zone_by_code("CI771");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0919724386031L, 128.395061728395L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0919724386031L, 127.901234567901L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.055246359875L, 128.641975308642L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.055246359875L, 127.654320987654L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0182461528016L, 128.395061728395L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0182461528016L, 127.901234567901L), "bottom.left");
+  }
+  {
+    note("geohex: DO045");
+    geohex_t zone = geohex_get_zone_by_code("DO045");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1284264049787L, 179.506172839506L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1284264049787L, 179.012345679012L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0919724386031L, 179.753086419753L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0919724386031L, 178.765432098765L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.055246359875L, 179.506172839506L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.055246359875L, 179.012345679012L), "bottom.left");
+  }
+  {
+    note("geohex: DO056");
+    geohex_t zone = geohex_get_zone_by_code("DO056");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.055246359875L, 179.506172839506L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.055246359875L, 179.012345679012L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0182461528016L, 179.753086419753L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0182461528016L, 178.765432098765L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9809697867981L, 179.506172839506L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9809697867981L, 179.012345679012L), "bottom.left");
+  }
+  {
+    note("geohex: DO077");
+    geohex_t zone = geohex_get_zone_by_code("DO077");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0182461528016L, -176.79012345679L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0182461528016L, -177.283950617284L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9809697867981L, -176.543209876543L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9809697867981L, -177.530864197531L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9434152165899L, -176.79012345679L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9434152165899L, -177.283950617284L), "bottom.left");
+  }
+  {
+    note("geohex: BV778");
+    geohex_t zone = geohex_get_zone_by_code("BV778");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9809697867981L, -70.8641975308642L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9809697867981L, -71.358024691358L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9434152165899L, -70.6172839506173L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9434152165899L, -71.604938271605L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9055803821143L, -70.8641975308642L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9055803821143L, -71.358024691358L), "bottom.left");
+  }
+  {
+    note("geohex: BV568");
+    geohex_t zone = geohex_get_zone_by_code("BV568");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0919724386031L, -81.9753086419753L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0919724386031L, -82.4691358024691L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.055246359875L, -81.7283950617284L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.055246359875L, -82.716049382716L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0182461528016L, -81.9753086419753L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0182461528016L, -82.4691358024691L), "bottom.left");
+  }
+  {
+    note("geohex: CZ335");
+    geohex_t zone = geohex_get_zone_by_code("CZ335");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.6224251800773L, -11.6049382716049L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.6224251800773L, -12.0987654320987L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.5377483715364L, -11.358024691358L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.5377483715364L, -12.3456790123457L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.4524498534913L, -11.6049382716049L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.4524498534913L, -12.0987654320987L), "bottom.left");
+  }
+  {
+    note("geohex: EU570");
+    geohex_t zone = geohex_get_zone_by_code("EU570");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.7076757831938L, 175.802469135802L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.7076757831938L, 175.308641975309L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.6089889314605L, 176.049382716049L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.6089889314605L, 175.061728395062L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.5095828813868L, 175.802469135802L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.5095828813868L, 175.308641975309L), "bottom.left");
+  }
+  {
+    note("geohex: EU868");
+    geohex_t zone = geohex_get_zone_by_code("EU868");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-75.6878448523063L, -175.308641975309L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-75.6878448523063L, -175.802469135802L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-75.5817404649569L, -175.061728395062L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-75.5817404649569L, -176.049382716049L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-75.4748662596862L, -175.308641975309L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-75.4748662596862L, -175.802469135802L), "bottom.left");
+  }
+  {
+    note("geohex: OK468");
+    geohex_t zone = geohex_get_zone_by_code("OK468");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-49.6124416615636L, 64.6913580246913L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-49.6124416615636L, 64.1975308641975L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.3345448501638L, 64.9382716049383L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.3345448501638L, 63.9506172839506L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-49.055070190506L, 64.6913580246913L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-49.055070190506L, 64.1975308641975L), "bottom.left");
+  }
+  {
+    note("geohex: OY443");
+    geohex_t zone = geohex_get_zone_by_code("OY443");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-0.855301964409653L, 0.987654320987654L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-0.855301964409653L, 0.493827160493827L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-0.427662894935065L, 1.23456790123457L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-0.427662894935065L, 0.246913580246914L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(1.27222187258541e-14L, 0.987654320987654L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(1.27222187258541e-14L, 0.493827160493827L), "bottom.left");
+  }
+  {
+    note("geohex: OY004");
+    geohex_t zone = geohex_get_zone_by_code("OY004");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-10.6301566211044L, 0.246913580246914L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-10.6301566211044L, -0.246913580246914L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-10.2095434727833L, 0.493827160493827L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-10.2095434727833L, -0.493827160493827L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-9.7883734846721L, 0.246913580246914L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-9.7883734846721L, -0.246913580246914L), "bottom.left");
+  }
+  {
+    note("geohex: Fb526");
+    geohex_t zone = geohex_get_zone_by_code("Fb526");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-47.6339545793101L, -109.382716049383L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-47.6339545793101L, -109.876543209877L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.3449700820465L, -109.135802469136L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.3449700820465L, -110.123456790123L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.0543948474294L, -109.382716049383L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.0543948474294L, -109.876543209877L), "bottom.left");
+  }
+  {
+    note("geohex: GH588");
+    geohex_t zone = geohex_get_zone_by_code("GH588");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-16.0377167933024L, -166.41975308642L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-16.0377167933024L, -166.913580246914L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-15.6262741560122L, -166.172839506173L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-15.6262741560122L, -167.160493827161L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-15.2140034644785L, -166.41975308642L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-15.2140034644785L, -166.913580246914L), "bottom.left");
+  }
+  {
+    note("geohex: GI440");
+    geohex_t zone = geohex_get_zone_by_code("GI440");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-12.724108773261L, -179.753086419753L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-12.724108773261L, -180.246913580247L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-12.3066051591638L, -179.506172839506L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-12.3066051591638L, -180.493827160494L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.8884368016234L, -179.753086419753L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.8884368016234L, -180.246913580247L), "bottom.left");
+  }
+  {
+    note("geohex: GI622");
+    geohex_t zone = geohex_get_zone_by_code("GI622");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-11.8884368016234L, -172.345679012346L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-11.8884368016234L, -172.839506172839L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-11.4696249513643L, -172.098765432099L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-11.4696249513643L, -173.086419753086L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.0501910292264L, -172.345679012346L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.0501910292264L, -172.839506172839L), "bottom.left");
+  }
+  {
+    note("geohex: QU340");
+    geohex_t zone = geohex_get_zone_by_code("QU340");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(6.40164208700372L, -173.086419753086L), "top.right");
+    location_is(polygon.top.left,     geohex_location(6.40164208700372L, -173.58024691358L), "top.left");
+    location_is(polygon.middle.right, geohex_location(6.82646163717905L, -172.83950617284L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(6.82646163717905L, -173.827160493827L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(7.25090445414504L, -173.086419753086L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(7.25090445414504L, -173.58024691358L), "bottom.left");
+  }
+  {
+    note("geohex: QU026");
+    geohex_t zone = geohex_get_zone_by_code("QU026");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(3.41930349159571L, 177.283950617284L), "top.right");
+    location_is(polygon.top.left,     geohex_location(3.41930349159571L, 176.79012345679L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.84611006144169L, 177.530864197531L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.84611006144169L, 176.543209876543L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.27270299638955L, 177.283950617284L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.27270299638955L, 176.79012345679L), "bottom.left");
+  }
+  {
+    note("geohex: XM454");
+    geohex_t zone = geohex_get_zone_by_code("XM454");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(33.4218747315811L, 138.024691358025L), "top.right");
+    location_is(polygon.top.left,     geohex_location(33.4218747315811L, 137.530864197531L), "top.left");
+    location_is(polygon.middle.right, geohex_location(33.7780865480893L, 138.271604938272L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(33.7780865480893L, 137.283950617284L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(34.1328231890485L, 138.024691358025L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(34.1328231890485L, 137.530864197531L), "bottom.left");
+  }
+  {
+    note("geohex: PS624");
+    geohex_t zone = geohex_get_zone_by_code("PS624");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.0972549270129L, 129.135802469136L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.0972549270129L, 128.641975308642L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.4929492879726L, 129.382716049383L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.4929492879726L, 128.395061728395L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.887515339138L, 129.135802469136L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.887515339138L, 128.641975308642L), "bottom.left");
+  }
+  {
+    note("geohex: XX038");
+    geohex_t zone = geohex_get_zone_by_code("XX038");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(44.0609594011089L, 142.469135802469L), "top.right");
+    location_is(polygon.top.left,     geohex_location(44.0609594011089L, 141.975308641975L), "top.left");
+    location_is(polygon.middle.right, geohex_location(44.3674832423129L, 142.716049382716L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(44.3674832423129L, 141.728395061728L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(44.6724113934194L, 142.469135802469L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(44.6724113934194L, 141.975308641975L), "bottom.left");
+  }
+  {
+    note("geohex: XU630");
+    geohex_t zone = geohex_get_zone_by_code("XU630");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(39.9314177389891L, 135.802469135802L), "top.right");
+    location_is(polygon.top.left,     geohex_location(39.9314177389891L, 135.308641975309L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.2585722649131L, 136.049382716049L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.2585722649131L, 135.061728395062L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(40.5841525253636L, 135.802469135802L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(40.5841525253636L, 135.308641975309L), "bottom.left");
+  }
+  {
+    note("geohex: PZ342");
+    geohex_t zone = geohex_get_zone_by_code("PZ342");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(38.6071224301071L, 45.4320987654321L), "top.right");
+    location_is(polygon.top.left,     geohex_location(38.6071224301071L, 44.9382716049383L), "top.left");
+    location_is(polygon.middle.right, geohex_location(38.9405407349711L, 45.679012345679L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(38.9405407349711L, 44.6913580246914L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(39.2723985350746L, 45.4320987654321L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(39.2723985350746L, 44.9382716049383L), "bottom.left");
+  }
+  {
+    note("geohex: PZ580");
+    geohex_t zone = geohex_get_zone_by_code("PZ580");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(45.5776197587709L, 33.5802469135803L), "top.right");
+    location_is(polygon.top.left,     geohex_location(45.5776197587709L, 33.0864197530864L), "top.left");
+    location_is(polygon.middle.right, geohex_location(45.8761640952879L, 33.8271604938272L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(45.8761640952879L, 32.8395061728395L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(46.1731130979309L, 33.5802469135803L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(46.1731130979309L, 33.0864197530864L), "bottom.left");
+  }
+  {
+    note("geohex: OY864");
+    geohex_t zone = geohex_get_zone_by_code("OY864");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(7.25090445414505L, 4.69135802469136L), "top.right");
+    location_is(polygon.top.left,     geohex_location(7.25090445414505L, 4.19753086419753L), "top.left");
+    location_is(polygon.middle.right, geohex_location(7.67494760129786L, 4.93827160493827L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(7.67494760129786L, 3.95061728395062L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(8.09856825123215L, 4.69135802469136L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(8.09856825123215L, 4.19753086419753L), "bottom.left");
+  }
+  {
+    note("geohex: OY145");
+    geohex_t zone = geohex_get_zone_by_code("OY145");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-3.84611006144169L, -7.1604938271605L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-3.84611006144169L, -7.65432098765432L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-3.41930349159571L, -6.91358024691358L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-3.41930349159571L, -7.90123456790124L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-2.99230687435892L, -7.1604938271605L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-2.99230687435892L, -7.65432098765432L), "bottom.left");
+  }
+  {
+    note("geohex: PA032");
+    geohex_t zone = geohex_get_zone_by_code("PA032");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.13783810478654L, -59.0123456790123L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.13783810478654L, -59.5061728395062L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.56514384994961L, -58.7654320987654L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.56514384994961L, -59.7530864197531L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(2.99230687435894L, -59.0123456790123L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(2.99230687435894L, -59.5061728395062L), "bottom.left");
+  }
+  {
+    note("geohex: OI758");
+    geohex_t zone = geohex_get_zone_by_code("OI758");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(27.5289431930909L, -115.308641975309L), "top.right");
+    location_is(polygon.top.left,     geohex_location(27.5289431930909L, -115.802469135802L), "top.left");
+    location_is(polygon.middle.right, geohex_location(27.9075323430044L, -115.061728395062L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(27.9075323430044L, -116.049382716049L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.2848011809809L, -115.308641975309L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.2848011809809L, -115.802469135802L), "bottom.left");
+  }
+  {
+    note("geohex: SV428");
+    geohex_t zone = geohex_get_zone_by_code("SV428");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(67.6058720425258L, -84.1975308641975L), "top.right");
+    location_is(polygon.top.left,     geohex_location(67.6058720425258L, -84.6913580246914L), "top.left");
+    location_is(polygon.middle.right, geohex_location(67.7682415504757L, -83.9506172839506L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(67.7682415504757L, -84.9382716049383L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(67.929493065438L, -84.1975308641975L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(67.929493065438L, -84.6913580246914L), "bottom.left");
+  }
+  {
+    note("geohex: SV385");
+    geohex_t zone = geohex_get_zone_by_code("SV385");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.9450851987393L, -73.8271604938272L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.9450851987393L, -74.320987654321L), "top.left");
+    location_is(polygon.middle.right, geohex_location(67.1119911384732L, -73.5802469135803L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(67.1119911384732L, -74.5679012345679L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(67.2777532865535L, -73.8271604938272L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(67.2777532865535L, -74.320987654321L), "bottom.left");
+  }
+  {
+    note("geohex: aX355");
+    geohex_t zone = geohex_get_zone_by_code("aX355");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.9994701395295L, 23.9506172839506L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.9994701395295L, 23.4567901234568L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.0953290532401L, 24.1975308641975L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.0953290532401L, 23.2098765432099L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.1904930604711L, 23.9506172839506L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.1904930604711L, 23.4567901234568L), "bottom.left");
+  }
+  {
+    note("geohex: aX568");
+    geohex_t zone = geohex_get_zone_by_code("aX568");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.4524498534913L, 18.0246913580247L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.4524498534913L, 17.5308641975309L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.5377483715365L, 18.2716049382716L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.5377483715365L, 17.2839506172839L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.6224251800773L, 18.0246913580247L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.6224251800773L, 17.5308641975309L), "bottom.left");
+  }
+  {
+    note("geohex: bD744");
+    geohex_t zone = geohex_get_zone_by_code("bD744");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.5817311155525L, -33.0864197530864L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.5817311155525L, -33.5802469135803L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.6293613243906L, -32.8395061728395L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.6293613243906L, -33.8271604938272L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.6766395147701L, -33.0864197530864L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.6766395147701L, -33.5802469135803L), "bottom.left");
+  }
+  {
+    note("geohex: bD515");
+    geohex_t zone = geohex_get_zone_by_code("bD515");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.4854042727994L, -49.3827160493827L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.4854042727994L, -49.8765432098765L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.5337463003993L, -49.1358024691358L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.5337463003993L, -50.1234567901234L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.5817311155524L, -49.3827160493827L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.5817311155524L, -49.8765432098765L), "bottom.left");
+  }
+  {
+    note("geohex: bb337");
+    geohex_t zone = geohex_get_zone_by_code("bb337");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0182461528016L, 89.8765432098766L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0182461528016L, 89.3827160493828L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.055246359875L, 90.1234567901235L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.055246359875L, 89.1358024691358L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0919724386032L, 89.8765432098766L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0919724386032L, 89.3827160493828L), "bottom.left");
+  }
+  {
+    note("geohex: TO808");
+    geohex_t zone = geohex_get_zone_by_code("TO808");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.94341521659L, -179.753086419753L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.94341521659L, -180.246913580247L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.9809697867981L, -179.506172839506L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.9809697867981L, -180.493827160494L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0182461528016L, -179.753086419753L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0182461528016L, -180.246913580247L), "bottom.left");
+  }
+  {
+    note("geohex: TO428");
+    geohex_t zone = geohex_get_zone_by_code("TO428");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.4702954814487L, 175.802469135802L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.4702954814487L, 175.308641975309L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.5113535162066L, 176.049382716049L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.5113535162066L, 175.061728395062L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.5521076214116L, 175.802469135802L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.5521076214116L, 175.308641975309L), "bottom.left");
+  }
+  {
+    note("geohex: TO474");
+    geohex_t zone = geohex_get_zone_by_code("TO474");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.5113535162065L, -177.530864197531L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.5113535162065L, -178.024691358025L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.5521076214116L, -177.283950617284L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.5521076214116L, -178.271604938272L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.5925600264163L, -177.530864197531L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.5925600264163L, -178.024691358025L), "bottom.left");
+  }
+  {
+    note("geohex: TO073");
+    geohex_t zone = geohex_get_zone_by_code("TO073");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.67663951477L, -176.79012345679L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.67663951477L, -177.283950617284L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.7235682563837L, -176.543209876543L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.7235682563837L, -177.530864197531L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.7701501008721L, -176.79012345679L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.7701501008721L, -177.283950617284L), "bottom.left");
+  }
+  {
+    note("geohex: aB648");
+    geohex_t zone = geohex_get_zone_by_code("aB648");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.2382434400818L, 173.58024691358L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.2382434400818L, 173.086419753086L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.2884112693828L, 173.827160493827L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.2884112693828L, 172.83950617284L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.3382085775188L, 173.58024691358L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.3382085775188L, 173.086419753086L), "bottom.left");
+  }
+  {
+    note("geohex: YG168");
+    geohex_t zone = geohex_get_zone_by_code("YG168");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(70.3626823791612L, 98.0246913580247L), "top.right");
+    location_is(polygon.top.left,     geohex_location(70.3626823791612L, 97.5308641975309L), "top.left");
+    location_is(polygon.middle.right, geohex_location(70.5059021145644L, 98.2716049382716L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(70.5059021145644L, 97.283950617284L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(70.6481176492254L, 98.0246913580247L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(70.6481176492254L, 97.5308641975309L), "bottom.left");
+  }
+  {
+    note("geohex: BV7511");
+    geohex_t zone = geohex_get_zone_by_code("BV7511");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0797607463223L, -76.4609053497943L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0797607463223L, -76.6255144032922L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0675187449682L, -76.3786008230453L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0675187449682L, -76.7078189300412L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.055246359875L, -76.4609053497943L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.055246359875L, -76.6255144032922L), "bottom.left");
+  }
+  {
+    note("geohex: BV7541");
+    geohex_t zone = geohex_get_zone_by_code("BV7541");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0429435161968L, -75.7201646090535L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0429435161968L, -75.8847736625514L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0306101389078L, -75.6378600823045L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0306101389078L, -75.9670781893004L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0182461528016L, -75.7201646090535L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0182461528016L, -75.8847736625514L), "bottom.left");
+  }
+  {
+    note("geohex: DO0532");
+    geohex_t zone = geohex_get_zone_by_code("DO0532");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0675187449682L, 178.106995884774L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0675187449682L, 177.942386831276L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.055246359875L, 178.189300411523L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.055246359875L, 177.860082304527L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0429435161968L, 178.106995884774L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0429435161968L, 177.942386831276L), "bottom.left");
+  }
+  {
+    note("geohex: DO3203");
+    geohex_t zone = geohex_get_zone_by_code("DO3203");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.8929061314715L, -177.448559670782L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.8929061314715L, -177.61316872428L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.8802004327088L, -177.366255144033L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.8802004327088L, -177.695473251029L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.8674632084215L, -177.448559670782L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.8674632084215L, -177.61316872428L), "bottom.left");
+  }
+  {
+    note("geohex: EU6235");
+    geohex_t zone = geohex_get_zone_by_code("EU6235");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.6560557436566L, -170.534979423868L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.6560557436566L, -170.699588477366L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.6255431823326L, -170.452674897119L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.6255431823326L, -170.781893004115L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.5949563773154L, -170.534979423868L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.5949563773154L, -170.699588477366L), "bottom.left");
+  }
+  {
+    note("geohex: EU1425");
+    geohex_t zone = geohex_get_zone_by_code("EU1425");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.3665252517046L, 171.687242798354L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.3665252517046L, 171.522633744856L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.3377438281995L, 171.769547325103L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.3377438281995L, 171.440329218107L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.3088921874373L, 171.687242798354L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.3088921874373L, 171.522633744856L), "bottom.left");
+  }
+  {
+    note("geohex: OK7172");
+    geohex_t zone = geohex_get_zone_by_code("OK7172");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-48.0167951988167L, 64.7736625514403L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-48.0167951988167L, 64.6090534979424L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.9213497363355L, 64.8559670781893L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.9213497363355L, 64.5267489711934L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.8257278514634L, 64.7736625514403L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.8257278514634L, 64.6090534979424L), "bottom.left");
+  }
+  {
+    note("geohex: CZ0737");
+    geohex_t zone = geohex_get_zone_by_code("CZ0737");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.9550018802927L, -16.7078189300412L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.9550018802927L, -16.8724279835391L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.9276577201097L, -16.6255144032922L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.9276577201097L, -16.9547325102881L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.9002467107229L, -16.7078189300412L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.9002467107229L, -16.8724279835391L), "bottom.left");
+  }
+  {
+    note("geohex: Fb0200");
+    geohex_t zone = geohex_get_zone_by_code("Fb0200");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-55.3331528181034L, -104.362139917695L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-55.3331528181034L, -104.526748971193L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-55.2519836552773L, -104.279835390947L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-55.2519836552773L, -104.609053497942L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-55.1706483838047L, -104.362139917695L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-55.1706483838047L, -104.526748971193L), "bottom.left");
+  }
+  {
+    note("geohex: Fb8608");
+    geohex_t zone = geohex_get_zone_by_code("Fb8608");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-45.1770783087657L, -95.4732510288066L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-45.1770783087657L, -95.6378600823045L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-45.0764996106517L, -95.3909465020576L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-45.0764996106517L, -95.7201646090535L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-44.9757435695275L, -95.4732510288066L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-44.9757435695275L, -95.6378600823045L), "bottom.left");
+  }
+  {
+    note("geohex: GH4405");
+    geohex_t zone = geohex_get_zone_by_code("GH4405");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-23.2809376400502L, -160.164609053498L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-23.2809376400502L, -160.329218106996L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-23.149924898842L, -160.082304526749L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-23.149924898842L, -160.411522633745L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-23.0187839444656L, -160.164609053498L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-23.0187839444656L, -160.329218106996L), "bottom.left");
+  }
+  {
+    note("geohex: GI2651");
+    geohex_t zone = geohex_get_zone_by_code("GI2651");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-11.3298817004596L, 170.205761316872L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-11.3298817004596L, 170.041152263374L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-11.1900701265807L, 170.288065843621L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-11.1900701265807L, 169.958847736626L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.0501910292264L, 170.205761316872L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.0501910292264L, 170.041152263374L), "bottom.left");
+  }
+  {
+    note("geohex: OC2121");
+    geohex_t zone = geohex_get_zone_by_code("OC2121");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-1.56791611410211L, -177.201646090535L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-1.56791611410211L, -177.366255144033L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-1.42540916199355L, -177.119341563786L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-1.42540916199355L, -177.448559670782L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-1.28289338959933L, -177.201646090535L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-1.28289338959933L, -177.366255144033L), "bottom.left");
+  }
+  {
+    note("geohex: QU7871");
+    geohex_t zone = geohex_get_zone_by_code("QU7871");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(17.8105946996974L, -172.757201646091L), "top.right");
+    location_is(polygon.top.left,     geohex_location(17.8105946996974L, -172.921810699589L), "top.left");
+    location_is(polygon.middle.right, geohex_location(17.9462662786555L, -172.674897119342L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(17.9462662786555L, -173.004115226337L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(18.0818338870585L, -172.757201646091L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(18.0818338870585L, -172.921810699589L), "bottom.left");
+  }
+  {
+    note("geohex: QU4212");
+    geohex_t zone = geohex_get_zone_by_code("QU4212");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(10.9102452098912L, 174.40329218107L), "top.right");
+    location_is(polygon.top.left,     geohex_location(10.9102452098912L, 174.238683127572L), "top.left");
+    location_is(polygon.middle.right, geohex_location(11.0501910292264L, 174.485596707819L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(11.0501910292264L, 174.156378600823L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(11.1900701265807L, 174.40329218107L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(11.1900701265807L, 174.238683127572L), "bottom.left");
+  }
+  {
+    note("geohex: OK4362");
+    geohex_t zone = geohex_get_zone_by_code("OK4362");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-50.7984896842917L, 63.2921810699589L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-50.7984896842917L, 63.1275720164609L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-50.7083005615114L, 63.3744855967078L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-50.7083005615114L, 63.0452674897119L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-50.6179376039815L, 63.2921810699589L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-50.6179376039815L, 63.1275720164609L), "bottom.left");
+  }
+  {
+    note("geohex: OX2538");
+    geohex_t zone = geohex_get_zone_by_code("OX2538");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-10.490015464426L, 5.26748971193415L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-10.490015464426L, 5.10288065843621L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-10.3498108112696L, 5.34979423868312L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-10.3498108112696L, 5.02057613168724L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-10.2095434727833L, 5.26748971193415L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-10.2095434727833L, 5.10288065843621L), "bottom.left");
+  }
+  {
+    note("geohex: OY5663");
+    geohex_t zone = geohex_get_zone_by_code("OY5663");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(3.5615946305499L, -0.411522633744855L), "top.right");
+    location_is(polygon.top.left,     geohex_location(3.5615946305499L, -0.576131687242798L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.7038637783779L, -0.329218106995884L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.7038637783779L, -0.658436213991769L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(3.84611006144169L, -0.411522633744855L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(3.84611006144169L, -0.576131687242798L), "bottom.left");
+  }
+  {
+    note("geohex: OG6663");
+    geohex_t zone = geohex_get_zone_by_code("OG6663");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-0.285110067403661L, -60.4115226337449L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-0.285110067403661L, -60.5761316872428L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-0.142555474941371L, -60.3292181069959L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-0.142555474941371L, -60.6584362139918L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-1.27222187258541e-14L, -60.4115226337449L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-1.27222187258541e-14L, -60.5761316872428L), "bottom.left");
+  }
+  {
+    note("geohex: PZ0631");
+    geohex_t zone = geohex_get_zone_by_code("PZ0631");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(35.3045311082906L, 45.0205761316872L), "top.right");
+    location_is(polygon.top.left,     geohex_location(35.3045311082906L, 44.8559670781893L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.4207859134104L, 45.1028806584362L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.4207859134104L, 44.7736625514403L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.536873197198L, 45.0205761316872L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.536873197198L, 44.8559670781893L), "bottom.left");
+  }
+  {
+    note("geohex: SV8518");
+    geohex_t zone = geohex_get_zone_by_code("SV8518");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(70.5534185655184L, -82.8806584362139L), "top.right");
+    location_is(polygon.top.left,     geohex_location(70.5534185655184L, -83.0452674897119L), "top.left");
+    location_is(polygon.middle.right, geohex_location(70.6008236675529L, -82.798353909465L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(70.6008236675529L, -83.1275720164609L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(70.6481176492254L, -82.8806584362139L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(70.6481176492254L, -83.0452674897119L), "bottom.left");
+  }
+  {
+    note("geohex: TK3246");
+    geohex_t zone = geohex_get_zone_by_code("TK3246");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.0729880787625L, -177.201646090535L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.0729880787625L, -177.366255144033L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.0950821454213L, -177.119341563786L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.0950821454213L, -177.448559670782L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.1171219698958L, -177.201646090535L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.1171219698958L, -177.366255144033L), "bottom.left");
+  }
+  {
+    note("geohex: TK1825");
+    geohex_t zone = geohex_get_zone_by_code("TK1825");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.4836247115025L, 171.687242798354L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.4836247115025L, 171.522633744856L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.5047101156331L, 171.769547325103L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.5047101156331L, 171.440329218107L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.5257436973084L, 171.687242798354L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.5257436973084L, 171.522633744856L), "bottom.left");
+  }
+  {
+    note("geohex: aB6727");
+    geohex_t zone = geohex_get_zone_by_code("aB6727");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.3382085775188L, 174.40329218107L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.3382085775188L, 174.238683127572L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.3547258092653L, 174.485596707819L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.3547258092653L, 174.156378600823L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.371202271563L, 174.40329218107L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.371202271563L, 174.238683127572L), "bottom.left");
+  }
+  {
+    note("geohex: TR1202");
+    geohex_t zone = geohex_get_zone_by_code("TR1202");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0429435161969L, -171.522633744856L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0429435161969L, -171.687242798354L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.055246359875L, -171.440329218107L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.055246359875L, -171.769547325103L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0675187449683L, -171.522633744856L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0675187449683L, -171.687242798354L), "bottom.left");
+  }
+  {
+    note("geohex: bD4054");
+    geohex_t zone = geohex_get_zone_by_code("bD4054");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.9117325442845L, -40.6584362139918L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.9117325442845L, -40.8230452674897L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.9293019627422L, -40.5761316872428L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.9293019627422L, -40.9053497942387L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.9468280533026L, -40.6584362139918L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.9468280533026L, -40.8230452674897L), "bottom.left");
+  }
+  {
+    note("geohex: aX4486");
+    geohex_t zone = geohex_get_zone_by_code("aX4486");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(77.7168588212124L, 20.5761316872428L), "top.right");
+    location_is(polygon.top.left,     geohex_location(77.7168588212124L, 20.4115226337449L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.747149679606L, 20.6584362139918L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.747149679606L, 20.3292181069959L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.7773669786304L, 20.5761316872428L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.7773669786304L, 20.4115226337449L), "bottom.left");
+  }
+  {
+    note("geohex: ZA5685");
+    geohex_t zone = geohex_get_zone_by_code("ZA5685");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.0015908094264L, 117.61316872428L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.0015908094264L, 117.448559670782L), "top.left");
+    location_is(polygon.middle.right, geohex_location(76.0360327020615L, 117.695473251029L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(76.0360327020615L, 117.366255144033L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.0703915338015L, 117.61316872428L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.0703915338015L, 117.448559670782L), "bottom.left");
+  }
+  {
+    note("geohex: XM4881");
+    geohex_t zone = geohex_get_zone_by_code("XM4881");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(35.3045311082906L, 139.835390946502L), "top.right");
+    location_is(polygon.top.left,     geohex_location(35.3045311082906L, 139.670781893004L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.4207859134104L, 139.917695473251L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.4207859134104L, 139.588477366255L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.536873197198L, 139.835390946502L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.536873197198L, 139.670781893004L), "bottom.left");
+  }
+  {
+    note("geohex: XU6302");
+    geohex_t zone = geohex_get_zone_by_code("XU6302");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(40.1496955258122L, 135.144032921811L), "top.right");
+    location_is(polygon.top.left,     geohex_location(40.1496955258122L, 134.979423868313L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.2585722649131L, 135.22633744856L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.2585722649131L, 134.897119341564L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(40.3672740838274L, 135.144032921811L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(40.3672740838274L, 134.979423868313L), "bottom.left");
+  }
+  {
+    note("geohex: XX0337");
+    geohex_t zone = geohex_get_zone_by_code("XX0337");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.4431267092789L, 143.292181069959L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.4431267092789L, 143.127572016461L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.5465417115035L, 143.374485596708L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.5465417115035L, 143.045267489712L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.6497795982984L, 143.292181069959L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.6497795982984L, 143.127572016461L), "bottom.left");
+  }
+  {
+    note("geohex: XM6425");
+    geohex_t zone = geohex_get_zone_by_code("XM6425");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(32.7050565948485L, 151.687242798354L), "top.right");
+    location_is(polygon.top.left,     geohex_location(32.7050565948485L, 151.522633744856L), "top.left");
+    location_is(polygon.middle.right, geohex_location(32.8249312089187L, 151.769547325103L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(32.8249312089187L, 151.440329218107L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(32.9446442554393L, 151.687242798354L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(32.9446442554393L, 151.522633744856L), "bottom.left");
+  }
+  {
+    note("geohex: PS6270");
+    geohex_t zone = geohex_get_zone_by_code("PS6270");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.4929492879726L, 129.711934156379L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.4929492879726L, 129.547325102881L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.6245974406222L, 129.794238683128L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.6245974406222L, 129.465020576132L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.7561196483026L, 129.711934156379L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.7561196483026L, 129.547325102881L), "bottom.left");
+  }
+  {
+    note("geohex: BV80302");
+    geohex_t zone = geohex_get_zone_by_code("BV80302");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0838346744086L, -79.3964334705075L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0838346744086L, -79.4513031550068L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0797607463223L, -79.3689986282579L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0797607463223L, -79.4787379972565L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0756834505626L, -79.3964334705075L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0756834505626L, -79.4513031550068L), "bottom.left");
+  }
+  {
+    note("geohex: BV80373");
+    geohex_t zone = geohex_get_zone_by_code("BV80373");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511487999708L, -78.9026063100137L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511487999708L, -78.957475994513L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0470478530043L, -78.875171467764L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0470478530043L, -78.9849108367626L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0429435161968L, -78.9026063100137L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0429435161968L, -78.957475994513L), "bottom.left");
+  }
+  {
+    note("geohex: DO08354");
+    geohex_t zone = geohex_get_zone_by_code("DO08354");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9350317687854L, -179.478737997256L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9350317687854L, -179.533607681756L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9308348477316L, -179.451303155007L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9308348477316L, -179.561042524005L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9266344581218L, -179.478737997256L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9266344581218L, -179.533607681756L), "bottom.left");
+  }
+  {
+    note("geohex: DO05758");
+    geohex_t zone = geohex_get_zone_by_code("DO05758");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9643133350153L, 178.299039780521L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9643133350153L, 178.244170096022L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9601406144117L, 178.326474622771L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9601406144117L, 178.216735253772L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9559644450966L, 178.299039780521L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9559644450966L, 178.244170096022L), "bottom.left");
+  }
+  {
+    note("geohex: EU31135");
+    geohex_t zone = geohex_get_zone_by_code("EU31135");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.7343679987212L, -176.104252400549L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.7343679987212L, -176.159122085048L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.7250810999821L, -176.076817558299L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.7250810999821L, -176.186556927298L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.7157866446833L, -176.104252400549L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.7157866446833L, -176.159122085048L), "bottom.left");
+  }
+  {
+    note("geohex: EU45042");
+    geohex_t zone = geohex_get_zone_by_code("EU45042");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.4821667810886L, 177.64060356653L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.4821667810886L, 177.58573388203L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.4718632770568L, 177.668038408779L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.4718632770568L, 177.558299039781L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.4615514278509L, 177.64060356653L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.4615514278509L, 177.58573388203L), "bottom.left");
+  }
+  {
+    note("geohex: CZ35087");
+    geohex_t zone = geohex_get_zone_by_code("CZ35087");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.2219143202323L, -15.4458161865569L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.2219143202323L, -15.5006858710562L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.2122108191318L, -15.4183813443073L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.2122108191318L, -15.5281207133059L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.2024994369026L, -15.4458161865569L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.2024994369026L, -15.5006858710562L), "bottom.left");
+  }
+  {
+    note("geohex: OK06445");
+    geohex_t zone = geohex_get_zone_by_code("OK06445");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-54.5966358085242L, 64.3895747599451L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-54.5966358085242L, 64.3347050754458L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-54.5690976325026L, 64.4170096021948L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-54.5690976325026L, 64.3072702331961L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-54.5415408406897L, 64.3895747599451L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-54.5415408406897L, 64.3347050754458L), "bottom.left");
+  }
+  {
+    note("geohex: Fb80457");
+    geohex_t zone = geohex_get_zone_by_code("Fb80457");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-46.3701930882356L, -100.137174211248L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-46.3701930882356L, -100.192043895748L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-46.3373956350873L, -100.109739368999L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-46.3373956350873L, -100.219478737997L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-46.3045784985401L, -100.137174211248L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-46.3045784985401L, -100.192043895748L), "bottom.left");
+  }
+  {
+    note("geohex: GH80422");
+    geohex_t zone = geohex_get_zone_by_code("GH80422");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-17.7200895554267L, -160.631001371742L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-17.7200895554267L, -160.685871056241L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-17.6748198317407L, -160.603566529492L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-17.6748198317407L, -160.713305898491L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-17.6295387075199L, -160.631001371742L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-17.6295387075199L, -160.685871056241L), "bottom.left");
+  }
+  {
+    note("geohex: GI74753");
+    geohex_t zone = geohex_get_zone_by_code("GI74753");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-7.20376345934287L, -172.729766803841L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-7.20376345934287L, -172.78463648834L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-7.15661756163309L, -172.702331961591L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-7.15661756163309L, -172.81207133059L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-7.10946679243079L, -172.729766803841L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-7.10946679243079L, -172.78463648834L), "bottom.left");
+  }
+  {
+    note("geohex: GI80240");
+    geohex_t zone = geohex_get_zone_by_code("GI80240");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-6.54328904282261L, 178.545953360768L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-6.54328904282261L, 178.491083676269L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-6.49607781033387L, 178.573388203018L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-6.49607781033387L, 178.463648834019L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-6.44886214784392L, 178.545953360768L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-6.44886214784392L, 178.491083676269L), "bottom.left");
+  }
+  {
+    note("geohex: QU01265");
+    geohex_t zone = geohex_get_zone_by_code("QU01265");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.56514384994961L, 176.735253772291L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.56514384994961L, 176.680384087792L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.61261388974431L, 176.76268861454L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.61261388974431L, 176.652949245542L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(2.66008213499604L, 176.735253772291L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(2.66008213499604L, 176.680384087792L), "bottom.left");
+  }
+  {
+    note("geohex: QU86344");
+    geohex_t zone = geohex_get_zone_by_code("QU86344");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(18.4428340565478L, -174.787379972565L), "top.right");
+    location_is(polygon.top.left,     geohex_location(18.4428340565478L, -174.842249657064L), "top.left");
+    location_is(polygon.middle.right, geohex_location(18.4879061162228L, -174.759945130316L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(18.4879061162228L, -174.869684499314L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(18.5329663238589L, -174.787379972565L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(18.5329663238589L, -174.842249657064L), "bottom.left");
+  }
+  {
+    note("geohex: OY77334");
+    geohex_t zone = geohex_get_zone_by_code("OY77334");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(4.50959809697502L, 9.9039780521262L), "top.right");
+    location_is(polygon.top.left,     geohex_location(4.50959809697502L, 9.84910836762688L), "top.left");
+    location_is(polygon.middle.right, geohex_location(4.55696797874602L, 9.93141289437586L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(4.55696797874602L, 9.82167352537723L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.60433473930148L, 9.9039780521262L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.60433473930148L, 9.84910836762688L), "bottom.left");
+  }
+  {
+    note("geohex: OY15454");
+    geohex_t zone = geohex_get_zone_by_code("OY15454");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-2.47019851680954L, -9.10836762688614L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-2.47019851680954L, -9.16323731138546L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-2.42272328851834L, -9.08093278463648L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-2.42272328851834L, -9.19067215363511L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-2.3752463957922L, -9.10836762688614L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-2.3752463957922L, -9.16323731138546L), "bottom.left");
+  }
+  {
+    note("geohex: PA04170");
+    geohex_t zone = geohex_get_zone_by_code("PA04170");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(3.41930349159573L, -60.4663923182442L), "top.right");
+    location_is(polygon.top.left,     geohex_location(3.41930349159573L, -60.5212620027435L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.46673626074913L, -60.4389574759945L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.46673626074913L, -60.5486968449931L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(3.51416665119458L, -60.4663923182442L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(3.51416665119458L, -60.5212620027435L), "bottom.left");
+  }
+  {
+    note("geohex: PS62113");
+    geohex_t zone = geohex_get_zone_by_code("PS62113");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.8769429534219L, 128.0109739369L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.8769429534219L, 127.956104252401L), "top.left");
+    location_is(polygon.middle.right, geohex_location(21.921032689852L, 128.03840877915L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(21.921032689852L, 127.928669410151L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.9651087772564L, 128.0109739369L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.9651087772564L, 127.956104252401L), "bottom.left");
+  }
+  {
+    note("geohex: PS68342");
+    geohex_t zone = geohex_get_zone_by_code("PS68342");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(24.4109283625301L, 133.936899862826L), "top.right");
+    location_is(polygon.top.left,     geohex_location(24.4109283625301L, 133.882030178326L), "top.left");
+    location_is(polygon.middle.right, geohex_location(24.4541915572933L, 133.964334705075L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(24.4541915572933L, 133.854595336077L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(24.4974399012965L, 133.936899862826L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(24.4974399012965L, 133.882030178326L), "bottom.left");
+  }
+  {
+    note("geohex: XM78145");
+    geohex_t zone = geohex_get_zone_by_code("XM78145");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(37.597545701302L, 145.871056241427L), "top.right");
+    location_is(polygon.top.left,     geohex_location(37.597545701302L, 145.816186556927L), "top.left");
+    location_is(polygon.middle.right, geohex_location(37.6351858644021L, 145.898491083676L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(37.6351858644021L, 145.788751714678L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(37.6728069702087L, 145.871056241427L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(37.6728069702087L, 145.816186556927L), "bottom.left");
+  }
+  {
+    note("geohex: XM48257");
+    geohex_t zone = geohex_get_zone_by_code("XM48257");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(34.9547639560787L, 138.38134430727L), "top.right");
+    location_is(polygon.top.left,     geohex_location(34.9547639560787L, 138.326474622771L), "top.left");
+    location_is(polygon.middle.right, geohex_location(34.9937011179371L, 138.40877914952L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(34.9937011179371L, 138.299039780521L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.0326197647605L, 138.38134430727L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.0326197647605L, 138.326474622771L), "bottom.left");
+  }
+  {
+    note("geohex: XX03156");
+    geohex_t zone = geohex_get_zone_by_code("XX03156");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.5120897219759L, 141.426611796982L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.5120897219759L, 141.371742112483L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.5465417115035L, 141.454046639232L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.5465417115035L, 141.344307270233L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.5809740215196L, 141.426611796982L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.5809740215196L, 141.371742112483L), "bottom.left");
+  }
+  {
+    note("geohex: PZ47685");
+    geohex_t zone = geohex_get_zone_by_code("PZ47685");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.0276962541387L, 43.6488340192044L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.0276962541387L, 43.5939643347051L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.0624236158088L, 43.676268861454L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.0624236158088L, 43.5665294924554L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.0971313176636L, 43.6488340192044L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.0971313176636L, 43.5939643347051L), "bottom.left");
+  }
+  {
+    note("geohex: SV40654");
+    geohex_t zone = geohex_get_zone_by_code("SV40654");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.4754021607312L, -78.7379972565158L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.4754021607312L, -78.7928669410151L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.4943616312731L, -78.7105624142661L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.4943616312731L, -78.8203017832647L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.5133066879411L, -78.7379972565158L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.5133066879411L, -78.7928669410151L), "bottom.left");
+  }
+  {
+    note("geohex: OI71873");
+    geohex_t zone = geohex_get_zone_by_code("OI71873");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(25.6594611871118L, -115.19890260631L), "top.right");
+    location_is(polygon.top.left,     geohex_location(25.6594611871118L, -115.253772290809L), "top.left");
+    location_is(polygon.middle.right, geohex_location(25.7022859273215L, -115.17146776406L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(25.7022859273215L, -115.281207133059L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(25.7450952667949L, -115.19890260631L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(25.7450952667949L, -115.253772290809L), "bottom.left");
+  }
+  {
+    note("geohex: aX40264");
+    geohex_t zone = geohex_get_zone_by_code("aX40264");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.9887760452365L, 19.039780521262L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.9887760452365L, 18.9849108367627L), "top.left");
+    location_is(polygon.middle.right, geohex_location(76.9994701395296L, 19.0672153635117L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(76.9994701395296L, 18.957475994513L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.0101555954485L, 19.039780521262L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.0101555954485L, 18.9849108367627L), "bottom.left");
+  }
+  {
+    note("geohex: ZA44552");
+    geohex_t zone = geohex_get_zone_by_code("ZA44552");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(74.9534563911502L, 118.875171467764L), "top.right");
+    location_is(polygon.top.left,     geohex_location(74.9534563911502L, 118.820301783265L), "top.left");
+    location_is(polygon.middle.right, geohex_location(74.9657874374314L, 118.902606310014L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(74.9657874374314L, 118.792866941015L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(74.9781086109047L, 118.875171467764L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(74.9781086109047L, 118.820301783265L), "bottom.left");
+  }
+  {
+    note("geohex: bD47117");
+    geohex_t zone = geohex_get_zone_by_code("bD47117");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.2717299624724L, -38.6556927297668L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.2717299624724L, -38.7105624142661L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.2772949786223L, -38.6282578875171L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.2772949786223L, -38.7379972565158L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.282855413019L, -38.6556927297668L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.282855413019L, -38.7105624142661L), "bottom.left");
+  }
+  {
+    note("geohex: TK51615");
+    geohex_t zone = geohex_get_zone_by_code("TK51615");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.0153225906358L, 172.290809327846L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.0153225906358L, 172.235939643347L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.0219205989575L, 172.318244170096L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.0219205989575L, 172.208504801097L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.0285131903759L, 172.290809327846L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.0285131903759L, 172.235939643347L), "bottom.left");
+  }
+  {
+    note("geohex: TK71615");
+    geohex_t zone = geohex_get_zone_by_code("TK71615");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.0153225906358L, -174.37585733882L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.0153225906358L, -174.43072702332L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.0219205989575L, -174.348422496571L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.0219205989575L, -174.458161865569L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.0285131903759L, -174.37585733882L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.0285131903759L, -174.43072702332L), "bottom.left");
+  }
+  {
+    note("geohex: TO38458");
+    geohex_t zone = geohex_get_zone_by_code("TO38458");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.3218160738426L, -173.552812071331L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.3218160738426L, -173.60768175583L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.3265156597377L, -173.525377229081L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.3265156597377L, -173.63511659808L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.3312113687006L, -173.552812071331L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.3312113687006L, -173.60768175583L), "bottom.left");
+  }
+  {
+    note("geohex: TO58484");
+    geohex_t zone = geohex_get_zone_by_code("TO58484");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0388357867675L, 173.360768175583L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0388357867675L, 173.305898491084L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0429435161968L, 173.388203017833L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0429435161968L, 173.278463648834L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0470478530043L, 173.360768175583L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0470478530043L, 173.305898491084L), "bottom.left");
+  }
+  {
+    note("geohex: BV553581");
+    geohex_t zone = geohex_get_zone_by_code("BV553581");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0374657892273L, -88.4133516232281L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0374657892273L, -88.4316415180612L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0360954143169L, -88.4042066758116L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0360954143169L, -88.4407864654778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0347246619329L, -88.4133516232281L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0347246619329L, -88.4316415180612L), "bottom.left");
+  }
+  {
+    note("geohex: CI802417");
+    geohex_t zone = geohex_get_zone_by_code("CI802417");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0223708871332L, 118.472793781436L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0223708871332L, 118.454503886603L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.020996354334L, 118.481938728852L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.020996354334L, 118.445358939186L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0196214429246L, 118.472793781436L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0196214429246L, 118.454503886603L), "bottom.left");
+  }
+  {
+    note("geohex: CI750110");
+    geohex_t zone = geohex_get_zone_by_code("CI750110");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1122581078036L, 124.124371284865L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1122581078036L, 124.106081390032L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1109083358255L, 124.133516232282L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1109083358255L, 124.096936442615L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.1095581920072L, 124.124371284865L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.1095581920072L, 124.106081390032L), "bottom.left");
+  }
+  {
+    note("geohex: DO018862");
+    geohex_t zone = geohex_get_zone_by_code("DO018862");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1418592212103L, 177.896662094193L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1418592212103L, 177.87837219936L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1405176040458L, 177.90580704161L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1405176040458L, 177.869227251943L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.1391756172713L, 177.896662094193L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.1391756172713L, 177.87837219936L), "bottom.left");
+  }
+  {
+    note("geohex: DO053505");
+    geohex_t zone = geohex_get_zone_by_code("DO053505");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511487999708L, 178.253315043439L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511487999708L, 178.235025148605L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.049782194126L, 178.262459990855L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.049782194126L, 178.225880201189L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0484152118382L, 178.253315043439L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0484152118382L, 178.235025148605L), "bottom.left");
+  }
+  {
+    note("geohex: DO074664");
+    geohex_t zone = geohex_get_zone_by_code("DO074664");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0196214429246L, -177.110196616369L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0196214429246L, -177.128486511203L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0182461528016L, -177.101051668953L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0182461528016L, -177.137631458619L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0168704838614L, -177.110196616369L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0168704838614L, -177.128486511203L), "bottom.left");
+  }
+  {
+    note("geohex: CZ351822");
+    geohex_t zone = geohex_get_zone_by_code("CZ351822");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.1375550297113L, -16.506630086877L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.1375550297113L, -16.5249199817101L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.1342985749577L, -16.4974851394605L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.1342985749577L, -16.5340649291267L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.131041239069L, -16.506630086877L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.131041239069L, -16.5249199817101L), "bottom.left");
+  }
+  {
+    note("geohex: EU412420");
+    geohex_t zone = geohex_get_zone_by_code("EU412420");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.8475889011933L, 176.140832190215L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.8475889011933L, 176.122542295382L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.8442540286679L, 176.149977137632L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.8442540286679L, 176.113397347965L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.8409182547605L, 176.140832190215L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.8409182547605L, 176.122542295382L), "bottom.left");
+  }
+  {
+    note("geohex: EU708101");
+    geohex_t zone = geohex_get_zone_by_code("EU708101");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.1553278534821L, -173.598536808413L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.1553278534821L, -173.616826703246L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.1518061167366L, -173.589391860997L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.1518061167366L, -173.625971650663L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.1482834306493L, -173.598536808413L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.1482834306493L, -173.616826703246L), "bottom.left");
+  }
+  {
+    note("geohex: OK847038");
+    geohex_t zone = geohex_get_zone_by_code("OK847038");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-44.5935091871764L, 60.8321902149063L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-44.5935091871764L, 60.8139003200732L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-44.5822286864963L, 60.8413351623228L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-44.5822286864963L, 60.8047553726566L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-44.5709459966191L, 60.8321902149063L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-44.5709459966191L, 60.8139003200732L), "bottom.left");
+  }
+  {
+    note("geohex: GH501658");
+    geohex_t zone = geohex_get_zone_by_code("GH501658");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-21.6415680809959L, -166.986739826246L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-21.6415680809959L, -167.005029721079L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-21.6268443575399L, -166.977594878829L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-21.6268443575399L, -167.014174668496L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-21.6121191338212L, -166.986739826246L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-21.6121191338212L, -167.005029721079L), "bottom.left");
+  }
+  {
+    note("geohex: GI842644");
+    geohex_t zone = geohex_get_zone_by_code("GI842644");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-3.86191375467323L, 179.021490626429L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-3.86191375467323L, 179.003200731596L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-3.84611006144169L, 179.030635573846L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-3.84611006144169L, 178.994055784179L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-3.83030607515138L, 179.021490626429L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-3.83030607515138L, 179.003200731596L), "bottom.left");
+  }
+  {
+    note("geohex: GI836575");
+    geohex_t zone = geohex_get_zone_by_code("GI836575");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-4.93581196869263L, -176.479195244627L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-4.93581196869263L, -176.49748513946L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-4.92003100511791L, -176.470050297211L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-4.92003100511791L, -176.506630086877L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-4.90424966737299L, -176.479195244627L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-4.90424966737299L, -176.49748513946L), "bottom.left");
+  }
+  {
+    note("geohex: QU316588");
+    geohex_t zone = geohex_get_zone_by_code("QU316588");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(6.65343117983402L, -174.311842706904L), "top.right");
+    location_is(polygon.top.left,     geohex_location(6.65343117983402L, -174.330132601738L), "top.left");
+    location_is(polygon.middle.right, geohex_location(6.6691637644673L, -174.302697759488L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(6.6691637644673L, -174.339277549154L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(6.68489584399763L, -174.311842706904L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(6.68489584399763L, -174.330132601738L), "bottom.left");
+  }
+  {
+    note("geohex: QU175485");
+    geohex_t zone = geohex_get_zone_by_code("QU175485");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(9.46042596144656L, 174.796524919982L), "top.right");
+    location_is(polygon.top.left,     geohex_location(9.46042596144656L, 174.778235025149L), "top.left");
+    location_is(polygon.middle.right, geohex_location(9.47604969238702L, 174.805669867398L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(9.47604969238702L, 174.769090077732L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(9.49167271224977L, 174.796524919982L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(9.49167271224977L, 174.778235025149L), "bottom.left");
+  }
+  {
+    note("geohex: Fb711277");
+    geohex_t zone = geohex_get_zone_by_code("Fb711277");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-48.4598765064117L, -96.671239140375L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-48.4598765064117L, -96.6895290352081L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-48.4493715354198L, -96.6620941929584L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-48.4493715354198L, -96.6986739826246L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-48.4388643908495L, -96.671239140375L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-48.4388643908495L, -96.6895290352081L), "bottom.left");
+  }
+  {
+    note("geohex: OY728344");
+    geohex_t zone = geohex_get_zone_by_code("OY728344");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(4.54117836336873L, 2.47828074988569L), "top.right");
+    location_is(polygon.top.left,     geohex_location(4.54117836336873L, 2.45999085505258L), "top.left");
+    location_is(polygon.middle.right, geohex_location(4.55696797874602L, 2.48742569730224L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(4.55696797874602L, 2.45084590763603L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.57275724732149L, 2.47828074988569L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.57275724732149L, 2.45999085505258L), "bottom.left");
+  }
+  {
+    note("geohex: PA016372");
+    geohex_t zone = geohex_get_zone_by_code("PA016372");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.45437362765821L, -60.4572473708276L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.45437362765821L, -60.4755372656607L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.47019851680954L, -60.4481024234111L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.47019851680954L, -60.4846822130773L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(2.48602321740854L, -60.4572473708276L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(2.48602321740854L, -60.4755372656607L), "bottom.left");
+  }
+  {
+    note("geohex: QU408880");
+    geohex_t zone = geohex_get_zone_by_code("QU408880");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(10.1159974900213L, -179.990855052583L), "top.right");
+    location_is(polygon.top.left,     geohex_location(10.1159974900213L, -180.009144947417L), "top.left");
+    location_is(polygon.middle.right, geohex_location(10.1315903865524L, -179.981710105167L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(10.1315903865524L, -180.018289894833L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(10.1471825248119L, -179.990855052583L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(10.1471825248119L, -180.009144947417L), "bottom.left");
+  }
+  {
+    note("geohex: XM442337");
+    geohex_t zone = geohex_get_zone_by_code("XM442337");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(32.5449729805341L, 138.884316415181L), "top.right");
+    location_is(polygon.top.left,     geohex_location(32.5449729805341L, 138.866026520348L), "top.left");
+    location_is(polygon.middle.right, geohex_location(32.5583242135466L, 138.893461362597L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(32.5583242135466L, 138.856881572931L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(32.5716734603819L, 138.884316415181L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(32.5716734603819L, 138.866026520348L), "bottom.left");
+  }
+  {
+    note("geohex: PS387785");
+    geohex_t zone = geohex_get_zone_by_code("PS387785");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.921032689852L, 127.636031092821L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.921032689852L, 127.617741197988L), "top.left");
+    location_is(polygon.middle.right, geohex_location(21.935726236625L, 127.645176040238L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(21.935726236625L, 127.608596250572L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.9504182660296L, 127.636031092821L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.9504182660296L, 127.617741197988L), "bottom.left");
+  }
+  {
+    note("geohex: XX037037");
+    geohex_t zone = geohex_get_zone_by_code("XX037037");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.8214490692687L, 143.081847279378L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.8214490692687L, 143.063557384545L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.8328762014381L, 143.090992226795L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.8328762014381L, 143.054412437128L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.8443011459943L, 143.081847279378L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.8443011459943L, 143.063557384545L), "bottom.left");
+  }
+  {
+    note("geohex: PZ173676");
+    geohex_t zone = geohex_get_zone_by_code("PZ173676");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(39.6270959128635L, 36.936442615455L), "top.right");
+    location_is(polygon.top.left,     geohex_location(39.6270959128635L, 36.9181527206219L), "top.left");
+    location_is(polygon.middle.right, geohex_location(39.6392946161491L, 36.9455875628715L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(39.6392946161491L, 36.9090077732053L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(39.6514911682249L, 36.936442615455L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(39.6514911682249L, 36.9181527206219L), "bottom.left");
+  }
+  {
+    note("geohex: SV321726");
+    geohex_t zone = geohex_get_zone_by_code("SV321726");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(65.7961777357975L, -78.3721993598537L), "top.right");
+    location_is(polygon.top.left,     geohex_location(65.7961777357975L, -78.3904892546868L), "top.left");
+    location_is(polygon.middle.right, geohex_location(65.8026708623787L, -78.3630544124372L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(65.8026708623787L, -78.3996342021034L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(65.8091623518439L, -78.3721993598537L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(65.8091623518439L, -78.3904892546868L), "bottom.left");
+  }
+  {
+    note("geohex: PC828583");
+    geohex_t zone = geohex_get_zone_by_code("PC828583");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(39.7611633040255L, -104.654778235025L), "top.right");
+    location_is(polygon.top.left,     geohex_location(39.7611633040255L, -104.673068129858L), "top.left");
+    location_is(polygon.middle.right, geohex_location(39.7733383345461L, -104.645633287609L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(39.7733383345461L, -104.682213077275L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(39.7855112119747L, -104.654778235025L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(39.7855112119747L, -104.673068129858L), "bottom.left");
+  }
+  {
+    note("geohex: OI713375");
+    geohex_t zone = geohex_get_zone_by_code("OI713375");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(24.3676503365825L, -114.503886602652L), "top.right");
+    location_is(polygon.top.left,     geohex_location(24.3676503365825L, -114.522176497485L), "top.left");
+    location_is(polygon.middle.right, geohex_location(24.382077991931L, -114.494741655236L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(24.382077991931L, -114.531321444902L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(24.3965040008224L, -114.503886602652L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(24.3965040008224L, -114.522176497485L), "bottom.left");
+  }
+  {
+    note("geohex: bD080050");
+    geohex_t zone = geohex_get_zone_by_code("bD080050");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.4017627756988L, -40.0731595793324L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.4017627756988L, -40.0914494741655L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.4038568826114L, -40.0640146319159L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.4038568826114L, -40.1005944215821L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.4059504157635L, -40.0731595793324L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.4059504157635L, -40.0914494741655L), "bottom.left");
+  }
+  {
+    note("geohex: aX817100");
+    geohex_t zone = geohex_get_zone_by_code("aX817100");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.9002467107229L, 18.2807498856881L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.9002467107229L, 18.262459990855L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.9032956845109L, 18.2898948331047L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.9032956845109L, 18.2533150434385L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.9063438312762L, 18.2807498856881L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.9063438312762L, 18.262459990855L), "bottom.left");
+  }
+  {
+    note("geohex: ZA712478");
+    geohex_t zone = geohex_get_zone_by_code("ZA712478");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.4907482535574L, 123.054412437128L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.4907482535574L, 123.036122542295L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.4947160961744L, 123.063557384545L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.4947160961744L, 123.026977594879L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.4986828769816L, 123.054412437128L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.4986828769816L, 123.036122542295L), "bottom.left");
+  }
+  {
+    note("geohex: TK166315");
+    geohex_t zone = geohex_get_zone_by_code("TK166315");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.0656113135618L, 179.405578417924L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.0656113135618L, 179.387288523091L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.0680709068572L, 179.414723365341L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.0680709068572L, 179.378143575674L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.0705298285311L, 179.405578417924L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.0705298285311L, 179.387288523091L), "bottom.left");
+  }
+  {
+    note("geohex: TK873482");
+    geohex_t zone = geohex_get_zone_by_code("TK873482");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.833119279622L, -177.08276177412L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.833119279622L, -177.101051668953L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.8350951420659L, -177.073616826703L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.8350951420659L, -177.11019661637L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.837070462619L, -177.08276177412L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.837070462619L, -177.101051668953L), "bottom.left");
+  }
+  {
+    note("geohex: TO433402");
+    geohex_t zone = geohex_get_zone_by_code("TO433402");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.2492679792019L, -177.08276177412L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.2492679792019L, -177.101051668953L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.2508548924535L, -177.073616826703L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.2508548924535L, -177.11019661637L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.252441369267L, -177.08276177412L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.252441369267L, -177.101051668953L), "bottom.left");
+  }
+  {
+    note("geohex: TO586342");
+    geohex_t zone = geohex_get_zone_by_code("TO586342");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.004472399533L, 175.016003657979L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.004472399533L, 174.997713763146L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0058514824907L, 175.025148605396L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0058514824907L, 174.988568815729L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0072301856982L, 175.016003657979L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0072301856982L, 174.997713763146L), "bottom.left");
+  }
+  {
+    note("geohex: bb335332");
+    geohex_t zone = geohex_get_zone_by_code("bb335332");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0374657892273L, 88.4316415180613L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0374657892273L, 88.4133516232282L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0388357867675L, 88.4407864654778L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0388357867675L, 88.4042066758116L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0402054070403L, 88.4316415180613L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0402054070403L, 88.4133516232282L), "bottom.left");
+  }
+  {
+    note("geohex: BV8032788");
+    geohex_t zone = geohex_get_zone_by_code("BV8032788");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0479594674037L, -79.6677335771986L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0479594674037L, -79.6738302088096L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.047503681127L, -79.6646852613931L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.047503681127L, -79.6768785246151L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0470478530043L, -79.6677335771986L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0470478530043L, -79.6738302088096L), "bottom.left");
+  }
+  {
+    note("geohex: CI7714524");
+    geohex_t zone = geohex_get_zone_by_code("CI7714524");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0516042516161L, 128.014022252705L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0516042516161L, 128.007925621094L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511487999708L, 128.017070568511L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511487999708L, 128.004877305289L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0506933065099L, 128.014022252705L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0506933065099L, 128.007925621094L), "bottom.left");
+  }
+  {
+    note("geohex: DO0514686");
+    geohex_t zone = geohex_get_zone_by_code("DO0514686");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0529703556967L, 177.222984301174L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0529703556967L, 177.216887669563L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0525150294753L, 177.226032616979L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0525150294753L, 177.213839353757L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0520596614497L, 177.222984301174L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0520596614497L, 177.216887669563L), "bottom.left");
+  }
+  {
+    note("geohex: DO0517300");
+    geohex_t zone = geohex_get_zone_by_code("DO0517300");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511487999708L, 177.369303459838L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511487999708L, 177.363206828227L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0506933065098L, 177.372351775644L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0506933065098L, 177.360158512422L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0502377712295L, 177.369303459838L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0502377712295L, 177.363206828227L), "bottom.left");
+  }
+  {
+    note("geohex: DO0732687");
+    geohex_t zone = geohex_get_zone_by_code("DO0732687");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0525150294752L, -177.354061880811L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0525150294752L, -177.360158512422L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0520596614496L, -177.351013565005L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0520596614496L, -177.363206828227L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0516042516161L, -177.354061880811L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0516042516161L, -177.360158512422L), "bottom.left");
+  }
+  {
+    note("geohex: DO0732768");
+    geohex_t zone = geohex_get_zone_by_code("DO0732768");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0506933065098L, -177.390641670477L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0506933065098L, -177.396738302088L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0502377712295L, -177.387593354672L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0502377712295L, -177.399786617894L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.049782194126L, -177.390641670477L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.049782194126L, -177.396738302088L), "bottom.left");
+  }
+  {
+    note("geohex: EU4031833");
+    geohex_t zone = geohex_get_zone_by_code("EU4031833");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.2078956225948L, -179.466544734034L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.2078956225948L, -179.472641365645L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.2068165801529L, -179.463496418229L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.2068165801529L, -179.475689681451L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.2057374403711L, -179.466544734034L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.2057374403711L, -179.472641365645L), "bottom.left");
+  }
+  {
+    note("geohex: EU8072131");
+    geohex_t zone = geohex_get_zone_by_code("EU8072131");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.3260782057512L, -179.814052735863L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.3260782057512L, -179.820149367474L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.3248300177426L, -179.811004420058L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.3248300177426L, -179.82319768328L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.3235817179685L, -179.814052735863L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.3235817179685L, -179.820149367474L), "bottom.left");
+  }
+  {
+    note("geohex: EU8255485");
+    geohex_t zone = geohex_get_zone_by_code("EU8255485");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-75.6447097334129L, 174.561804602957L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-75.6447097334129L, 174.555707971346L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-75.6434006236876L, 174.564852918762L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-75.6434006236876L, 174.55265965554L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-75.6420913970892L, 174.561804602957L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-75.6420913970892L, 174.555707971346L), "bottom.left");
+  }
+  {
+    note("geohex: CZ3800810");
+    geohex_t zone = geohex_get_zone_by_code("CZ3800810");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.0624332391514L, -13.3577198597774L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.0624332391514L, -13.3638164913885L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.0613410780894L, -13.3546715439719L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.0613410780894L, -13.366864807194L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.0602488185566L, -13.3577198597774L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.0602488185566L, -13.3638164913885L), "bottom.left");
+  }
+  {
+    note("geohex: OK1624776");
+    geohex_t zone = geohex_get_zone_by_code("OK1624776");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-52.2696952176244L, 56.4273738759335L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-52.2696952176244L, 56.4212772443225L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-52.2664641271478L, 56.430422191739L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-52.2664641271478L, 56.418228928517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-52.263232801185L, 56.4273738759335L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-52.263232801185L, 56.4212772443225L), "bottom.left");
+  }
+  {
+    note("geohex: OK7464515");
+    geohex_t zone = geohex_get_zone_by_code("OK7464515");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-47.3235005587993L, 68.0323121475385L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-47.3235005587993L, 68.0262155159274L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.3199214562931L, 68.035360463344L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.3199214562931L, 68.0231672001219L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.3163421113141L, 68.0323121475385L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.3163421113141L, 68.0262155159274L), "bottom.left");
+  }
+  {
+    note("geohex: Fb5316746");
+    geohex_t zone = geohex_get_zone_by_code("Fb5316746");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-48.4633776804082L, -104.587715287304L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-48.4633776804082L, -104.593811918915L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-48.4598765064117L, -104.584666971498L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-48.4598765064117L, -104.59686023472L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-48.4563750909171L, -104.587715287304L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-48.4563750909171L, -104.593811918915L), "bottom.left");
+  }
+  {
+    note("geohex: Fb4033527");
+    geohex_t zone = geohex_get_zone_by_code("Fb4033527");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-51.8378904787554L, -99.1373266270385L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-51.8378904787554L, -99.1434232586496L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-51.8346280091477L, -99.134278311233L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-51.8346280091477L, -99.1464715744551L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-51.8313653031605L, -99.1373266270385L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-51.8313653031605L, -99.1434232586496L), "bottom.left");
+  }
+  {
+    note("geohex: GH4540858");
+    geohex_t zone = geohex_get_zone_by_code("GH4540858");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-21.4598708376365L, -162.246608748666L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-21.4598708376365L, -162.252705380277L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-21.4549569468283L, -162.243560432861L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-21.4549569468283L, -162.255753696083L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-21.4500428903903L, -162.246608748666L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-21.4500428903903L, -162.252705380277L), "bottom.left");
+  }
+  {
+    note("geohex: GI4351804");
+    geohex_t zone = geohex_get_zone_by_code("GI4351804");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-12.3891283632109L, -178.76238378296L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-12.3891283632109L, -178.768480414571L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-12.3839714259397L, -178.759335467154L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-12.3839714259397L, -178.771528730377L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-12.3788143867519L, -178.76238378296L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-12.3788143867519L, -178.768480414571L), "bottom.left");
+  }
+  {
+    note("geohex: GI8387484");
+    geohex_t zone = geohex_get_zone_by_code("GI8387484");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-4.10419948775739L, -177.527815881725L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-4.10419948775739L, -177.533912513336L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-4.09893317247951L, -177.52476756592L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-4.09893317247951L, -177.536960829142L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-4.09366682251329L, -177.527815881725L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-4.09366682251329L, -177.533912513336L), "bottom.left");
+  }
+  {
+    note("geohex: QU0706771");
+    geohex_t zone = geohex_get_zone_by_code("QU0706771");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(4.32535281981477L, -177.180307879896L), "top.right");
+    location_is(polygon.top.left,     geohex_location(4.32535281981477L, -177.186404511507L), "top.left");
+    location_is(polygon.middle.right, geohex_location(4.33061760163989L, -177.177259564091L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(4.33061760163989L, -177.189452827313L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.33588234683049L, -177.180307879896L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.33588234683049L, -177.186404511507L), "bottom.left");
+  }
+  {
+    note("geohex: QU4884047");
+    geohex_t zone = geohex_get_zone_by_code("QU4884047");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(14.709021327764L, -179.987806736778L), "top.right");
+    location_is(polygon.top.left,     geohex_location(14.709021327764L, -179.993903368389L), "top.left");
+    location_is(polygon.middle.right, geohex_location(14.7141280738906L, -179.984758420972L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(14.7141280738906L, -179.996951684194L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(14.7192347004905L, -179.987806736778L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(14.7192347004905L, -179.993903368389L), "bottom.left");
+  }
+  {
+    note("geohex: QU8251271");
+    geohex_t zone = geohex_get_zone_by_code("QU8251271");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(19.1675381870286L, 174.424630391709L), "top.right");
+    location_is(polygon.top.left,     geohex_location(19.1675381870286L, 174.418533760098L), "top.left");
+    location_is(polygon.middle.right, geohex_location(19.1725252486474L, 174.427678707514L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(19.1725252486474L, 174.415485444292L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(19.1775121593425L, 174.424630391709L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(19.1775121593425L, 174.418533760098L), "bottom.left");
+  }
+  {
+    note("geohex: PA0565644");
+    geohex_t zone = geohex_get_zone_by_code("PA0565644");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(5.26186610113234L, -60.8199969516842L), "top.right");
+    location_is(polygon.top.left,     geohex_location(5.26186610113234L, -60.8260935832952L), "top.left");
+    location_is(polygon.middle.right, geohex_location(5.26712366729293L, -60.8169486358787L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(5.26712366729293L, -60.8291418991007L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(5.27238118897812L, -60.8199969516842L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(5.27238118897812L, -60.8260935832952L), "bottom.left");
+  }
+  {
+    note("geohex: OY8320288");
+    geohex_t zone = geohex_get_zone_by_code("OY8320288");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(6.15497821548596L, 0.579180003048316L), "top.right");
+    location_is(polygon.top.left,     geohex_location(6.15497821548596L, 0.573083371437281L), "top.left");
+    location_is(polygon.middle.right, geohex_location(6.16022759188225L, 0.582228318853833L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(6.16022759188225L, 0.570035055631764L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(6.1654769163698L, 0.579180003048316L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(6.1654769163698L, 0.573083371437281L), "bottom.left");
+  }
+  {
+    note("geohex: OY3556486");
+    geohex_t zone = geohex_get_zone_by_code("OY3556486");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-2.11145706419977L, 4.21886907483615L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-2.11145706419977L, 4.21277244322512L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-2.10618080216265L, 4.22191739064167L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-2.10618080216265L, 4.2097241274196L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-2.10090452225653L, 4.21886907483615L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-2.10090452225653L, 4.21277244322512L), "bottom.left");
+  }
+  {
+    note("geohex: PZ8016814");
+    geohex_t zone = geohex_get_zone_by_code("PZ8016814");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(45.3294698144182L, 39.7286998933089L), "top.right");
+    location_is(polygon.top.left,     geohex_location(45.3294698144182L, 39.7226032616979L), "top.left");
+    location_is(polygon.middle.right, geohex_location(45.3331815719879L, 39.7317482091145L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(45.3331815719879L, 39.7195549458924L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(45.3368930863041L, 39.7286998933089L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(45.3368930863041L, 39.7226032616979L), "bottom.left");
+  }
+  {
+    note("geohex: PZ1746604");
+    geohex_t zone = geohex_get_zone_by_code("PZ1746604");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(39.9030713229747L, 36.2170400853528L), "top.right");
+    location_is(polygon.top.left,     geohex_location(39.9030713229747L, 36.2109434537418L), "top.left");
+    location_is(polygon.middle.right, geohex_location(39.907121529315L, 36.2200884011583L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(39.907121529315L, 36.2078951379363L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(39.9111714962193L, 36.2170400853528L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(39.9111714962193L, 36.2109434537418L), "bottom.left");
+  }
+  {
+    note("geohex: PS6242083");
+    geohex_t zone = geohex_get_zone_by_code("PS6242083");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.424637889562L, 128.407254991617L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.424637889562L, 128.401158360006L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.4295183912878L, 128.410303307423L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.4295183912878L, 128.398110044201L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.4343987214196L, 128.407254991617L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.4343987214196L, 128.401158360006L), "bottom.left");
+  }
+  {
+    note("geohex: XM5643552");
+    geohex_t zone = geohex_get_zone_by_code("XM5643552");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(35.8156540875783L, 137.899710409998L), "top.right");
+    location_is(polygon.top.left,     geohex_location(35.8156540875783L, 137.893613778387L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.8199354136109L, 137.902758725804L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.8199354136109L, 137.890565462582L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.824216508757L, 137.899710409998L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.824216508757L, 137.893613778387L), "bottom.left");
+  }
+  {
+    note("geohex: XU6303820");
+    geohex_t zone = geohex_get_zone_by_code("XU6303820");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(40.210204191562L, 135.750647767109L), "top.right");
+    location_is(polygon.top.left,     geohex_location(40.210204191562L, 135.744551135498L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.214236183804L, 135.753696082914L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.214236183804L, 135.741502819692L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(40.2182679361626L, 135.750647767109L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(40.2182679361626L, 135.744551135498L), "bottom.left");
+  }
+  {
+    note("geohex: XM7851800");
+    geohex_t zone = geohex_get_zone_by_code("XM7851800");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(38.1974978260893L, 145.682060661485L), "top.right");
+    location_is(polygon.top.left,     geohex_location(38.1974978260893L, 145.675964029873L), "top.left");
+    location_is(polygon.middle.right, geohex_location(38.2016470474239L, 145.68510897729L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(38.2016470474239L, 145.672915714068L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(38.2057960323063L, 145.682060661485L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(38.2057960323063L, 145.675964029873L), "bottom.left");
+  }
+  {
+    note("geohex: XX0345653");
+    geohex_t zone = geohex_get_zone_by_code("XX0345653");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.8595310023876L, 142.124676116446L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.8595310023876L, 142.118579484835L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.8633378587961L, 142.127724432251L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.8633378587961L, 142.115531169029L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.867144472126L, 142.124676116446L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.867144472126L, 142.118579484835L), "bottom.left");
+  }
+  {
+    note("geohex: XM6306347");
+    geohex_t zone = geohex_get_zone_by_code("XM6306347");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(30.8469781653046L, 156.14388050602L), "top.right");
+    location_is(polygon.top.left,     geohex_location(30.8469781653046L, 156.137783874409L), "top.left");
+    location_is(polygon.middle.right, geohex_location(30.8515110089981L, 156.146928821826L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(30.8515110089981L, 156.134735558604L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(30.8560436384917L, 156.14388050602L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(30.8560436384917L, 156.137783874409L), "bottom.left");
+  }
+  {
+    note("geohex: QU8827707");
+    geohex_t zone = geohex_get_zone_by_code("QU8827707");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.4500428903903L, 178.859929888736L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.4500428903903L, 178.853833257125L), "top.left");
+    location_is(polygon.middle.right, geohex_location(21.4549569468283L, 178.862978204542L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(21.4549569468283L, 178.85078494132L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.4598708376365L, 178.859929888736L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.4598708376365L, 178.853833257125L), "bottom.left");
+  }
+  {
+    note("geohex: PZ4253332");
+    geohex_t zone = geohex_get_zone_by_code("PZ4253332");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(42.0316706921203L, 35.1562261850328L), "top.right");
+    location_is(polygon.top.left,     geohex_location(42.0316706921203L, 35.1501295534217L), "top.left");
+    location_is(polygon.middle.right, geohex_location(42.0355923018785L, 35.1592745008383L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(42.0355923018785L, 35.1470812376162L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(42.039513669668L, 35.1562261850328L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(42.039513669668L, 35.1501295534217L), "bottom.left");
+  }
+  {
+    note("geohex: OI8776718");
+    geohex_t zone = geohex_get_zone_by_code("OI8776718");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(30.9194779502181L, -116.485291876238L), "top.right");
+    location_is(polygon.top.left,     geohex_location(30.9194779502181L, -116.491388507849L), "top.left");
+    location_is(polygon.middle.right, geohex_location(30.9240073645291L, -116.482243560433L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(30.9240073645291L, -116.494436823655L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(30.928536564349L, -116.485291876238L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(30.928536564349L, -116.491388507849L), "bottom.left");
+  }
+  {
+    note("geohex: PF2148656");
+    geohex_t zone = geohex_get_zone_by_code("PF2148656");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(41.1312342635584L, -95.3970431336686L), "top.right");
+    location_is(polygon.top.left,     geohex_location(41.1312342635584L, -95.4031397652797L), "top.left");
+    location_is(polygon.middle.right, geohex_location(41.1352109428687L, -95.3939948178631L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(41.1352109428687L, -95.4061880810852L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(41.1391873811194L, -95.3970431336686L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(41.1391873811194L, -95.4031397652797L), "bottom.left");
+  }
+  {
+    note("geohex: ZA4587731");
+    geohex_t zone = geohex_get_zone_by_code("ZA4587731");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.4085079963618L, 118.128334095412L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.4085079963618L, 118.122237463801L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.4098380636786L, 118.131382411218L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.4098380636786L, 118.119189147996L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.4111680123867L, 118.128334095412L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.4111680123867L, 118.122237463801L), "bottom.left");
+  }
+  {
+    note("geohex: SV4335020");
+    geohex_t zone = geohex_get_zone_by_code("SV4335020");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.789517197219L, -77.3357719859777L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.789517197219L, -77.3418686175888L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.7915979463581L, -77.3327236701722L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.7915979463581L, -77.3449169333943L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.7936785192786L, -77.3357719859777L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.7936785192786L, -77.3418686175888L), "bottom.left");
+  }
+  {
+    note("geohex: SV5843218");
+    geohex_t zone = geohex_get_zone_by_code("SV5843218");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(69.7266494639338L, -86.6087486663618L), "top.right");
+    location_is(polygon.top.left,     geohex_location(69.7266494639338L, -86.6148452979729L), "top.left");
+    location_is(polygon.middle.right, geohex_location(69.7284788454195L, -86.6057003505563L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(69.7284788454195L, -86.6178936137784L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(69.7303080687751L, -86.6087486663618L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(69.7303080687751L, -86.6148452979729L), "bottom.left");
+  }
+  {
+    note("geohex: aX0682573");
+    geohex_t zone = geohex_get_zone_by_code("aX0682573");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.0143567626192L, 23.9079408626734L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.0143567626192L, 23.9018442310623L), "top.left");
+    location_is(polygon.middle.right, geohex_location(76.0156327302267L, 23.9109891784789L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(76.0156327302267L, 23.8987959152568L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.0169085837432L, 23.9079408626734L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.0169085837432L, 23.9018442310623L), "bottom.left");
+  }
+  {
+    note("geohex: aX8100870");
+    geohex_t zone = geohex_get_zone_by_code("aX8100870");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.6692008130174L, 17.808260935833L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.6692008130174L, 17.8021643042219L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.6702381130175L, 17.8113092516385L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.6702381130175L, 17.7991159884164L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.6712753192969L, 17.808260935833L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.6712753192969L, 17.8021643042219L), "bottom.left");
+  }
+  {
+    note("geohex: bD4424804");
+    geohex_t zone = geohex_get_zone_by_code("bD4424804");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.194587974704L, -41.4784331656759L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.194587974704L, -41.484529797287L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.1952135950448L, -41.4753848498704L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.1952135950448L, -41.4875781130925L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.1958391581432L, -41.4784331656759L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.1958391581432L, -41.484529797287L), "bottom.left");
+  }
+  {
+    note("geohex: bE6100113");
+    geohex_t zone = geohex_get_zone_by_code("bE6100113");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.1811514612154L, -48.9864349946655L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.1811514612154L, -48.9925316262765L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.1816867255254L, -48.98338667886L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.1816867255254L, -48.995579942082L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.1822219407669L, -48.9864349946655L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.1822219407669L, -48.9925316262765L), "bottom.left");
+  }
+  {
+    note("geohex: TK5027217");
+    geohex_t zone = geohex_get_zone_by_code("TK5027217");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.8732665374047L, 171.918914799573L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.8732665374047L, 171.912818167962L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.8740128778651L, 171.921963115379L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.8740128778651L, 171.909769852157L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.8747591502434L, 171.918914799573L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.8747591502434L, 171.912818167962L), "bottom.left");
+  }
+  {
+    note("geohex: TK7070414");
+    geohex_t zone = geohex_get_zone_by_code("TK7070414");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.8725201288562L, -172.616979119037L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.8725201288562L, -172.623075750648L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.8732665374047L, -172.613930803231L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.8732665374047L, -172.626124066453L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.8740128778651L, -172.616979119037L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.8740128778651L, -172.623075750648L), "bottom.left");
+  }
+  {
+    note("geohex: TO6240542");
+    geohex_t zone = geohex_get_zone_by_code("TO6240542");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.4053033138408L, -171.208657216888L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.4053033138408L, -171.214753848499L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.4058180257527L, -171.205608901082L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.4058180257527L, -171.217802164304L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.4063326904617L, -171.208657216888L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.4063326904617L, -171.214753848499L), "bottom.left");
+  }
+  {
+    note("geohex: TO7775738");
+    geohex_t zone = geohex_get_zone_by_code("TO7775738");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.9592128749224L, -170.504496265813L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.9592128749224L, -170.510592897424L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.9596767659574L, -170.501447950008L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.9596767659574L, -170.51364121323L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.9601406144117L, -170.504496265813L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.9601406144117L, -170.510592897424L), "bottom.left");
+  }
+  {
+    note("geohex: TO5821675");
+    geohex_t zone = geohex_get_zone_by_code("TO5821675");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0072301856982L, 171.790885535741L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0072301856982L, 171.78478890413L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0076896690631L, 171.793933851547L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0076896690631L, 171.781740588325L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0081491102489L, 171.790885535741L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0081491102489L, 171.78478890413L), "bottom.left");
+  }
+  {
+    note("geohex: bb3371862");
+    geohex_t zone = geohex_get_zone_by_code("bb3371862");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0506933065099L, 89.4223441548545L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0506933065099L, 89.4162475232434L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0511487999708L, 89.42539247066L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0511487999708L, 89.4131992074379L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0516042516161L, 89.4223441548545L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0516042516161L, 89.4162475232434L), "bottom.left");
+  }
+  {
+    note("geohex: BV54870250");
+    geohex_t zone = geohex_get_zone_by_code("BV54870250");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511487999708L, -86.4827516130671L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511487999708L, -86.4847838236041L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0509969734635L, -86.4817355077986L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0509969734635L, -86.4857999288726L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0508451423099L, -86.4827516130671L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0508451423099L, -86.4847838236041L), "bottom.left");
+  }
+  {
+    note("geohex: BV78253862");
+    geohex_t zone = geohex_get_zone_by_code("BV78253862");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.8944725537891L, -74.9662144998222L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.8944725537891L, -74.9682467103592L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.8943159331226L, -74.9651983945537L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.8943159331226L, -74.9692628156277L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.8941593076641L, -74.9662144998222L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.8941593076641L, -74.9682467103592L), "bottom.left");
+  }
+  {
+    note("geohex: CI57758513");
+    geohex_t zone = geohex_get_zone_by_code("CI57758513");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9595221403438L, 116.016867347457L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9595221403438L, 116.01483513692L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9593675099988L, 116.017883452726L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9593675099988L, 116.013819031652L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9592128749224L, 116.016867347457L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9592128749224L, 116.01483513692L), "bottom.left");
+  }
+  {
+    note("geohex: CI75600226");
+    geohex_t zone = geohex_get_zone_by_code("CI75600226");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0513006218319L, 125.859879083473L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0513006218319L, 125.857846872936L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511487999708L, 125.860895188742L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511487999708L, 125.856830767668L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0509969734635L, 125.859879083473L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0509969734635L, 125.857846872936L), "bottom.left");
+  }
+  {
+    note("geohex: DO05603615");
+    geohex_t zone = geohex_get_zone_by_code("DO05603615");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.047503681127L, 179.385256312554L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.047503681127L, 179.383224102017L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0473517430692L, 179.386272417823L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0473517430692L, 179.382207996748L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0471998003617L, 179.385256312554L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0471998003617L, 179.383224102017L), "bottom.left");
+  }
+  {
+    note("geohex: DO07152160");
+    geohex_t zone = geohex_get_zone_by_code("DO07152160");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0447680845659L, -178.938169994411L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0447680845659L, -178.940202204948L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0446160627918L, -178.937153889143L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0446160627918L, -178.941218310217L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0444640363654L, -178.938169994411L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0444640363654L, -178.940202204948L), "bottom.left");
+  }
+  {
+    note("geohex: EU41063674");
+    geohex_t zone = geohex_get_zone_by_code("EU41063674");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.0256096195107L, 178.418940202205L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.0256096195107L, 178.416907991668L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.0252444701795L, 178.419956307473L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.0252444701795L, 178.415891886399L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.024879309876L, 178.418940202205L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.024879309876L, 178.416907991668L), "bottom.left");
+  }
+  {
+    note("geohex: EU72201265");
+    geohex_t zone = geohex_get_zone_by_code("EU72201265");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.7839381457023L, -179.380175786211L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.7839381457023L, -179.382207996748L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.7835357741786L, -179.379159680943L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.7835357741786L, -179.383224102017L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.7831333906224L, -179.380175786211L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.7831333906224L, -179.382207996748L), "bottom.left");
+  }
+  {
+    note("geohex: CZ34762511");
+    geohex_t zone = geohex_get_zone_by_code("CZ34762511");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.2785400909123L, -12.3019864857999L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.2785400909123L, -12.3040186963369L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.2781825453963L, -12.3009703805314L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.2781825453963L, -12.3050348016054L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.2778249891265L, -12.3019864857999L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.2778249891265L, -12.3040186963369L), "bottom.left");
+  }
+  {
+    note("geohex: Fb38241503");
+    geohex_t zone = geohex_get_zone_by_code("Fb38241503");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-50.7372690952039L, -94.9204897627394L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-50.7372690952039L, -94.9225219732764L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-50.7361552519765L, -94.9194736574709L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-50.7361552519765L, -94.9235380785449L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-50.7350413822592L, -94.9204897627394L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-50.7350413822592L, -94.9225219732764L), "bottom.left");
+  }
+  {
+    note("geohex: OK48511367");
+    geohex_t zone = geohex_get_zone_by_code("OK48511367");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-48.0591587908747L, 58.9798303104201L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-48.0591587908747L, 58.9777980998831L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-48.0579824947847L, 58.9808464156887L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-48.0579824947847L, 58.9767819946146L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-48.0568061718185L, 58.9798303104201L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-48.0568061718185L, 58.9777980998831L), "bottom.left");
+  }
+  {
+    note("geohex: GI32042116");
+    geohex_t zone = geohex_get_zone_by_code("GI32042116");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-16.0597044159391L, -177.971853884062L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-16.0597044159391L, -177.973886094599L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-16.0580131465426L, -177.970837778794L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-16.0580131465426L, -177.974902199868L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-16.0563218627759L, -177.971853884062L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-16.0563218627759L, -177.973886094599L), "bottom.left");
+  }
+  {
+    note("geohex: GI71565064");
+    geohex_t zone = geohex_get_zone_by_code("GI71565064");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-8.50781931338796L, -175.86546766245L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-8.50781931338796L, -175.867499872987L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-8.50607873048697L, -175.864451557181L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-8.50607873048697L, -175.868515978255L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-8.50433813967769L, -175.86546766245L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-8.50433813967769L, -175.867499872987L), "bottom.left");
+  }
+  {
+    note("geohex: GH45442518");
+    geohex_t zone = geohex_get_zone_by_code("GH45442518");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-21.2910659982988L, -162.422394960118L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-21.2910659982988L, -162.424427170655L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-21.2894261632855L, -162.421378854849L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-21.2894261632855L, -162.425443275923L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-21.2877863099837L, -162.422394960118L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-21.2877863099837L, -162.424427170655L), "bottom.left");
+  }
+  {
+    note("geohex: OY33228746");
+    geohex_t zone = geohex_get_zone_by_code("OY33228746");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-5.01646433945816L, 6.94812782604278L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-5.01646433945816L, 6.94609561550577L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-5.01471113242862L, 6.94914393131128L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-5.01471113242862L, 6.94507951023726L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-5.0129579206917L, 6.94812782604278L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-5.0129579206917L, 6.94609561550577L), "bottom.left");
+  }
+  {
+    note("geohex: PA03278283");
+    geohex_t zone = geohex_get_zone_by_code("PA03278283");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.80950712167057L, -59.0631509424376L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.80950712167057L, -59.0651831529747L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.81126495087439L, -59.0621348371691L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.81126495087439L, -59.0661992582432L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(2.81302277742997L, -59.0631509424376L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(2.81302277742997L, -59.0651831529747L), "bottom.left");
+  }
+  {
+    note("geohex: QU42174351");
+    geohex_t zone = geohex_get_zone_by_code("QU42174351");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(11.1762578991997L, 175.077986079358L), "top.right");
+    location_is(polygon.top.left,     geohex_location(11.1762578991997L, 175.075953868821L), "top.left");
+    location_is(polygon.middle.right, geohex_location(11.1779844636168L, 175.079002184626L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(11.1779844636168L, 175.074937763552L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(11.1797110177528L, 175.077986079358L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(11.1797110177528L, 175.075953868821L), "bottom.left");
+  }
+  {
+    note("geohex: QU47122108");
+    geohex_t zone = geohex_get_zone_by_code("QU47122108");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(12.2825309982078L, -179.203373469491L), "top.right");
+    location_is(polygon.top.left,     geohex_location(12.2825309982078L, -179.205405680028L), "top.left");
+    location_is(polygon.middle.right, geohex_location(12.2842506542222L, -179.202357364223L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(12.2842506542222L, -179.206421785297L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(12.285970298998L, -179.203373469491L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(12.285970298998L, -179.205405680028L), "bottom.left");
+  }
+  {
+    note("geohex: XM32230826");
+    geohex_t zone = geohex_get_zone_by_code("XM32230826");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(29.2274965618893L, 140.976477163034L), "top.right");
+    location_is(polygon.top.left,     geohex_location(29.2274965618893L, 140.974444952497L), "top.left");
+    location_is(polygon.middle.right, geohex_location(29.2290324338197L, 140.977493268303L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(29.2290324338197L, 140.973428847229L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(29.2305682827135L, 140.976477163034L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(29.2305682827135L, 140.974444952497L), "bottom.left");
+  }
+  {
+    note("geohex: XM56301016");
+    geohex_t zone = geohex_get_zone_by_code("XM56301016");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(35.2341229051485L, 138.434181781233L), "top.right");
+    location_is(polygon.top.left,     geohex_location(35.2341229051485L, 138.432149570695L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.2355604188248L, 138.435197886501L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.2355604188248L, 138.431133465427L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.236997907026L, 138.434181781233L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.236997907026L, 138.432149570695L), "bottom.left");
+  }
+  {
+    note("geohex: PS61272751");
+    geohex_t zone = geohex_get_zone_by_code("PS61272751");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.4516809276044L, 129.728191840675L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.4516809276044L, 129.726159630138L), "top.left");
+    location_is(polygon.middle.right, geohex_location(21.4533189464174L, 129.729207945943L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(21.4533189464174L, 129.725143524869L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.4549569468283L, 129.728191840675L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.4549569468283L, 129.726159630138L), "bottom.left");
+  }
+  {
+    note("geohex: XM60832123");
+    geohex_t zone = geohex_get_zone_by_code("XM60832123");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(31.1155556060029L, 153.373977544074L), "top.right");
+    location_is(polygon.top.left,     geohex_location(31.1155556060029L, 153.371945333537L), "top.left");
+    location_is(polygon.middle.right, geohex_location(31.1170623309677L, 153.374993649342L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(31.1170623309677L, 153.370929228268L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(31.1185690320146L, 153.373977544074L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(31.1185690320146L, 153.371945333537L), "bottom.left");
+  }
+  {
+    note("geohex: XU63124187");
+    geohex_t zone = geohex_get_zone_by_code("XU63124187");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(40.5801426255756L, 134.297617233145L), "top.right");
+    location_is(polygon.top.left,     geohex_location(40.5801426255756L, 134.295585022608L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.5814792855475L, 134.298633338414L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.5814792855475L, 134.29456891734L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(40.5828159188102L, 134.297617233145L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(40.5828159188102L, 134.295585022608L), "bottom.left");
+  }
+  {
+    note("geohex: XX03173236");
+    geohex_t zone = geohex_get_zone_by_code("XX03173236");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.5069840498977L, 141.772087588274L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.5069840498977L, 141.770055377737L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.5082605084073L, 141.773103693543L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.5082605084073L, 141.769039272469L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.5095369399236L, 141.772087588274L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.5095369399236L, 141.770055377737L), "bottom.left");
+  }
+  {
+    note("geohex: PZ38755703");
+    geohex_t zone = geohex_get_zone_by_code("PZ38755703");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(41.3746910839103L, 47.1096885637352L), "top.right");
+    location_is(polygon.top.left,     geohex_location(41.3746910839103L, 47.1076563531982L), "top.left");
+    location_is(polygon.middle.right, geohex_location(41.3760117394249L, 47.1107046690037L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(41.3760117394249L, 47.1066402479297L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(41.3773323681254L, 47.1096885637352L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(41.3773323681254L, 47.1076563531982L), "bottom.left");
+  }
+  {
+    note("geohex: PZ57757416");
+    geohex_t zone = geohex_get_zone_by_code("PZ57757416");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(46.0034486295038L, 36.1296550322613L), "top.right");
+    location_is(polygon.top.left,     geohex_location(46.0034486295038L, 36.1276228217243L), "top.left");
+    location_is(polygon.middle.right, geohex_location(46.0046711009809L, 36.1306711375299L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(46.0046711009809L, 36.1266067164558L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(46.0058935454445L, 36.1296550322613L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(46.0058935454445L, 36.1276228217243L), "bottom.left");
+  }
+  {
+    note("geohex: Fc51504013");
+    geohex_t zone = geohex_get_zone_by_code("Fc51504013");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-39.85309909355L, -129.634710155972L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-39.85309909355L, -129.636742366509L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-39.8517479873992L, -129.633694050704L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-39.8517479873992L, -129.637758471778L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-39.8503968546537L, -129.634710155972L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-39.8503968546537L, -129.636742366509L), "bottom.left");
+  }
+  {
+    note("geohex: OW22586402");
+    geohex_t zone = geohex_get_zone_by_code("OW22586402");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(0.700441040903862L, -58.3589899913631L), "top.right");
+    location_is(polygon.top.left,     geohex_location(0.700441040903862L, -58.3610222019001L), "top.left");
+    location_is(polygon.middle.right, geohex_location(0.702200855013125L, -58.3579738860946L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(0.702200855013125L, -58.3620383071686L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(0.703960668459942L, -58.3589899913631L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(0.703960668459942L, -58.3610222019001L), "bottom.left");
+  }
+  {
+    note("geohex: PC52458806");
+    geohex_t zone = geohex_get_zone_by_code("PC52458806");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(36.0920373899818L, -111.350911954478L), "top.right");
+    location_is(polygon.top.left,     geohex_location(36.0920373899818L, -111.352944165016L), "top.left");
+    location_is(polygon.middle.right, geohex_location(36.0934595397351L, -111.34989584921L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(36.0934595397351L, -111.353960270284L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(36.0948816637541L, -111.350911954478L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(36.0948816637541L, -111.352944165016L), "bottom.left");
+  }
+  {
+    note("geohex: SV20852101");
+    geohex_t zone = geohex_get_zone_by_code("SV20852101");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.821402658847L, -93.7743230198649L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.821402658847L, -93.7763552304019L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.8220953612271L, -93.7733069145964L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.8220953612271L, -93.7773713356704L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.8227880440472L, -93.7743230198649L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.8227880440472L, -93.7763552304019L), "bottom.left");
+  }
+  {
+    note("geohex: aX46486040");
+    geohex_t zone = geohex_get_zone_by_code("aX46486040");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(77.617620405868L, 24.6100696032109L), "top.right");
+    location_is(polygon.top.left,     geohex_location(77.617620405868L, 24.6080373926739L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.617997794141L, 24.6110857084794L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.617997794141L, 24.6070212874054L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.6183751710916L, 24.6100696032109L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.6183751710916L, 24.6080373926739L), "bottom.left");
+  }
+  {
+    note("geohex: ZA62754057");
+    geohex_t zone = geohex_get_zone_by_code("ZA62754057");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(74.9589380754989L, 129.37763552304L), "top.right");
+    location_is(polygon.top.left,     geohex_location(74.9589380754989L, 129.375603312503L), "top.left");
+    location_is(polygon.middle.right, geohex_location(74.9593947944536L, 129.378651628309L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(74.9593947944536L, 129.374587207235L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(74.9598514998601L, 129.37763552304L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(74.9598514998601L, 129.375603312503L), "bottom.left");
+  }
+  {
+    note("geohex: bD28367162");
+    geohex_t zone = geohex_get_zone_by_code("bD28367162");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.4401212961002L, -52.0306863791089L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.4401212961002L, -52.0327185896459L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.4403223519231L, -52.0296702738404L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.4403223519231L, -52.0337346949144L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.4405234016108L, -52.0306863791089L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.4405234016108L, -52.0327185896459L), "bottom.left");
+  }
+  {
+    note("geohex: TK05722747");
+    geohex_t zone = geohex_get_zone_by_code("TK05722747");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(80.7604458578603L, 177.89158156785L), "top.right");
+    location_is(polygon.top.left,     geohex_location(80.7604458578603L, 177.889549357313L), "top.left");
+    location_is(polygon.middle.right, geohex_location(80.760728435108L, 177.892597673119L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(80.760728435108L, 177.888533252045L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(80.7610110037885L, 177.89158156785L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(80.7610110037885L, 177.889549357313L), "bottom.left");
+  }
+  {
+    note("geohex: TK83151057");
+    geohex_t zone = geohex_get_zone_by_code("TK83151057");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.5043908961701L, -178.852817151857L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.5043908961701L, -178.854849362394L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.5046204779964L, -178.851801046588L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.5046204779964L, -178.855865467663L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.5048500528309L, -178.852817151857L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.5048500528309L, -178.854849362394L), "bottom.left");
+  }
+  {
+    note("geohex: TO31130720");
+    geohex_t zone = geohex_get_zone_by_code("TO31130720");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.8379612821613L, -176.039221663364L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.8379612821613L, -176.041253873901L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.838150193033L, -176.038205558096L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.838150193033L, -176.04226997917L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.8383390981356L, -176.039221663364L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.8383390981356L, -176.041253873901L), "bottom.left");
+  }
+  {
+    note("geohex: TO51331450");
+    geohex_t zone = geohex_get_zone_by_code("TO51331450");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.6149040358523L, 172.008332063202L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.6149040358523L, 172.006299852665L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.6150692030928L, 172.00934816847L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.6150692030928L, 172.005283747396L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.6152343652824L, 172.008332063202L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.6152343652824L, 172.006299852665L), "bottom.left");
+  }
+  {
+    note("geohex: bb33488116");
+    geohex_t zone = geohex_get_zone_by_code("bb33488116");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0491746929231L, 88.8594218361022L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0491746929231L, 88.8573896255652L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0493265751955L, 88.8604379413707L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0493265751955L, 88.8563735202967L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.04947845282L, 88.8594218361022L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.04947845282L, 88.8573896255652L), "bottom.left");
+  }
+  {
+    note("geohex: BV804240512");
+    geohex_t zone = geohex_get_zone_by_code("BV804240512");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0207417696776L, -80.5077139324968L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0207417696776L, -80.5083913360091L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0206908511882L, -80.5073752307406L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0206908511882L, -80.5087300377653L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0206399321795L, -80.5077139324968L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0206399321795L, -80.5083913360091L), "bottom.left");
+  }
+  {
+    note("geohex: CI708565326");
+    geohex_t zone = geohex_get_zone_by_code("CI708565326");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.2589708455591L, 126.562346525767L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.2589708455591L, 126.561669122254L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.2589223575258L, 126.562685227523L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.2589223575258L, 126.561330420498L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.2588738689976L, 126.562346525767L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.2588738689976L, 126.561669122254L), "bottom.left");
+  }
+  {
+    note("geohex: CI754848748");
+    geohex_t zone = geohex_get_zone_by_code("CI754848748");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9901483841328L, 124.453928093617L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9901483841328L, 124.453250690105L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9900971535871L, 124.454266795373L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9900971535871L, 124.452911988349L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9900459225188L, 124.453928093617L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9900459225188L, 124.453250690105L), "bottom.left");
+  }
+  {
+    note("geohex: DO055580431");
+    geohex_t zone = geohex_get_zone_by_code("DO055580431");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9631803444714L, 176.792494369083L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9631803444714L, 176.791816965571L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9631288388604L, 176.792833070839L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9631288388604L, 176.791478263815L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9630773327241L, 176.792494369083L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9630773327241L, 176.791816965571L), "bottom.left");
+  }
+  {
+    note("geohex: DO053480025");
+    geohex_t zone = geohex_get_zone_by_code("DO053480025");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0506933065098L, 178.511744483395L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0506933065098L, 178.511067079883L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0506426935439L, 178.512083185151L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0506426935439L, 178.510728378127L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0505920800617L, 178.511744483395L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0505920800617L, 178.511067079883L), "bottom.left");
+  }
+  {
+    note("geohex: DO073506567");
+    geohex_t zone = geohex_get_zone_by_code("DO073506567");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0506933065098L, -177.230774441565L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0506933065098L, -177.231451845078L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0506426935439L, -177.230435739809L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0506426935439L, -177.231790546834L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0505920800617L, -177.230774441565L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0505920800617L, -177.231451845078L), "bottom.left");
+  }
+  {
+    note("geohex: CZ347013544");
+    geohex_t zone = geohex_get_zone_by_code("CZ347013544");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.3495965283909L, -12.6562685227523L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.3495965283909L, -12.6569459262646L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.3494780602137L, -12.6559298209961L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.3494780602137L, -12.6572846280208L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.3493595908485L, -12.6562685227523L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.3493595908485L, -12.6569459262646L), "bottom.left");
+  }
+  {
+    note("geohex: EU413474586");
+    geohex_t zone = geohex_get_zone_by_code("EU413474586");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.9156941218801L, 178.594049010144L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.9156941218801L, 178.593371606632L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.9155713059442L, 178.5943877119L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.9155713059442L, 178.593032904876L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.9154484887786L, 178.594049010144L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.9154484887786L, 178.593371606632L), "bottom.left");
+  }
+  {
+    note("geohex: EU354580674");
+    geohex_t zone = geohex_get_zone_by_code("EU354580674");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.0621905452025L, -175.780792223408L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.0621905452025L, -175.78146962692L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.0620691964047L, -175.780453521651L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.0620691964047L, -175.781808328676L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.0619478463913L, -175.780792223408L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.0619478463913L, -175.78146962692L), "bottom.left");
+  }
+  {
+    note("geohex: OK474555348");
+    geohex_t zone = geohex_get_zone_by_code("OK474555348");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-48.9230287575873L, 61.8750529221494L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-48.9230287575873L, 61.8743755186371L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-48.9226432855131L, 61.8753916239056L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-48.9226432855131L, 61.8740368168809L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-48.9222578104636L, 61.8750529221494L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-48.9222578104636L, 61.8743755186371L), "bottom.left");
+  }
+  {
+    note("geohex: Fb484868583");
+    geohex_t zone = geohex_get_zone_by_code("Fb484868583");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-47.9904965723643L, -99.8431810868939L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-47.9904965723643L, -99.8438584904063L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.9901039539973L, -99.8428423851378L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.9901039539973L, -99.8441971921624L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.9897113326433L, -99.8431810868939L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.9897113326433L, -99.8438584904063L), "bottom.left");
+  }
+  {
+    note("geohex: GH147081657");
+    geohex_t zone = geohex_get_zone_by_code("GH147081657");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-25.8005659034605L, -165.936764382123L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-25.8005659034605L, -165.937441785636L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-25.8000377340134L, -165.936425680367L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-25.8000377340134L, -165.937780487392L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-25.7995095622126L, -165.936764382123L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-25.7995095622126L, -165.937441785636L), "bottom.left");
+  }
+  {
+    note("geohex: GI730641802");
+    geohex_t zone = geohex_get_zone_by_code("GI730641802");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-9.79762309124821L, -170.646412301648L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-9.79762309124821L, -170.64708970516L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-9.79704499838907L, -170.646073599892L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-9.79704499838907L, -170.647428406916L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-9.79646690452274L, -170.646412301648L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-9.79646690452274L, -170.64708970516L), "bottom.left");
+  }
+  {
+    note("geohex: GI576514101");
+    geohex_t zone = geohex_get_zone_by_code("GI576514101");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-6.31710146423577L, 176.697996579112L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-6.31710146423577L, 176.6973191756L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-6.31651837729493L, 176.698335280868L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-6.31651837729493L, 176.696980473844L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-6.31593528969724L, 176.697996579112L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-6.31593528969724L, 176.6973191756L), "bottom.left");
+  }
+  {
+    note("geohex: OY041035522");
+    geohex_t zone = geohex_get_zone_by_code("OY041035522");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-8.4074328257882L, -0.702806144049857L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-8.4074328257882L, -0.703483547562194L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-8.40685248119733L, -0.702467442293689L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-8.40685248119733L, -0.703822249318363L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-8.40627213573772L, -0.702806144049857L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-8.40627213573772L, -0.703483547562194L), "bottom.left");
+  }
+  {
+    note("geohex: OY537117080");
+    geohex_t zone = geohex_get_zone_by_code("OY537117080");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.80950712167055L, -4.00514826669376L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.80950712167055L, -4.0058256702061L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.81009306503265L, -4.00480956493759L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.81009306503265L, -4.00616437196227L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(2.81067900810061L, -4.00514826669376L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(2.81067900810061L, -4.0058256702061L), "bottom.left");
+  }
+  {
+    note("geohex: PA402570238");
+    geohex_t zone = geohex_get_zone_by_code("PA402570238");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(9.09972796439679L, -61.6609934122508L), "top.right");
+    location_is(polygon.top.left,     geohex_location(9.09972796439679L, -61.6616708157632L), "top.left");
+    location_is(polygon.middle.right, geohex_location(9.10030722934531L, -61.6606547104947L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(9.10030722934531L, -61.6620095175193L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(9.10088649335576L, -61.6609934122508L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(9.10088649335576L, -61.6616708157632L), "bottom.left");
+  }
+  {
+    note("geohex: QU058877078");
+    geohex_t zone = geohex_get_zone_by_code("QU058877078");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(6.31476911253157L, 177.890904164338L), "top.right");
+    location_is(polygon.top.left,     geohex_location(6.31476911253157L, 177.890226760826L), "top.left");
+    location_is(polygon.middle.right, geohex_location(6.31535220144277L, 177.891242866094L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(6.31535220144277L, 177.88988805907L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(6.31593528969724L, 177.890904164338L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(6.31593528969724L, 177.890226760826L), "bottom.left");
+  }
+  {
+    note("geohex: QU832828267");
+    geohex_t zone = geohex_get_zone_by_code("QU832828267");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(17.9764014229065L, -179.434706768955L), "top.right");
+    location_is(polygon.top.left,     geohex_location(17.9764014229065L, -179.435384172467L), "top.left");
+    location_is(polygon.middle.right, geohex_location(17.9769594326653L, -179.434368067198L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(17.9769594326653L, -179.435722874223L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(17.9775174406607L, -179.434706768955L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(17.9775174406607L, -179.435384172467L), "bottom.left");
+  }
+  {
+    note("geohex: PZ382714446");
+    geohex_t zone = geohex_get_zone_by_code("PZ382714446");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(40.9794989843845L, 45.3521651509763L), "top.right");
+    location_is(polygon.top.left,     geohex_location(40.9794989843845L, 45.351487747464L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.9799418699384L, 45.3525038527325L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.9799418699384L, 45.3511490457078L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(40.9803847525186L, 45.3521651509763L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(40.9803847525186L, 45.351487747464L), "bottom.left");
+  }
+  {
+    note("geohex: PZ028668414");
+    geohex_t zone = geohex_get_zone_by_code("PZ028668414");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(36.5976355242024L, 36.211282155498L), "top.right");
+    location_is(polygon.top.left,     geohex_location(36.5976355242024L, 36.2106047519856L), "top.left");
+    location_is(polygon.middle.right, geohex_location(36.5981065089872L, 36.2116208572542L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(36.5981065089872L, 36.2102660502295L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(36.5985774908969L, 36.211282155498L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(36.5985774908969L, 36.2106047519856L), "bottom.left");
+  }
+  {
+    note("geohex: PS383657231");
+    geohex_t zone = geohex_get_zone_by_code("PS383657231");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(20.9599974267292L, 127.830445900862L), "top.right");
+    location_is(polygon.top.left,     geohex_location(20.9599974267292L, 127.82976849735L), "top.left");
+    location_is(polygon.middle.right, geohex_location(20.9605452560715L, 127.830784602618L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(20.9605452560715L, 127.829429795593L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(20.9610930834072L, 127.830445900862L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(20.9610930834072L, 127.82976849735L), "bottom.left");
+  }
+  {
+    note("geohex: XM602176827");
+    geohex_t zone = geohex_get_zone_by_code("XM602176827");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(30.4472512737085L, 151.737370658267L), "top.right");
+    location_is(polygon.top.left,     geohex_location(30.4472512737085L, 151.736693254755L), "top.left");
+    location_is(polygon.middle.right, geohex_location(30.4477570198834L, 151.737709360023L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(30.4477570198834L, 151.736354552998L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(30.4482627634342L, 151.737370658267L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(30.4482627634342L, 151.736693254755L), "bottom.left");
+  }
+  {
+    note("geohex: XM482452815");
+    geohex_t zone = geohex_get_zone_by_code("XM482452815");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(34.8840529569388L, 138.377618587952L), "top.right");
+    location_is(polygon.top.left,     geohex_location(34.8840529569388L, 138.37694118444L), "top.left");
+    location_is(polygon.middle.right, geohex_location(34.8845341899227L, 138.377957289709L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(34.8845341899227L, 138.376602482684L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(34.8850154200885L, 138.377618587952L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(34.8850154200885L, 138.37694118444L), "bottom.left");
+  }
+  {
+    note("geohex: XX033123366");
+    geohex_t zone = geohex_get_zone_by_code("XX033123366");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.3237458129131L, 142.596487662789L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.3237458129131L, 142.595810259276L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.3241725915388L, 142.596826364545L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.3241725915388L, 142.59547155752L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.3245993671663L, 142.596487662789L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.3245993671663L, 142.595810259276L), "bottom.left");
+  }
+  {
+    note("geohex: OI860616105");
+    geohex_t zone = geohex_get_zone_by_code("OI860616105");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(28.6113084912756L, -115.09898558824L), "top.right");
+    location_is(polygon.top.left,     geohex_location(28.6113084912756L, -115.099662991753L), "top.left");
+    location_is(polygon.middle.right, geohex_location(28.6118235021042L, -115.098646886484L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(28.6118235021042L, -115.100001693509L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.6123385104076L, -115.09898558824L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.6123385104076L, -115.099662991753L), "bottom.left");
+  }
+  {
+    note("geohex: RX114077466");
+    geohex_t zone = geohex_get_zone_by_code("RX114077466");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(46.3151145393293L, -108.770681975986L), "top.right");
+    location_is(polygon.top.left,     geohex_location(46.3151145393293L, -108.771359379498L), "top.left");
+    location_is(polygon.middle.right, geohex_location(46.3155197311649L, -108.77034327423L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(46.3155197311649L, -108.771698081255L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(46.3159249200003L, -108.770681975986L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(46.3159249200003L, -108.771359379498L), "bottom.left");
+  }
+  {
+    note("geohex: SV355072242");
+    geohex_t zone = geohex_get_zone_by_code("SV355072242");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.5130728861928L, -76.2888448576606L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.5130728861928L, -76.2895222611729L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.5133066879411L, -76.2885061559044L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.5133066879411L, -76.2898609629291L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.5135404874939L, -76.2888448576606L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.5135404874939L, -76.2895222611729L), "bottom.left");
+  }
+  {
+    note("geohex: YG413103084");
+    geohex_t zone = geohex_get_zone_by_code("YG413103084");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(70.8440811183794L, 98.2993784822774L), "top.right");
+    location_is(polygon.top.left,     geohex_location(70.8440811183794L, 98.2987010787651L), "top.left");
+    location_is(polygon.middle.right, geohex_location(70.8442736203269L, 98.2997171840336L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(70.8442736203269L, 98.2983623770089L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(70.8444661204125L, 98.2993784822774L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(70.8444661204125L, 98.2987010787651L), "bottom.left");
+  }
+  {
+    note("geohex: ZA486483578");
+    geohex_t zone = geohex_get_zone_by_code("ZA486483578");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.496626160202L, 121.503158393876L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.496626160202L, 121.502480990364L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.4967730780092L, 121.503497095632L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.4967730780092L, 121.502142288608L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.4969199943602L, 121.503158393876L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.4969199943602L, 121.502480990364L), "bottom.left");
+  }
+  {
+    note("geohex: aX426174078");
+    geohex_t zone = geohex_get_zone_by_code("aX426174078");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(77.5420412878298L, 16.8758150011008L), "top.right");
+    location_is(polygon.top.left,     geohex_location(77.5420412878298L, 16.8751375975884L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.5421678409154L, 16.876153702857L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.5421678409154L, 16.8747988958323L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.5422943927357L, 16.8758150011008L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.5422943927357L, 16.8751375975884L), "bottom.left");
+  }
+  {
+    note("geohex: aX747576237");
+    geohex_t zone = geohex_get_zone_by_code("aX747576237");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.4900861697121L, 27.2837812664059L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.4900861697121L, 27.2831038628935L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.4902032275222L, 27.2841199681621L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.4902032275222L, 27.2827651611374L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.4903202841578L, 27.2837812664059L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.4903202841578L, 27.2831038628935L), "bottom.left");
+  }
+  {
+    note("geohex: TK184816376");
+    geohex_t zone = geohex_get_zone_by_code("TK184816376");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.5181325752664L, 173.320462666599L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.5181325752664L, 173.319785263087L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.5182191033962L, 173.320801368355L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.5182191033962L, 173.31944656133L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.5183056306498L, 173.320462666599L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.5183056306498L, 173.319785263087L), "bottom.left");
+  }
+  {
+    note("geohex: TO310523631");
+    geohex_t zone = geohex_get_zone_by_code("TO310523631");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.829706545322L, -175.918982539924L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.829706545322L, -175.919659943437L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.829769600284L, -175.918643838168L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.829769600284L, -175.919998645193L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.8298326546042L, -175.918982539924L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.8298326546042L, -175.919659943437L), "bottom.left");
+  }
+  {
+    note("geohex: TO423806423");
+    geohex_t zone = geohex_get_zone_by_code("TO423806423");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.4057036494073L, 176.346424156209L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.4057036494073L, 176.345746752697L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.4057608378714L, 176.346762857965L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.4057608378714L, 176.345408050941L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.4058180257527L, 176.346424156209L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.4058180257527L, 176.345746752697L), "bottom.left");
+  }
+  {
+    note("geohex: bb303856635");
+    geohex_t zone = geohex_get_zone_by_code("bb303856635");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.8969778328773L, 87.4006333722841L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.8969778328773L, 87.3999559687717L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.8970300131518L, 87.4009720740402L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.8970300131518L, 87.3996172670156L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.897082192894L, 87.4006333722841L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.897082192894L, 87.3999559687717L), "bottom.left");
+  }
+  {
+    note("geohex: TO815178640");
+    geohex_t zone = geohex_get_zone_by_code("TO815178640");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0496303257969L, 176.891056580128L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0496303257969L, 176.890379176616L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0496809490896L, 176.891395281885L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0496809490896L, 176.89004047486L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.049731571866L, 176.891056580128L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.049731571866L, 176.890379176616L), "bottom.left");
+  }
+  {
+    note("geohex: SV1700305142");
+    geohex_t zone = geohex_get_zone_by_code("SV1700305142");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(65.9464610452602L, -84.3748976838445L), "top.right");
+    location_is(polygon.top.left,     geohex_location(65.9464610452602L, -84.3751234850153L), "top.left");
+    location_is(polygon.middle.right, geohex_location(65.9465407491988L, -84.3747847832591L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(65.9465407491988L, -84.3752363856007L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(65.9466204528889L, -84.3748976838445L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(65.9466204528889L, -84.3751234850153L), "bottom.left");
+  }
+  {
+    note("geohex: BV5482764471");
+    geohex_t zone = geohex_get_zone_by_code("BV5482764471");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511319305883L, -87.0225293118145L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511319305883L, -87.0227551129853L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511150611485L, -87.0224164112291L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511150611485L, -87.0228680135707L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0510981916512L, -87.0225293118145L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0510981916512L, -87.0227551129853L), "bottom.left");
+  }
+  {
+    note("geohex: BV7560068257");
+    geohex_t zone = geohex_get_zone_by_code("BV7560068257");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0501871536168L, -74.0258655241127L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0501871536168L, -74.0260913252835L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0501702809645L, -74.0257526235274L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0501702809645L, -74.0262042258689L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0501534082548L, -74.0258655241127L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0501534082548L, -74.0260913252835L), "bottom.left");
+  }
+  {
+    note("geohex: CI5263615540");
+    geohex_t zone = geohex_get_zone_by_code("CI5263615540");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1413126810499L, 110.742377799229L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1413126810499L, 110.742151998058L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1412961182694L, 110.742490699814L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1412961182694L, 110.742039097473L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.1412795554325L, 110.742377799229L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.1412795554325L, 110.742151998058L), "bottom.left");
+  }
+  {
+    note("geohex: CI7265571616");
+    geohex_t zone = geohex_get_zone_by_code("CI7265571616");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1114249591416L, 123.398646321981L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1114249591416L, 123.39842052081L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1114082947234L, 123.398759222567L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1114082947234L, 123.398307620225L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.1113916302485L, 123.398646321981L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.1113916302485L, 123.39842052081L), "bottom.left");
+  }
+  {
+    note("geohex: CI7505181555");
+    geohex_t zone = geohex_get_zone_by_code("CI7505181555");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0813706016566L, 124.101791167787L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0813706016566L, 124.101565366616L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0813538350387L, 124.101904068373L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0813538350387L, 124.101452466031L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0813370683637L, 124.101791167787L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0813370683637L, 124.101565366616L), "bottom.left");
+  }
+  {
+    note("geohex: CI5736546251");
+    geohex_t zone = geohex_get_zone_by_code("CI5736546251");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511319305883L, 116.718770286824L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511319305883L, 116.718544485653L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511150611485L, 116.718883187409L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511150611485L, 116.718431585068L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0510981916512L, 116.718770286824L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0510981916512L, 116.718544485653L), "bottom.left");
+  }
+  {
+    note("geohex: DO0273028158");
+    geohex_t zone = geohex_get_zone_by_code("DO0273028158");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1114416235032L, 176.484388671555L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1114416235032L, 176.484162870384L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1114249591416L, 176.484501572141L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1114249591416L, 176.484049969799L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.1114082947234L, 176.484388671555L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.1114082947234L, 176.484162870384L), "bottom.left");
+  }
+  {
+    note("geohex: DO0536546500");
+    geohex_t zone = geohex_get_zone_by_code("DO0536546500");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511487999708L, 178.945395631876L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511487999708L, 178.945169830706L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511319305883L, 178.945508532462L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511319305883L, 178.94505693012L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511150611485L, 178.945395631876L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511150611485L, 178.945169830706L), "bottom.left");
+  }
+  {
+    note("geohex: DO0716764500");
+    geohex_t zone = geohex_get_zone_by_code("DO0716764500");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511487999708L, -177.890452561996L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511487999708L, -177.890678363167L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511319305883L, -177.890339661411L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511319305883L, -177.890791263753L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511150611485L, -177.890452561996L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511150611485L, -177.890678363167L), "bottom.left");
+  }
+  {
+    note("geohex: EU4016113514");
+    geohex_t zone = geohex_get_zone_by_code("EU4016113514");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.2066167467967L, 179.648540477682L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.2066167467967L, 179.648314676512L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.2065767797249L, 179.648653378268L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.2065767797249L, 179.648201775926L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.2065368125195L, 179.648540477682L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.2065368125195L, 179.648314676512L), "bottom.left");
+  }
+  {
+    note("geohex: EU4827777232");
+    geohex_t zone = geohex_get_zone_by_code("EU4827777232");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.9520512140467L, 178.878671385911L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.9520512140467L, 178.87844558474L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.9520070654571L, 178.878784286497L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.9520070654571L, 178.878332684155L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.9519629167208L, 178.878671385911L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.9519629167208L, 178.87844558474L), "bottom.left");
+  }
+  {
+    note("geohex: EU7445272188");
+    geohex_t zone = geohex_get_zone_by_code("EU7445272188");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.6712988059574L, -173.738646434882L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.6712988059574L, -173.738872236053L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.6712537244362L, -173.738533534296L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.6712537244362L, -173.738985136638L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.6712086427653L, -173.738646434882L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.6712086427653L, -173.738872236053L), "bottom.left");
+  }
+  {
+    note("geohex: OK1777354303");
+    geohex_t zone = geohex_get_zone_by_code("OK1777354303");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-51.179458323895L, 56.6015794791896L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-51.179458323895L, 56.6013536780188L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-51.1793357370083L, 56.601692379775L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-51.1793357370083L, 56.6012407774334L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-51.1792131497957L, 56.6015794791896L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-51.1792131497957L, 56.6013536780188L), "bottom.left");
+  }
+  {
+    note("geohex: CZ3420476772");
+    geohex_t zone = geohex_get_zone_by_code("CZ3420476772");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.4202673865305L, -14.765590159585L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.4202673865305L, -14.7658159607558L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.4202281335297L, -14.7654772589996L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.4202281335297L, -14.7659288613412L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.4201888803977L, -14.765590159585L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.4201888803977L, -14.7658159607558L), "bottom.left");
+  }
+  {
+    note("geohex: Fb4334484641");
+    geohex_t zone = geohex_get_zone_by_code("Fb4334484641");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-50.9586433747794L, -97.0311662065968L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-50.9586433747794L, -97.0313920077676L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-50.9585202016351L, -97.0310533060114L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-50.9585202016351L, -97.031504908353L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-50.9583970281643L, -97.0311662065968L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-50.9583970281643L, -97.0313920077676L), "bottom.left");
+  }
+  {
+    note("geohex: GH5856584625");
+    geohex_t zone = geohex_get_zone_by_code("GH5856584625");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-15.9615870788838L, -166.992046153759L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-15.9615870788838L, -166.99227195493L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-15.9613990684089L, -166.991933253174L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-15.9613990684089L, -166.992384855515L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-15.9612110577575L, -166.992046153759L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-15.9612110577575L, -166.99227195493L), "bottom.left");
+  }
+  {
+    note("geohex: GI1730824803");
+    geohex_t zone = geohex_get_zone_by_code("GI1730824803");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-14.5692015319049L, 176.241878214138L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-14.5692015319049L, 176.241652412968L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-14.5690122702619L, 176.241991114724L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-14.5690122702619L, 176.241539512382L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-14.5688230084564L, 176.241878214138L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-14.5688230084564L, 176.241652412968L), "bottom.left");
+  }
+  {
+    note("geohex: GI7234521114");
+    geohex_t zone = geohex_get_zone_by_code("GI7234521114");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-8.05926566432509L, -177.187307716191L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-8.05926566432509L, -177.187533517361L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-8.05907204605798L, -177.187194815605L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-8.05907204605798L, -177.187646417947L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-8.05887842769819L, -177.187307716191L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-8.05887842769819L, -177.187533517361L), "bottom.left");
+  }
+  {
+    note("geohex: QU3851424320");
+    geohex_t zone = geohex_get_zone_by_code("QU3851424320");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(10.4877080806808L, -174.374728332966L), "top.right");
+    location_is(polygon.top.left,     geohex_location(10.4877080806808L, -174.374954134137L), "top.left");
+    location_is(polygon.middle.right, geohex_location(10.4879003633167L, -174.374615432381L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(10.4879003633167L, -174.375067034723L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(10.488092645833L, -174.374728332966L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(10.488092645833L, -174.374954134137L), "bottom.left");
+  }
+  {
+    note("geohex: QU8152020110");
+    geohex_t zone = geohex_get_zone_by_code("QU8152020110");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(17.9786334513613L, 176.484388671555L), "top.right");
+    location_is(polygon.top.left,     geohex_location(17.9786334513613L, 176.484162870384L), "top.left");
+    location_is(polygon.middle.right, geohex_location(17.9788194524589L, 176.484501572141L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(17.9788194524589L, 176.484049969799L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(17.9790054533606L, 176.484388671555L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(17.9790054533606L, 176.484162870384L), "bottom.left");
+  }
+  {
+    note("geohex: PA0426257051");
+    geohex_t zone = geohex_get_zone_by_code("PA0426257051");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(3.86386480752959L, -61.171795175758L), "top.right");
+    location_is(polygon.top.left,     geohex_location(3.86386480752959L, -61.1720209769288L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.86405991256846L, -61.1716822751726L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.86405991256846L, -61.1721338775142L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(3.86425501756247L, -61.171795175758L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(3.86425501756247L, -61.1720209769288L), "bottom.left");
+  }
+  {
+    note("geohex: OY4244664644");
+    geohex_t zone = geohex_get_zone_by_code("OY4244664644");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-0.000195549550100057L, -4.21875617425076L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-0.000195549550100057L, -4.21898197542154L), "top.left");
+    location_is(polygon.middle.right, geohex_location(0L, -4.21864327366537L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(0L, -4.21909487600693L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(0.000195549550087335L, -4.21875617425076L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(0.000195549550087335L, -4.21898197542154L), "bottom.left");
+  }
+  {
+    note("geohex: OY7353226324");
+    geohex_t zone = geohex_get_zone_by_code("OY7353226324");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(2.84798344186291L, 8.1950018910848L), "top.right");
+    location_is(polygon.top.left,     geohex_location(2.84798344186291L, 8.19477608991403L), "top.left");
+    location_is(polygon.middle.right, geohex_location(2.84817874986869L, 8.19511479167019L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(2.84817874986869L, 8.19466318932864L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(2.84837405784135L, 8.1950018910848L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(2.84837405784135L, 8.19477608991403L), "bottom.left");
+  }
+  {
+    note("geohex: OY3444432334");
+    geohex_t zone = geohex_get_zone_by_code("OY3444432334");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-3.86445012251156L, 6.67998893574263L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-3.86445012251156L, 6.67976313457185L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-3.86425501756244L, 6.68010183632802L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-3.86425501756244L, 6.67965023398646L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-3.86405991256843L, 6.67998893574263L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-3.86405991256843L, 6.67976313457185L), "bottom.left");
+  }
+  {
+    note("geohex: QU8136543688");
+    geohex_t zone = geohex_get_zone_by_code("QU8136543688");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(17.3085199124803L, 178.945395631876L), "top.right");
+    location_is(polygon.top.left,     geohex_location(17.3085199124803L, 178.945169830706L), "top.left");
+    location_is(polygon.middle.right, geohex_location(17.3087066067811L, 178.945508532462L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(17.3087066067811L, 178.94505693012L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(17.3088933008923L, 178.945395631876L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(17.3088933008923L, 178.945169830706L), "bottom.left");
+  }
+  {
+    note("geohex: QU8831183154");
+    geohex_t zone = geohex_get_zone_by_code("QU8831183154");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(20.7493001766198L, -179.583283939327L), "top.right");
+    location_is(polygon.top.left,     geohex_location(20.7493001766198L, -179.583509740498L), "top.left");
+    location_is(polygon.middle.right, geohex_location(20.749483042625L, -179.583171038742L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(20.749483042625L, -179.583622641083L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(20.7496659084091L, -179.583283939327L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(20.7496659084091L, -179.583509740498L), "bottom.left");
+  }
+  {
+    note("geohex: PS6206841033");
+    geohex_t zone = geohex_get_zone_by_code("PS6206841033");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.779643369772L, 129.375038809576L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.779643369772L, 129.374813008405L), "top.left");
+    location_is(polygon.middle.right, geohex_location(21.7798249604327L, 129.375151710162L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(21.7798249604327L, 129.37470010782L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.7800065508635L, 129.375038809576L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.7800065508635L, 129.374813008405L), "bottom.left");
+  }
+  {
+    note("geohex: XM0565771230");
+    geohex_t zone = geohex_get_zone_by_code("XM0565771230");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(27.3263890033868L, 139.107972474837L), "top.right");
+    location_is(polygon.top.left,     geohex_location(27.3263890033868L, 139.107746673666L), "top.left");
+    location_is(polygon.middle.right, geohex_location(27.326562730624L, 139.108085375423L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(27.326562730624L, 139.107633773081L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(27.3267364575889L, 139.107972474837L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(27.3267364575889L, 139.107746673666L), "bottom.left");
+  }
+  {
+    note("geohex: XM4863207510");
+    geohex_t zone = geohex_get_zone_by_code("XM4863207510");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(34.6995336616501L, 141.568979435158L), "top.right");
+    location_is(polygon.top.left,     geohex_location(34.6995336616501L, 141.568753633988L), "top.left");
+    location_is(polygon.middle.right, geohex_location(34.6996944322973L, 141.569092335744L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(34.6996944322973L, 141.568640733402L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(34.6998552026322L, 141.568979435158L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(34.6998552026322L, 141.568753633988L), "bottom.left");
+  }
+  {
+    note("geohex: XX0330807788");
+    geohex_t zone = geohex_get_zone_by_code("XX0330807788");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.2880280488834L, 142.97526912677L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.2880280488834L, 142.9750433256L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.2881703923717L, 142.975382027356L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.2881703923717L, 142.974930425014L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.2883127355269L, 142.97526912677L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.2883127355269L, 142.9750433256L), "bottom.left");
+  }
+  {
+    note("geohex: XM6054354111");
+    geohex_t zone = geohex_get_zone_by_code("XM6054354111");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(30.8582259392548L, 152.643172054847L), "top.right");
+    location_is(polygon.top.left,     geohex_location(30.8582259392548L, 152.642946253676L), "top.left");
+    location_is(polygon.middle.right, geohex_location(30.8583938064873L, 152.643284955432L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(30.8583938064873L, 152.642833353091L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(30.8585616734259L, 152.643172054847L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(30.8585616734259L, 152.642946253676L), "bottom.left");
+  }
+  {
+    note("geohex: PZ1548687734");
+    geohex_t zone = geohex_get_zone_by_code("PZ1548687734");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(40.1786866571785L, 31.289042433685L), "top.right");
+    location_is(polygon.top.left,     geohex_location(40.1786866571785L, 31.2888166325142L), "top.left");
+    location_is(polygon.middle.right, geohex_location(40.1788360639254L, 31.2891553342704L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(40.1788360639254L, 31.2887037319288L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(40.1789854703432L, 31.289042433685L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(40.1789854703432L, 31.2888166325142L), "bottom.left");
+  }
+  {
+    note("geohex: PZ7555070851");
+    geohex_t zone = geohex_get_zone_by_code("PZ7555070851");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(45.9154957370512L, 43.4829830592672L), "top.right");
+    location_is(polygon.top.left,     geohex_location(45.9154957370512L, 43.4827572580964L), "top.left");
+    location_is(polygon.middle.right, geohex_location(45.9156317843344L, 43.4830959598526L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(45.9156317843344L, 43.482644357511L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(45.9157678312841L, 43.4829830592672L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(45.9157678312841L, 43.4827572580964L), "bottom.left");
+  }
+  {
+    note("geohex: OI7581576564");
+    geohex_t zone = geohex_get_zone_by_code("OI7581576564");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(27.8389058485433L, -115.839952130152L), "top.right");
+    location_is(polygon.top.left,     geohex_location(27.8389058485433L, -115.840177931323L), "top.left");
+    location_is(polygon.middle.right, geohex_location(27.8390787658482L, -115.839839229566L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(27.8390787658482L, -115.840290831908L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(27.8392516828775L, -115.839952130152L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(27.8392516828775L, -115.840177931323L), "bottom.left");
+  }
+  {
+    note("geohex: RX1535370770");
+    geohex_t zone = geohex_get_zone_by_code("RX1535370770");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(47.9897113326433L, -108.281145037737L), "top.right");
+    location_is(polygon.top.left,     geohex_location(47.9897113326433L, -108.281370838908L), "top.left");
+    location_is(polygon.middle.right, geohex_location(47.9898422067599L, -108.281032137152L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(47.9898422067599L, -108.281483739493L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(47.9899730805445L, -108.281145037737L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(47.9899730805445L, -108.281370838908L), "bottom.left");
+  }
+  {
+    note("geohex: SV7031782060");
+    geohex_t zone = geohex_get_zone_by_code("SV7031782060");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(67.74270214104L, -72.7733464298012L), "top.right");
+    location_is(polygon.top.left,     geohex_location(67.74270214104L, -72.773572230972L), "top.left");
+    location_is(polygon.middle.right, geohex_location(67.7427762085421L, -72.7732335292158L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(67.7427762085421L, -72.7736851315574L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(67.7428502758102L, -72.7733464298012L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(67.7428502758102L, -72.773572230972L), "bottom.left");
+  }
+  {
+    note("geohex: SW6431665682");
+    geohex_t zone = geohex_get_zone_by_code("SW6431665682");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(71.3006994778419L, -85.9569735869081L), "top.right");
+    location_is(polygon.top.left,     geohex_location(71.3006994778419L, -85.9571993880788L), "top.left");
+    location_is(polygon.middle.right, geohex_location(71.3007621712053L, -85.9568606863227L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(71.3007621712053L, -85.9573122886642L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(71.3008248643661L, -85.9569735869081L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(71.3008248643661L, -85.9571993880788L), "bottom.left");
+  }
+  {
+    note("geohex: aX1617612856");
+    geohex_t zone = geohex_get_zone_by_code("aX1617612856");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.639208026748L, 17.4026091325284L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.639208026748L, 17.4023833313576L), "top.left");
+    location_is(polygon.middle.right, geohex_location(76.6392532146874L, 17.4027220331137L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(76.6392532146874L, 17.4022704307722L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.6392984024766L, 17.4026091325284L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.6392984024766L, 17.4023833313576L), "bottom.left");
+  }
+  {
+    note("geohex: aX7255422107");
+    geohex_t zone = geohex_get_zone_by_code("aX7255422107");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.4803662762568L, 21.1588116084382L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.4803662762568L, 21.1585858072674L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.4804053281635L, 21.1589245090236L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.4804053281635L, 21.158472906682L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.4804443799395L, 21.1588116084382L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.4804443799395L, 21.1585858072674L), "bottom.left");
+  }
+  {
+    note("geohex: ZA7323011017");
+    geohex_t zone = geohex_get_zone_by_code("ZA7323011017");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.4088035771272L, 127.617176695061L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.4088035771272L, 127.61695089389L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.4088528400187L, 127.617289595647L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.4088528400187L, 127.616837993305L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.4089021027474L, 127.617176695061L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.4089021027474L, 127.61695089389L), "bottom.left");
+  }
+  {
+    note("geohex: TK0130411728");
+    geohex_t zone = geohex_get_zone_by_code("TK0130411728");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(80.1399383692427L, 178.483067734706L), "top.right");
+    location_is(polygon.top.left,     geohex_location(80.1399383692427L, 178.482841933535L), "top.left");
+    location_is(polygon.middle.right, geohex_location(80.1399718555572L, 178.483180635292L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(80.1399718555572L, 178.48272903295L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(80.1400053417591L, 178.483067734706L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(80.1400053417591L, 178.482841933535L), "bottom.left");
+  }
+  {
+    note("geohex: TK8071386820");
+    geohex_t zone = geohex_get_zone_by_code("TK8071386820");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.4188865659156L, -179.407497727876L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.4188865659156L, -179.407723529047L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.4189123646549L, -179.40738482729L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.4189123646549L, -179.407836429632L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.4189381633069L, -179.407497727876L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.4189381633069L, -179.407723529047L), "bottom.left");
+  }
+  {
+    note("geohex: TO4434206021");
+    geohex_t zone = geohex_get_zone_by_code("TO4434206021");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.3837766958343L, -179.407836429632L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.3837766958343L, -179.408062230803L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.3837958331987L, -179.407723529047L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.3837958331987L, -179.408175131388L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.3838149704982L, -179.407836429632L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.3838149704982L, -179.408062230803L), "bottom.left");
+  }
+  {
+    note("geohex: bb3372146218");
+    geohex_t zone = geohex_get_zone_by_code("bb3372146218");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0511150611484L, 89.0647880009258L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0511150611484L, 89.064562199755L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0511319305883L, 89.0649009015112L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0511319305883L, 89.0644492991696L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0511487999707L, 89.0647880009258L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0511487999707L, 89.064562199755L), "bottom.left");
+  }
+  {
+    note("geohex: BV57264048634");
+    geohex_t zone = geohex_get_zone_by_code("BV57264048634");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0207134816921L, -85.4296902196105L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0207134816921L, -85.4297654866674L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0207078240758L, -85.429652586082L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0207078240758L, -85.4298031201959L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.020702166453L, -85.4296902196105L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.020702166453L, -85.4297654866674L), "bottom.left");
+  }
+  {
+    note("geohex: CI57246068382");
+    geohex_t zone = geohex_get_zone_by_code("CI57246068382");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0207134816921L, 114.257800960031L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0207134816921L, 114.257725692974L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0207078240758L, 114.25783859356L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0207078240758L, 114.257688059446L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.020702166453L, 114.257800960031L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.020702166453L, 114.257725692974L), "bottom.left");
+  }
+  {
+    note("geohex: DO05443747884");
+    geohex_t zone = geohex_get_zone_by_code("DO05443747884");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0207134816921L, 177.89060309611L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0207134816921L, 177.890527829054L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0207078240758L, 177.890640729639L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0207078240758L, 177.890490195525L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.020702166453L, 177.89060309611L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.020702166453L, 177.890527829054L), "bottom.left");
+  }
+  {
+    note("geohex: DO04773823048");
+    geohex_t zone = geohex_get_zone_by_code("DO04773823048");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0813650127903L, -178.945245097762L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0813650127903L, -178.945320364819L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0813594239177L, -178.945207464234L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0813594239177L, -178.945357998348L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0813538350387L, -178.945245097762L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0813538350387L, -178.945320364819L), "bottom.left");
+  }
+  {
+    note("geohex: DO04773823048");
+    geohex_t zone = geohex_get_zone_by_code("DO04773823048");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0813650127903L, -178.945245097762L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0813650127903L, -178.945320364819L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0813594239177L, -178.945207464234L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0813594239177L, -178.945357998348L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0813538350387L, -178.945245097762L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0813538350387L, -178.945320364819L), "bottom.left");
+  }
+  {
+    note("geohex: DO07200264504");
+    geohex_t zone = geohex_get_zone_by_code("DO07200264504");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511375537221L, -179.296817520665L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511375537221L, -179.296892787722L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511319305883L, -179.296779887137L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511319305883L, -179.296930421251L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.051126307448L, -179.296817520665L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.051126307448L, -179.296892787722L), "bottom.left");
+  }
+  {
+    note("geohex: CZ34837816828");
+    geohex_t zone = geohex_get_zone_by_code("CZ34837816828");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.2065634573379L, -13.0078033121268L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.2065634573379L, -13.0078785791838L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.2065501349361L, -13.0077656785984L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.2065501349361L, -13.0079162127122L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.2065368125195L, -13.0078033121268L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.2065368125195L, -13.0078785791838L), "bottom.left");
+  }
+  {
+    note("geohex: EU18781747622");
+    geohex_t zone = geohex_get_zone_by_code("EU18781747622");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.6928870633283L, 174.023419344763L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.6928870633283L, 174.023344077706L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.6928731694156L, 174.023456978291L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.6928731694156L, 174.023306444177L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.6928592754874L, 174.023419344763L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.6928592754874L, 174.023344077706L), "bottom.left");
+  }
+  {
+    note("geohex: EU47467037811");
+    geohex_t zone = geohex_get_zone_by_code("EU47467037811");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.2820685275626L, -177.189866796126L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.2820685275626L, -177.189942063183L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.282054177379L, -177.189829162598L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.282054177379L, -177.189979696711L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.2820398271795L, -177.189866796126L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.2820398271795L, -177.189942063183L), "bottom.left");
+  }
+  {
+    note("geohex: Fb05827021141");
+    geohex_t zone = geohex_get_zone_by_code("Fb05827021141");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-53.3309229233961L, -102.656174438931L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-53.3309229233961L, -102.656249705988L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-53.3308839964808L, -102.656136805403L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-53.3308839964808L, -102.656287339517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-53.3308450695299L, -102.656174438931L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-53.3308450695299L, -102.656249705988L), "bottom.left");
+  }
+  {
+    note("geohex: OK72311284586");
+    geohex_t zone = geohex_get_zone_by_code("OK72311284586");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-47.7541695224686L, 62.5781225008985L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-47.7541695224686L, 62.5780472338416L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.7541256989525L, 62.578160134427L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.7541256989525L, 62.5780096003131L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.7540818753996L, 62.5781225008985L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.7540818753996L, 62.5780472338416L), "bottom.left");
+  }
+  {
+    note("geohex: GH51383310718");
+    geohex_t zone = geohex_get_zone_by_code("GH51383310718");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-20.3034917928639L, -168.046838689525L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-20.3034917928639L, -168.046913956582L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-20.3034306596438L, -168.046801055997L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-20.3034306596438L, -168.046951590111L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-20.3033695263995L, -168.046838689525L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-20.3033695263995L, -168.046913956582L), "bottom.left");
+  }
+  {
+    note("geohex: GI47416263465");
+    geohex_t zone = geohex_get_zone_by_code("GI47416263465");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-10.3515421167535L, -177.893011641932L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-10.3515421167535L, -177.893086908989L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-10.3514779944986L, -177.892974008404L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-10.3514779944986L, -177.893124542517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-10.3514138722305L, -177.893011641932L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-10.3514138722305L, -177.893086908989L), "bottom.left");
+  }
+  {
+    note("geohex: GI87045185255");
+    geohex_t zone = geohex_get_zone_by_code("GI87045185255");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-3.37518695779833L, -177.893011641932L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-3.37518695779833L, -177.893086908989L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-3.37512188767836L, -177.892974008404L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-3.37512188767836L, -177.893124542517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-3.37505681755404L, -177.893011641932L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-3.37505681755404L, -177.893086908989L), "bottom.left");
+  }
+  {
+    note("geohex: QU07002763476");
+    geohex_t zone = geohex_get_zone_by_code("QU07002763476");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(4.00250800524466L, -177.893011641932L), "top.right");
+    location_is(polygon.top.left,     geohex_location(4.00250800524466L, -177.893086908989L), "top.left");
+    location_is(polygon.middle.right, geohex_location(4.00257302944339L, -177.892974008404L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(4.00257302944339L, -177.893124542517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.00263805363695L, -177.893011641932L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.00263805363695L, -177.893086908989L), "bottom.left");
+  }
+  {
+    note("geohex: QU85663663436");
+    geohex_t zone = geohex_get_zone_by_code("QU85663663436");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(20.0558887374592L, 179.912200978095L), "top.right");
+    location_is(polygon.top.left,     geohex_location(20.0558887374592L, 179.912125711038L), "top.left");
+    location_is(polygon.middle.right, geohex_location(20.055949967828L, 179.912238611624L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(20.055949967828L, 179.91208807751L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(20.056011198173L, 179.912200978095L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(20.056011198173L, 179.912125711038L), "bottom.left");
+  }
+  {
+    note("geohex: QU84201138888");
+    geohex_t zone = geohex_get_zone_by_code("QU84201138888");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(18.5628762815998L, 178.417961730465L), "top.right");
+    location_is(polygon.top.left,     geohex_location(18.5628762815998L, 178.417886463408L), "top.left");
+    location_is(polygon.middle.right, geohex_location(18.5629380736087L, 178.417999363993L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(18.5629380736087L, 178.41784882988L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(18.5629998655952L, 178.417961730465L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(18.5629998655952L, 178.417886463408L), "bottom.left");
+  }
+  {
+    note("geohex: PS62147032100");
+    geohex_t zone = geohex_get_zone_by_code("PS62147032100");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.1059515765153L, 128.232522518963L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.1059515765153L, 128.232447251906L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.1060119680404L, 128.232560152491L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.1060119680404L, 128.232409618377L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.1060723595395L, 128.232522518963L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.1060723595395L, 128.232447251906L), "bottom.left");
+  }
+  {
+    note("geohex: XM30178015132");
+    geohex_t zone = geohex_get_zone_by_code("XM30178015132");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(26.9476577506072L, 146.159780671796L), "top.right");
+    location_is(polygon.top.left,     geohex_location(26.9476577506072L, 146.159705404739L), "top.left");
+    location_is(polygon.middle.right, geohex_location(26.9477158562438L, 146.159818305325L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(26.9477158562438L, 146.159667771211L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(26.9477739618503L, 146.159780671796L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(26.9477739618503L, 146.159705404739L), "bottom.left");
+  }
+  {
+    note("geohex: XM60054311737");
+    geohex_t zone = geohex_get_zone_by_code("XM60054311737");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(29.8846000274555L, 153.103166673253L), "top.right");
+    location_is(polygon.top.left,     geohex_location(29.8846000274555L, 153.103091406196L), "top.left");
+    location_is(polygon.middle.right, geohex_location(29.8846565432607L, 153.103204306781L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(29.8846565432607L, 153.103053772667L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(29.8847130590338L, 153.103166673253L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(29.8847130590338L, 153.103091406196L), "bottom.left");
+  }
+  {
+    note("geohex: XM44560457183");
+    geohex_t zone = geohex_get_zone_by_code("XM44560457183");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(32.9901441796746L, 139.746124216987L), "top.right");
+    location_is(polygon.top.left,     geohex_location(32.9901441796746L, 139.74604894993L), "top.left");
+    location_is(polygon.middle.right, geohex_location(32.9901988529811L, 139.746161850516L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(32.9901988529811L, 139.746011316402L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(32.9902535262537L, 139.746124216987L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(32.9902535262537L, 139.74604894993L), "bottom.left");
+  }
+  {
+    note("geohex: XM56456700534");
+    geohex_t zone = geohex_get_zone_by_code("XM56456700534");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(36.0012299653838L, 137.722268323295L), "top.right");
+    location_is(polygon.top.left,     geohex_location(36.0012299653838L, 137.722193056238L), "top.left");
+    location_is(polygon.middle.right, geohex_location(36.0012826988468L, 137.722305956823L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(36.0012826988468L, 137.722155422709L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(36.0013354322745L, 137.722268323295L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(36.0013354322745L, 137.722193056238L), "bottom.left");
+  }
+  {
+    note("geohex: XX03131786872");
+    geohex_t zone = geohex_get_zone_by_code("XX03131786872");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.3251209777506L, 141.679772542954L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.3251209777506L, 141.679697275897L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.3251683966725L, 141.679810176482L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.3251683966725L, 141.679659642369L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.3252158155574L, 141.679772542954L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.3252158155574L, 141.679697275897L), "bottom.left");
+  }
+  {
+    note("geohex: PZ16386410216");
+    geohex_t zone = geohex_get_zone_by_code("PZ16386410216");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(38.8225159154581L, 38.671875147006L), "top.right");
+    location_is(polygon.top.left,     geohex_location(38.8225159154581L, 38.671799879949L), "top.left");
+    location_is(polygon.middle.right, geohex_location(38.8225666991148L, 38.6719127805344L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(38.8225666991148L, 38.6717622464206L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(38.8226174827352L, 38.671875147006L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(38.8226174827352L, 38.671799879949L), "bottom.left");
+  }
+  {
+    note("geohex: OI78178446320");
+    geohex_t zone = geohex_get_zone_by_code("OI78178446320");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(28.1166000092254L, -113.820687526932L), "top.right");
+    location_is(polygon.top.left,     geohex_location(28.1166000092254L, -113.820762793988L), "top.left");
+    location_is(polygon.middle.right, geohex_location(28.1166575001496L, -113.820649893403L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(28.1166575001496L, -113.820800427517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.1167149910431L, -113.820687526932L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.1167149910431L, -113.820762793988L), "bottom.left");
+  }
+  {
+    note("geohex: RX13217487787");
+    geohex_t zone = geohex_get_zone_by_code("RX13217487787");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(46.4121397149615L, -106.086320024236L), "top.right");
+    location_is(polygon.top.left,     geohex_location(46.4121397149615L, -106.086395291293L), "top.left");
+    location_is(polygon.middle.right, geohex_location(46.4121846565377L, -106.086282390708L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(46.4121846565377L, -106.086432924821L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(46.4122295980768L, -106.086320024236L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(46.4122295980768L, -106.086395291293L), "bottom.left");
+  }
+  {
+    note("geohex: SV40163034106");
+    geohex_t zone = geohex_get_zone_by_code("SV40163034106");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.2314492852859L, -80.1562167766507L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.2314492852859L, -80.1562920437076L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.2314755568993L, -80.1561791431222L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.2314755568993L, -80.1563296772361L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.2315018284854L, -80.1562167766507L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.2315018284854L, -80.1562920437076L), "bottom.left");
+  }
+  {
+    note("geohex: aX41314430862");
+    geohex_t zone = geohex_get_zone_by_code("aX41314430862");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(77.157139076762L, 18.2812391215582L), "top.right");
+    location_is(polygon.top.left,     geohex_location(77.157139076762L, 18.2811638545012L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.1571535655358L, 18.2812767550866L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.1571535655358L, 18.2811262209728L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.1571680542934L, 18.2812391215582L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.1571680542934L, 18.2811638545012L), "bottom.left");
+  }
+  {
+    note("geohex: ZA47238521110");
+    geohex_t zone = geohex_get_zone_by_code("ZA47238521110");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.1407490458344L, 120.937564094603L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.1407490458344L, 120.937488827546L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.1407657617551L, 120.937601728132L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.1407657617551L, 120.937451194018L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.1407824776575L, 120.937564094603L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.1407824776575L, 120.937488827546L), "bottom.left");
+  }
+  {
+    note("geohex: TK11857485652");
+    geohex_t zone = geohex_get_zone_by_code("TK11857485652");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.0601634038097L, 170.944959082946L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.0601634038097L, 170.944883815889L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.060173533092L, 170.944996716475L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.060173533092L, 170.944846182361L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.0601836623628L, 170.944959082946L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.0601836623628L, 170.944883815889L), "bottom.left");
+  }
+  {
+    note("geohex: TK43222807032");
+    geohex_t zone = geohex_get_zone_by_code("TK43222807032");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.4867999977752L, -179.914496623332L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.4867999977752L, -179.914571890389L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.4868096473096L, -179.914458989803L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.4868096473096L, -179.914609523917L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.4868192968332L, -179.914496623332L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.4868192968332L, -179.914571890389L), "bottom.left");
+  }
+  {
+    note("geohex: TO03574622544");
+    geohex_t zone = geohex_get_zone_by_code("TO03574622544");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.549839381103L, -178.242100251956L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.549839381103L, -178.242175519013L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.549846703706L, -178.242062618428L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.549846703706L, -178.242213152542L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.5498540263008L, -178.242100251956L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.5498540263008L, -178.242175519013L), "bottom.left");
+  }
+  {
+    note("geohex: TO54114446763");
+    geohex_t zone = geohex_get_zone_by_code("TO54114446763");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.7383817421472L, 172.353619686851L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.7383817421472L, 172.353544419794L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.7383877196727L, 172.35365732038L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.7383877196727L, 172.353506786266L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.7383936971914L, 172.353619686851L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.7383936971914L, 172.353544419794L), "bottom.left");
+  }
+  {
+    note("geohex: bb33540877533");
+    geohex_t zone = geohex_get_zone_by_code("bb33540877533");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0504121168324L, 88.1598145419717L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0504121168324L, 88.1597392749148L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0504177407822L, 88.1598521755002L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0504177407822L, 88.1597016413863L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0504233647255L, 88.1598145419717L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0504233647255L, 88.1597392749148L), "bottom.left");
+  }
+  {
+    note("geohex: BV803254745602");
+    geohex_t zone = geohex_get_zone_by_code("BV803254745602");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0506558154736L, -79.8266474233891L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0506558154736L, -79.8266725124081L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0506539409143L, -79.8266348788797L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0506539409143L, -79.8266850569176L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0506520663543L, -79.8266474233891L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0506520663543L, -79.8266725124081L), "bottom.left");
+  }
+  {
+    note("geohex: CI803456424553");
+    geohex_t zone = geohex_get_zone_by_code("CI803456424553");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511300562089L, 120.706807842576L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511300562089L, 120.706782753557L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511281818288L, 120.706820387086L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511281818288L, 120.706770209048L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.051126307448L, 120.706807842576L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.051126307448L, 120.706782753557L), "bottom.left");
+  }
+  {
+    note("geohex: DO053652024200");
+    geohex_t zone = geohex_get_zone_by_code("DO053652024200");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0520765276776L, 178.86840997715L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0520765276776L, 178.868384888131L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0520746536551L, 178.86842252166L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0520746536551L, 178.868372343622L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0520727796319L, 178.86840997715L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0520727796319L, 178.868384888131L), "bottom.left");
+  }
+  {
+    note("geohex: DO053654462750");
+    geohex_t zone = geohex_get_zone_by_code("DO053654462750");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511319305883L, 178.934343919018L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511319305883L, 178.934318829999L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511300562089L, 178.934356463527L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511300562089L, 178.934306285489L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511281818288L, 178.934343919018L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511281818288L, 178.934318829999L), "bottom.left");
+  }
+  {
+    note("geohex: DO071704644727");
+    geohex_t zone = geohex_get_zone_by_code("DO071704644727");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511319305883L, -178.253151964815L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511319305883L, -178.253177053834L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511300562089L, -178.253139420306L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511300562089L, -178.253189598344L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511281818288L, -178.253151964815L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511281818288L, -178.253177053834L), "bottom.left");
+  }
+  {
+    note("geohex: CY281612610161");
+    geohex_t zone = geohex_get_zone_by_code("CY281612610161");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-79.4452321068118L, -13.7023175354053L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-79.4452321068118L, -13.7023426244243L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-79.4452281268277L, -13.7023049908958L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-79.4452281268277L, -13.7023551689338L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-79.4452241468421L, -13.7023175354053L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-79.4452241468421L, -13.7023426244243L), "bottom.left");
+  }
+  {
+    note("geohex: EU181655132036");
+    geohex_t zone = geohex_get_zone_by_code("EU181655132036");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.915671378281L, 172.968752254092L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.915671378281L, 172.968727165073L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.9156668295562L, 172.968764798601L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.9156668295562L, 172.968714620563L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.9156622808296L, 172.968752254092L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.9156622808296L, 172.968727165073L), "bottom.left");
+  }
+  {
+    note("geohex: EU832016181016");
+    geohex_t zone = geohex_get_zone_by_code("EU832016181016");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.1849979968856L, -179.296880243213L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.1849979968856L, -179.296905332232L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.1849928085699L, -179.296867698704L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.1849928085699L, -179.296917876741L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.1849876202524L, -179.296880243213L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.1849876202524L, -179.296905332232L), "bottom.left");
+  }
+  {
+    note("geohex: FY636801583240");
+    geohex_t zone = geohex_get_zone_by_code("FY636801583240");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-57.364372434714L, -102.999191506364L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-57.364372434714L, -102.999216595382L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-57.3643607170673L, -102.999178961854L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-57.3643607170673L, -102.999229139892L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-57.3643489994169L, -102.999191506364L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-57.3643489994169L, -102.999216595382L), "bottom.left");
+  }
+  {
+    note("geohex: OK446658243285");
+    geohex_t zone = geohex_get_zone_by_code("OK446658243285");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-49.83800543492L, 61.8750278331304L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-49.83800543492L, 61.8750027441114L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.8379914216003L, 61.8750403776399L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.8379914216003L, 61.874990199602L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-49.8379774082765L, 61.8750278331304L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-49.8379774082765L, 61.8750027441114L), "bottom.left");
+  }
+  {
+    note("geohex: GH058068815001");
+    geohex_t zone = geohex_get_zone_by_code("GH058068815001");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-27.7456441133958L, -162.061702678817L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-27.7456441133958L, -162.061727767836L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-27.7456248838545L, -162.061690134308L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-27.7456248838545L, -162.061740312346L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-27.7456056543099L, -162.061702678817L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-27.7456056543099L, -162.061727767836L), "bottom.left");
+  }
+  {
+    note("geohex: GI410587505268");
+    geohex_t zone = geohex_get_zone_by_code("GI410587505268");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-13.3082350796498L, 177.547698929263L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-13.3082350796498L, 177.547673840244L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-13.3082139354019L, 177.547711473773L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-13.3082139354019L, 177.547661295735L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-13.3081927911521L, 177.547698929263L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-13.3081927911521L, 177.547673840244L), "bottom.left");
+  }
+  {
+    note("geohex: GI871735246286");
+    geohex_t zone = geohex_get_zone_by_code("GI871735246286");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-2.88146742859531L, -178.233582530014L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-2.88146742859531L, -178.233607619033L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-2.88144572833833L, -178.233569985505L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-2.88144572833833L, -178.233620163543L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-2.88142402808096L, -178.233582530014L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-2.88142402808096L, -178.233607619033L), "bottom.left");
+  }
+  {
+    note("geohex: QU460311054340");
+    geohex_t zone = geohex_get_zone_by_code("QU460311054340");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(10.4187991283065L, -175.421078413847L), "top.right");
+    location_is(polygon.top.left,     geohex_location(10.4187991283065L, -175.421103502866L), "top.left");
+    location_is(polygon.middle.right, geohex_location(10.4188204977908L, -175.421065869338L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(10.4188204977908L, -175.421116047376L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(10.4188418672738L, -175.421078413847L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(10.4188418672738L, -175.421103502866L), "bottom.left");
+  }
+  {
+    note("geohex: QU533828300764");
+    geohex_t zone = geohex_get_zone_by_code("QU533828300764");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(13.8552863503994L, 176.141409237651L), "top.right");
+    location_is(polygon.top.left,     geohex_location(13.8552863503994L, 176.141384148632L), "top.left");
+    location_is(polygon.middle.right, geohex_location(13.8553074459289L, 176.141421782161L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(13.8553074459289L, 176.141371604123L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(13.8553285414564L, 176.141409237651L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(13.8553285414564L, 176.141384148632L), "bottom.left");
+  }
+  {
+    note("geohex: OY313181386161");
+    geohex_t zone = geohex_get_zone_by_code("OY313181386161");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-5.61601195714254L, 4.92187593103781L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-5.61601195714254L, 4.92185084201884L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-5.61599033370547L, 4.9218884755473L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-5.61599033370547L, 4.92183829750935L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-5.61596871026761L, 4.92187593103781L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-5.61596871026761L, 4.92185084201884L), "bottom.left");
+  }
+  {
+    note("geohex: OY803527038734");
+    geohex_t zone = geohex_get_zone_by_code("OY803527038734");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(4.84590527908578L, 0.360165411902105L), "top.right");
+    location_is(polygon.top.left,     geohex_location(4.84590527908578L, 0.36014032288313L), "top.left");
+    location_is(polygon.middle.right, geohex_location(4.84592692914741L, 0.360177956411593L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(4.84592692914741L, 0.360127778373642L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.84594857920832L, 0.360165411902105L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.84594857920832L, 0.36014032288313L), "bottom.left");
+  }
+  {
+    note("geohex: PA043284261600");
+    geohex_t zone = geohex_get_zone_by_code("PA043284261600");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(3.51338592345567L, -59.7656058402219L), "top.right");
+    location_is(polygon.top.left,     geohex_location(3.51338592345567L, -59.7656309292408L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.51340761034611L, -59.7655932957124L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.51340761034611L, -59.7656434737503L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(3.51342929723607L, -59.7656058402219L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(3.51342929723607L, -59.7656309292408L), "bottom.left");
+  }
+  {
+    note("geohex: PZ060785824214");
+    geohex_t zone = geohex_get_zone_by_code("PZ060785824214");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(35.403502703845L, 44.6570487912424L), "top.right");
+    location_is(polygon.top.left,     geohex_location(35.403502703845L, 44.6570237022234L), "top.left");
+    location_is(polygon.middle.right, geohex_location(35.4035204139484L, 44.6570613357519L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(35.4035204139484L, 44.657011157714L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(35.4035381240479L, 44.6570487912424L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(35.4035381240479L, 44.6570237022234L), "bottom.left");
+  }
+  {
+    note("geohex: PS625060382624");
+    geohex_t zone = geohex_get_zone_by_code("PS625060382624");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.59370823483L, 128.320334085377L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.59370823483L, 128.320308996358L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.5937282950056L, 128.320346629886L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.5937282950056L, 128.320296451848L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.5937483551783L, 128.320334085377L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.5937483551783L, 128.320308996358L), "bottom.left");
+  }
+  {
+    note("geohex: XM317558565378");
+    geohex_t zone = geohex_get_zone_by_code("XM317558565378");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(28.8601828825201L, 144.852366803966L), "top.right");
+    location_is(polygon.top.left,     geohex_location(28.8601828825201L, 144.852341714947L), "top.left");
+    location_is(polygon.middle.right, geohex_location(28.860201911666L, 144.852379348476L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(28.860201911666L, 144.852329170438L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.8602209408084L, 144.852366803966L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.8602209408084L, 144.852341714947L), "bottom.left");
+  }
+  {
+    note("geohex: XL822458403751");
+    geohex_t zone = geohex_get_zone_by_code("XL822458403751");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(29.4741531509422L, 153.992986364745L), "top.right");
+    location_is(polygon.top.left,     geohex_location(29.4741531509422L, 153.992961275726L), "top.left");
+    location_is(polygon.middle.right, geohex_location(29.4741720666167L, 153.992998909255L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(29.4741720666167L, 153.992948731217L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(29.4741909822876L, 153.992986364745L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(29.4741909822876L, 153.992961275726L), "bottom.left");
+  }
+  {
+    note("geohex: XP251226173262");
+    geohex_t zone = geohex_get_zone_by_code("XP251226173262");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(42.5013842929187L, 143.09454232298L), "top.right");
+    location_is(polygon.top.left,     geohex_location(42.5013842929187L, 143.094517233961L), "top.left");
+    location_is(polygon.middle.right, geohex_location(42.5014003119232L, 143.094554867489L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(42.5014003119232L, 143.094504689451L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(42.5014163309237L, 143.09454232298L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(42.5014163309237L, 143.094517233961L), "bottom.left");
+  }
+  {
+    note("geohex: OI745463230145");
+    geohex_t zone = geohex_get_zone_by_code("OI745463230145");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(26.3683813521068L, -113.897635548129L), "top.right");
+    location_is(polygon.top.left,     geohex_location(26.3683813521068L, -113.897660637148L), "top.left");
+    location_is(polygon.middle.right, geohex_location(26.3684008192149L, -113.89762300362L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(26.3684008192149L, -113.897673181658L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(26.3684202863196L, -113.897635548129L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(26.3684202863196L, -113.897660637148L), "bottom.left");
+  }
+  {
+    note("geohex: RU681285781273");
+    geohex_t zone = geohex_get_zone_by_code("RU681285781273");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(43.5295465958548L, -107.921054892892L), "top.right");
+    location_is(polygon.top.left,     geohex_location(43.5295465958548L, -107.921079981911L), "top.left");
+    location_is(polygon.middle.right, geohex_location(43.5295623488747L, -107.921042348382L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(43.5295623488747L, -107.92109252642L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(43.5295781018906L, -107.921054892892L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(43.5295781018906L, -107.921079981911L), "bottom.left");
+  }
+  {
+    note("geohex: SV352321156833");
+    geohex_t zone = geohex_get_zone_by_code("SV352321156833");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.3727437031164L, -76.9921653265994L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.3727437031164L, -76.9921904156184L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.3727524112604L, -76.9921527820899L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.3727524112604L, -76.9922029601279L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.3727611194013L, -76.9921653265994L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.3727611194013L, -76.9921904156184L), "bottom.left");
+  }
+  {
+    note("geohex: ZA412658306821");
+    geohex_t zone = geohex_get_zone_by_code("ZA412658306821");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(74.4964094339424L, 116.718745197805L), "top.right");
+    location_is(polygon.top.left,     geohex_location(74.4964094339424L, 116.718720108786L), "top.left");
+    location_is(polygon.middle.right, geohex_location(74.4964152417361L, 116.718757742314L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(74.4964152417361L, 116.718707564276L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(74.4964210495277L, 116.718745197805L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(74.4964210495277L, 116.718720108786L), "bottom.left");
+  }
+  {
+    note("geohex: aX413323833627");
+    geohex_t zone = geohex_get_zone_by_code("aX413323833627");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(77.1571535655358L, 18.6328240889707L), "top.right");
+    location_is(polygon.top.left,     geohex_location(77.1571535655358L, 18.6327989999517L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.1571583951234L, 18.6328366334802L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.1571583951234L, 18.6327864554422L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.1571632247093L, 18.6328240889707L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.1571632247093L, 18.6327989999517L), "bottom.left");
+  }
+  {
+    note("geohex: bD023073480358");
+    geohex_t zone = geohex_get_zone_by_code("bD023073480358");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.1183782119158L, -43.5937259890248L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.1183782119158L, -43.5937510780438L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.1183811913695L, -43.5937134445153L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.1183811913695L, -43.5937636225533L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.1183841708221L, -43.5937259890248L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.1183841708221L, -43.5937510780438L), "bottom.left");
+  }
+  {
+    note("geohex: TK570232153327");
+    geohex_t zone = geohex_get_zone_by_code("TK570232153327");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.2616961137671L, 175.078149157981L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.2616961137671L, 175.078124068962L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.2616990393759L, 175.078161702491L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.2616990393759L, 175.078111524453L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.2617019649836L, 175.078149157981L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.2617019649836L, 175.078124068962L), "bottom.left");
+  }
+  {
+    note("geohex: TK800808780528");
+    geohex_t zone = geohex_get_zone_by_code("TK800808780528");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.2994965426402L, -179.991407011001L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.2994965426402L, -179.99143210002L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.2994994540443L, -179.991394466491L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.2994994540443L, -179.991444644529L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.2995023654472L, -179.991407011001L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.2995023654472L, -179.99143210002L), "bottom.left");
+  }
+  {
+    note("geohex: TO328348003525");
+    geohex_t zone = geohex_get_zone_by_code("TO328348003525");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.1177847951154L, -177.530437684208L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.1177847951154L, -177.530462773227L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.1177870218545L, -177.530425139699L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.1177870218545L, -177.530475317737L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.1177892485928L, -177.530437684208L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.1177892485928L, -177.530462773227L), "bottom.left");
+  }
+  {
+    note("geohex: TO563763855337");
+    geohex_t zone = geohex_get_zone_by_code("TO563763855337");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.7641296836553L, 178.953913353818L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.7641296836553L, 178.9538882648L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.7641316664413L, 178.953925898328L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.7641316664413L, 178.95387572029L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.7641336492266L, 178.953913353818L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.7641336492266L, 178.9538882648L), "bottom.left");
+  }
+  {
+    note("geohex: bb337212207184");
+    geohex_t zone = geohex_get_zone_by_code("bb337212207184");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0508882553321L, 88.9810283110762L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0508882553321L, 88.9810032220573L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0508901298028L, 88.9810408555857L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0508901298028L, 88.9809906775478L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0508920042728L, 88.9810283110762L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0508920042728L, 88.9810032220573L), "bottom.left");
+  }
+  {
+    note("geohex: BV8046354823266");
+    geohex_t zone = geohex_get_zone_by_code("BV8046354823266");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0207084527001L, -79.4531179273794L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0207084527001L, -79.4531262903858L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0207078240758L, -79.4531137458763L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0207078240758L, -79.4531304718889L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0207071954513L, -79.4531179273794L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0207071954513L, -79.4531262903858L), "bottom.left");
+  }
+  {
+    note("geohex: CI5803560714155");
+    geohex_t zone = geohex_get_zone_by_code("CI5803560714155");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9901009484602L, 113.554685384747L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9901009484602L, 113.554677021741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9901003159816L, 113.554689566251L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9901003159816L, 113.554672840238L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9900996835028L, 113.554685384747L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9900996835028L, 113.554677021741L), "bottom.left");
+  }
+  {
+    note("geohex: DO0482706175341");
+    geohex_t zone = geohex_get_zone_by_code("DO0482706175341");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0539720511391L, 179.604500886374L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0539720511391L, 179.604492523368L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0539714267038L, 179.604505067877L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0539714267038L, 179.604488341865L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0539708022683L, 179.604500886374L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0539708022683L, 179.604492523368L), "bottom.left");
+  }
+  {
+    note("geohex: DO0482731186381");
+    geohex_t zone = geohex_get_zone_by_code("DO0482731186381");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0530240676933L, 179.604500886374L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0530240676933L, 179.604492523368L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0530234431386L, 179.604505067877L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0530234431386L, 179.604488341865L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0530228185837L, 179.604500886374L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0530228185837L, 179.604492523368L), "bottom.left");
+  }
+  {
+    note("geohex: DO0485035421662");
+    geohex_t zone = geohex_get_zone_by_code("DO0485035421662");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0520771523516L, 179.769285563005L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0520771523516L, 179.769277199999L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0520765276776L, 179.769289744508L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0520765276776L, 179.769273018495L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0520759030035L, 179.769285563005L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0520759030035L, 179.769277199999L), "bottom.left");
+  }
+  {
+    note("geohex: DO0485060618642");
+    geohex_t zone = geohex_get_zone_by_code("DO0485060618642");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0520771523516L, 179.81324152425L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0520771523516L, 179.813233161244L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0520765276776L, 179.813245705753L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0520765276776L, 179.81322897974L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0520759030035L, 179.81324152425L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0520759030035L, 179.813233161244L), "bottom.left");
+  }
+  {
+    note("geohex: DO0485068654767");
+    geohex_t zone = geohex_get_zone_by_code("DO0485068654767");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0501815294057L, 179.81324152425L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0501815294057L, 179.813233161244L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.050180904493L, 179.813245705753L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.050180904493L, 179.81322897974L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0501802795802L, 179.81324152425L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0501802795802L, 179.813233161244L), "bottom.left");
+  }
+  {
+    note("geohex: DO0712537663424");
+    geohex_t zone = geohex_get_zone_by_code("DO0712537663424");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0520771523516L, -179.049673957745L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0520771523516L, -179.049682320751L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0520765276776L, -179.049669776242L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0520765276776L, -179.049686502254L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0520759030035L, -179.049673957745L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0520759030035L, -179.049682320751L), "bottom.left");
+  }
+  {
+    note("geohex: DO0712564265481");
+    geohex_t zone = geohex_get_zone_by_code("DO0712564265481");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511294314156L, -179.044192007099L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511294314156L, -179.044200370105L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511288066223L, -179.044187825595L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511288066223L, -179.044204551608L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511281818288L, -179.044192007099L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511281818288L, -179.044200370105L), "bottom.left");
+  }
+  {
+    note("geohex: EU4501241604860");
+    geohex_t zone = geohex_get_zone_by_code("EU4501241604860");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.5041216083107L, 177.363286276788L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.5041216083107L, 177.363277913781L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.5041200412389L, 177.363290458291L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.5041200412389L, 177.363273732278L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.5041184741669L, 177.363286276788L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.5041184741669L, 177.363277913781L), "bottom.left");
+  }
+  {
+    note("geohex: EU8407181150325");
+    geohex_t zone = geohex_get_zone_by_code("EU8407181150325");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-75.9725807568541L, -179.848571044471L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-75.9725807568541L, -179.848579407477L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-75.9725790013535L, -179.848566862967L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-75.9725790013535L, -179.84858358898L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-75.9725772458526L, -179.848571044471L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-75.9725772458526L, -179.848579407477L), "bottom.left");
+  }
+  {
+    note("geohex: CZ3061211527483");
+    geohex_t zone = geohex_get_zone_by_code("CZ3061211527483");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.9039299121133L, -12.3046793738366L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.9039299121133L, -12.304687736843L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.9039285182458L, -12.3046751923335L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.9039285182458L, -12.3046919183461L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.903927124378L, -12.3046793738366L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.903927124378L, -12.304687736843L), "bottom.left");
+  }
+  {
+    note("geohex: Fb4625116215430");
+    geohex_t zone = geohex_get_zone_by_code("Fb4625116215430");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-49.8379914216003L, -97.3828097150535L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-49.8379914216003L, -97.3828180780599L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.8379867504928L, -97.3828055335504L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.8379867504928L, -97.3828222595631L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-49.8379820793849L, -97.3828097150535L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-49.8379820793849L, -97.3828180780599L), "bottom.left");
+  }
+  {
+    note("geohex: OK7250326542858");
+    geohex_t zone = geohex_get_zone_by_code("OK7250326542858");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-47.2792332497861L, 61.5234470472211L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-47.2792332497861L, 61.5234386842147L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.2792283362341L, 61.5234512287242L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.2792283362341L, 61.5234345027116L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.2792234226817L, 61.5234470472211L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.2792234226817L, 61.5234386842147L), "bottom.left");
+  }
+  {
+    note("geohex: GH4221515066426");
+    geohex_t zone = geohex_get_zone_by_code("GH4221515066426");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-22.5937349817301L, -166.289060205073L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-22.5937349817301L, -166.28906856808L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-22.5937282950056L, -166.28905602357L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-22.5937282950056L, -166.289072749583L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-22.5937216082807L, -166.289060205073L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-22.5937216082807L, -166.28906856808L), "bottom.left");
+  }
+  {
+    note("geohex: GI4421818162227");
+    geohex_t zone = geohex_get_zone_by_code("GI4421818162227");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-11.5230886907851L, 178.242192245026L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-11.5230886907851L, 178.24218388202L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-11.5230815941884L, 178.242196426529L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-11.5230815941884L, 178.242179700517L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-11.5230744975915L, 178.242192245026L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-11.5230744975915L, 178.24218388202L), "bottom.left");
+  }
+  {
+    note("geohex: GI8724851414563");
+    geohex_t zone = geohex_get_zone_by_code("GI8724851414563");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-2.460184068321L, -179.29687606171L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-2.460184068321L, -179.296884424716L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-2.46017683242058L, -179.296871880207L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-2.46017683242058L, -179.296888606219L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-2.46016959652014L, -179.29687606171L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-2.46016959652014L, -179.296884424716L), "bottom.left");
+  }
+  {
+    note("geohex: QU4074815410453");
+    geohex_t zone = geohex_get_zone_by_code("QU4074815410453");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(9.44905241033167L, -179.29687606171L), "top.right");
+    location_is(polygon.top.left,     geohex_location(9.44905241033167L, -179.296884424716L), "top.left");
+    location_is(polygon.middle.right, geohex_location(9.44905955464005L, -179.296871880207L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(9.44905955464005L, -179.296888606219L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(9.4490666989483L, -179.29687606171L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(9.4490666989483L, -179.296884424716L), "bottom.left");
+  }
+  {
+    note("geohex: QU8810462030471");
+    geohex_t zone = geohex_get_zone_by_code("QU8810462030471");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(20.6327764473894L, 179.296884424716L), "top.right");
+    location_is(polygon.top.left,     geohex_location(20.6327764473894L, 179.29687606171L), "top.left");
+    location_is(polygon.middle.right, geohex_location(20.6327832254127L, 179.296888606219L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(20.6327832254127L, 179.296871880207L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(20.6327900034356L, 179.296884424716L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(20.6327900034356L, 179.29687606171L), "bottom.left");
+  }
+  {
+    note("geohex: PA0414822216031");
+    geohex_t zone = geohex_get_zone_by_code("PA0414822216031");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(3.5134148393095L, -60.8203063829182L), "top.right");
+    location_is(polygon.top.left,     geohex_location(3.5134148393095L, -60.8203147459246L), "top.left");
+    location_is(polygon.middle.right, geohex_location(3.51342206827281L, -60.8203022014151L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(3.51342206827281L, -60.8203189274277L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(3.51342929723607L, -60.8203063829182L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(3.51342929723607L, -60.8203147459246L), "bottom.left");
+  }
+  {
+    note("geohex: OY4236836048713");
+    geohex_t zone = geohex_get_zone_by_code("OY4236836048713");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-0.351566914641817L, -3.16405981305754L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-0.351566914641817L, -3.16406817606386L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-0.351559672202227L, -3.16405563155438L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-0.351559672202227L, -3.16407235756703L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-0.351552429762625L, -3.16405981305754L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-0.351552429762625L, -3.16406817606386L), "bottom.left");
+  }
+  {
+    note("geohex: OY7001555744550");
+    geohex_t zone = geohex_get_zone_by_code("OY7001555744550");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(0.355571982871085L, 6.3037707331994L), "top.right");
+    location_is(polygon.top.left,     geohex_location(0.355571982871085L, 6.30376237019308L), "top.left");
+    location_is(polygon.middle.right, geohex_location(0.355579225307545L, 6.30377491470256L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(0.355579225307545L, 6.30375818868991L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(0.355586467744005L, 6.3037707331994L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(0.355586467744005L, 6.30376237019308L), "bottom.left");
+  }
+  {
+    note("geohex: XM4117607703260");
+    geohex_t zone = geohex_get_zone_by_code("XM4117607703260");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(31.3536365070368L, 137.460945283149L), "top.right");
+    location_is(polygon.top.left,     geohex_location(31.3536365070368L, 137.460936920143L), "top.left");
+    location_is(polygon.middle.right, geohex_location(31.3536426919945L, 137.460949464653L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(31.3536426919945L, 137.46093273864L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(31.3536488769518L, 137.460945283149L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(31.3536488769518L, 137.460936920143L), "bottom.left");
+  }
+  {
+    note("geohex: PS6246856326218");
+    geohex_t zone = geohex_get_zone_by_code("PS6246856326218");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.5937149215555L, 129.375005357551L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.5937149215555L, 129.374996994545L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.5937216082807L, 129.375009539054L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.5937216082807L, 129.374992813041L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.5937282950056L, 129.375005357551L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.5937282950056L, 129.374996994545L), "bottom.left");
+  }
+  {
+    note("geohex: XL5887834871345");
+    geohex_t zone = geohex_get_zone_by_code("XL5887834871345");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(29.2323885182376L, 153.608463696921L), "top.right");
+    location_is(polygon.top.left,     geohex_location(29.2323885182376L, 153.608455333915L), "top.left");
+    location_is(polygon.middle.right, geohex_location(29.2323948384434L, 153.608467878424L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(29.2323948384434L, 153.608451152412L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(29.2324011586489L, 153.608463696921L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(29.2324011586489L, 153.608455333915L), "bottom.left");
+  }
+  {
+    note("geohex: XX0066438378463");
+    geohex_t zone = geohex_get_zone_by_code("XX0066438378463");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(42.814461999111L, 142.006899898369L), "top.right");
+    location_is(polygon.top.left,     geohex_location(42.814461999111L, 142.006891535362L), "top.left");
+    location_is(polygon.middle.right, geohex_location(42.8144673119628L, 142.006904079872L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(42.8144673119628L, 142.006887353859L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(42.8144726248141L, 142.006899898369L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(42.8144726248141L, 142.006891535362L), "bottom.left");
+  }
+  {
+    note("geohex: PZ4537105130820");
+    geohex_t zone = geohex_get_zone_by_code("PZ4537105130820");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(42.553072262644L, 38.6718793285091L), "top.right");
+    location_is(polygon.top.left,     geohex_location(42.553072262644L, 38.6718709655028L), "top.left");
+    location_is(polygon.middle.right, geohex_location(42.5530775978963L, 38.6718835100123L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(42.5530775978963L, 38.6718667839997L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(42.553082933148L, 38.6718793285091L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(42.553082933148L, 38.6718709655028L), "bottom.left");
+  }
+  {
+    note("geohex: OI8337351073052");
+    geohex_t zone = geohex_get_zone_by_code("OI8337351073052");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(27.9979434595288L, -116.743102453727L), "top.right");
+    location_is(polygon.top.left,     geohex_location(27.9979434595288L, -116.743110816733L), "top.left");
+    location_is(polygon.middle.right, geohex_location(27.9979498544657L, -116.743098272224L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(27.9979498544657L, -116.743114998236L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(27.9979562494021L, -116.743102453727L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(27.9979562494021L, -116.743110816733L), "bottom.left");
+  }
+  {
+    note("geohex: RX1135780670728");
+    geohex_t zone = geohex_get_zone_by_code("RX1135780670728");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(46.3193513969738L, -108.305602649735L), "top.right");
+    location_is(polygon.top.left,     geohex_location(46.3193513969738L, -108.305611012741L), "top.left");
+    location_is(polygon.middle.right, geohex_location(46.3193563989732L, -108.305598468232L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(46.3193563989732L, -108.305615194244L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(46.319361400972L, -108.305602649735L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(46.319361400972L, -108.305611012741L), "bottom.left");
+  }
+  {
+    note("geohex: SV4163853373183");
+    geohex_t zone = geohex_get_zone_by_code("SV4163853373183");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(66.9300567505242L, -80.5078101070695L), "top.right");
+    location_is(polygon.top.left,     geohex_location(66.9300567505242L, -80.5078184700758L), "top.left");
+    location_is(polygon.middle.right, geohex_location(66.9300595885603L, -80.5078059255663L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(66.9300595885603L, -80.507822651579L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(66.930062426596L, -80.5078101070695L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(66.930062426596L, -80.5078184700758L), "bottom.left");
+  }
+  {
+    note("geohex: aX4034808877353");
+    geohex_t zone = geohex_get_zone_by_code("aX4034808877353");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(76.9206113771927L, 20.742187540835L), "top.right");
+    location_is(polygon.top.left,     geohex_location(76.9206113771927L, 20.7421791778287L), "top.left");
+    location_is(polygon.middle.right, geohex_location(76.9206130161942L, 20.7421917223382L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(76.9206130161942L, 20.7421749963255L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(76.9206146551955L, 20.742187540835L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(76.9206146551955L, 20.7421791778287L), "bottom.left");
+  }
+  {
+    note("geohex: ZA4726354081160");
+    geohex_t zone = geohex_get_zone_by_code("ZA4726354081160");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(75.1407769056921L, 121.289065431952L), "top.right");
+    location_is(polygon.top.left,     geohex_location(75.1407769056921L, 121.289057068946L), "top.left");
+    location_is(polygon.middle.right, geohex_location(75.1407787630141L, 121.289069613456L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(75.1407787630141L, 121.289052887443L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(75.1407806203359L, 121.289065431952L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(75.1407806203359L, 121.289057068946L), "bottom.left");
+  }
+  {
+    note("geohex: bD0853382488383");
+    geohex_t zone = geohex_get_zone_by_code("bD0853382488383");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.5861060784983L, -40.4296829019799L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.5861060784983L, -40.4296912649863L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.5861070130518L, -40.4296787204768L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.5861070130518L, -40.4296954464894L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.5861079476052L, -40.4296829019799L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.5861079476052L, -40.4296912649863L), "bottom.left");
+  }
+  {
+    note("geohex: TK2756770452053");
+    geohex_t zone = geohex_get_zone_by_code("TK2756770452053");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.9231862356737L, 168.750000261344L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.9231862356737L, 168.749991898338L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.9231872532598L, 168.750004442847L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.9231872532598L, 168.749987716835L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.9231882708457L, 168.750000261344L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.9231882708457L, 168.749991898338L), "bottom.left");
+  }
+  {
+    note("geohex: TK7434850466772");
+    geohex_t zone = geohex_get_zone_by_code("TK7434850466772");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.1664445099557L, -172.617188194195L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.1664445099557L, -172.617196557201L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.1664454970882L, -172.617184012692L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.1664454970882L, -172.617200738704L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.1664464842206L, -172.617188194195L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.1664464842206L, -172.617196557201L), "bottom.left");
+  }
+  {
+    note("geohex: TO0846631354832");
+    geohex_t zone = geohex_get_zone_by_code("TO0846631354832");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.9054839322745L, -179.321224954625L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.9054839322745L, -179.321233317632L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.9054847012108L, -179.321220773122L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.9054847012108L, -179.321237499135L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.905485470147L, -179.321224954625L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.905485470147L, -179.321233317632L), "bottom.left");
+  }
+  {
+    note("geohex: TO4805277813220");
+    geohex_t zone = geohex_get_zone_by_code("TO4805277813220");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.6082176619005L, 179.624082865684L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.6082176619005L, 179.624074502678L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.6082183424529L, 179.624087047188L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.6082183424529L, 179.624070321175L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.6082190230052L, 179.624082865684L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.6082190230052L, 179.624074502678L), "bottom.left");
+  }
+  {
+    note("geohex: bb3356324634667");
+    geohex_t zone = geohex_get_zone_by_code("bb3356324634667");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0510981916513L, 88.6768406820115L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0510981916513L, 88.6768323190052L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0510988164485L, 88.6768448635147L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0510988164485L, 88.676828137502L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0510994412456L, 88.6768406820115L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0510994412456L, 88.6768323190052L), "bottom.left");
+  }
+  {
+    note("geohex: BV80717180121576");
+    geohex_t zone = geohex_get_zone_by_code("BV80717180121576");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9901005268078L, -79.4531248965514L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9901005268078L, -79.4531276842201L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.9901003159816L, -79.453123502717L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.9901003159816L, -79.4531290780545L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9901001051553L, -79.4531248965514L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9901001051553L, -79.4531276842201L), "bottom.left");
+  }
+  {
+    note("geohex: CI56436210413512");
+    geohex_t zone = geohex_get_zone_by_code("CI56436210413512");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.1412840539864L, 118.125002831226L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.1412840539864L, 118.125000043557L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.1412838495068L, 118.125004225061L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.1412838495068L, 118.124998649723L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.1412836450271L, 118.125002831226L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.1412836450271L, 118.125000043557L), "bottom.left");
+  }
+  {
+    note("geohex: CI56773820550701");
+    geohex_t zone = geohex_get_zone_by_code("CI56773820550701");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0813648057952L, 118.828126769516L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0813648057952L, 118.828123981848L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0813645988L, 118.828128163351L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0813645988L, 118.828122588013L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0813643918048L, 118.828126769516L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0813643918048L, 118.828123981848L), "bottom.left");
+  }
+  {
+    note("geohex: CI80611150250021");
+    geohex_t zone = geohex_get_zone_by_code("CI80611150250021");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0359416648253L, 121.113284795838L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0359416648253L, 121.11328200817L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0359414559233L, 121.113286189673L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0359414559233L, 121.113280614335L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0359412470213L, 121.113284795838L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0359412470213L, 121.11328200817L), "bottom.left");
+  }
+  {
+    note("geohex: DO05167224507116");
+    geohex_t zone = geohex_get_zone_by_code("DO05167224507116");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511290148867L, 177.539065519067L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511290148867L, 177.539062731398L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511288066223L, 177.539066912901L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511288066223L, 177.539061337564L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511285983578L, 177.539065519067L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511285983578L, 177.539062731398L), "bottom.left");
+  }
+  {
+    note("geohex: DO05405867244763");
+    geohex_t zone = geohex_get_zone_by_code("DO05405867244763");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0359416648253L, 177.714847549015L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0359416648253L, 177.714844761347L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0359414559233L, 177.71484894285L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0359414559233L, 177.714843367512L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0359412470213L, 177.714847549015L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0359412470213L, 177.714844761347L), "bottom.left");
+  }
+  {
+    note("geohex: DO07170215584802");
+    geohex_t zone = geohex_get_zone_by_code("DO07170215584802");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0513658059241L, -178.339690960433L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0513658059241L, -178.339693748102L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0513655976696L, -178.339689566599L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0513655976696L, -178.339695141937L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.051365389415L, -178.339690960433L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.051365389415L, -178.339693748102L), "bottom.left");
+  }
+  {
+    note("geohex: DO07170226100057");
+    geohex_t zone = geohex_get_zone_by_code("DO07170226100057");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0512475159479L, -178.339690960433L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0512475159479L, -178.339693748102L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0512473076884L, -178.339689566599L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0512473076884L, -178.339695141937L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0512470994289L, -178.339690960433L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0512470994289L, -178.339693748102L), "bottom.left");
+  }
+  {
+    note("geohex: DO07170227640163");
+    geohex_t zone = geohex_get_zone_by_code("DO07170227640163");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0510105109951L, -178.339690960433L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0510105109951L, -178.339693748102L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0510103027256L, -178.339689566599L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0510103027256L, -178.339695141937L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0510100944562L, -178.339690960433L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0510100944562L, -178.339693748102L), "bottom.left");
+  }
+  {
+    note("geohex: EU16473602511456");
+    geohex_t zone = geohex_get_zone_by_code("EU16473602511456");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.3494112689893L, 178.154298442383L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.3494112689893L, 178.154295654714L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.3494107814607L, 178.154299836218L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.3494107814607L, 178.15429426088L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.3494102939321L, 178.154298442383L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.3494102939321L, 178.154295654714L), "bottom.left");
+  }
+  {
+    note("geohex: EU40673078217161");
+    geohex_t zone = geohex_get_zone_by_code("EU40673078217161");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.0901008843337L, -178.182428807992L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.0901008843337L, -178.182431595661L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.090100386109L, -178.182427414158L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.090100386109L, -178.182432989495L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.0900998878844L, -178.182428807992L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.0900998878844L, -178.182431595661L), "bottom.left");
+  }
+  {
+    note("geohex: CZ31831222362536");
+    geohex_t zone = geohex_get_zone_by_code("CZ31831222362536");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.4905519853933L, -15.4687503375692L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.4905519853933L, -15.468753125238L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.4905515036907L, -15.4687489437349L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.4905515036907L, -15.4687545190724L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.4905510219881L, -15.4687503375692L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.4905510219881L, -15.468753125238L), "bottom.left");
+  }
+  {
+    note("geohex: Fb31200035818717");
+    geohex_t zone = geohex_get_zone_by_code("Fb31200035818717");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-53.3308753460503L, -97.0312484428257L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-53.3308753460503L, -97.0312512304944L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-53.3308739043117L, -97.0312470489912L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-53.3308739043117L, -97.0312526243288L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-53.3308724625731L, -97.0312484428257L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-53.3308724625731L, -97.0312512304944L), "bottom.left");
+  }
+  {
+    note("geohex: OK44243402806508");
+    geohex_t zone = geohex_get_zone_by_code("OK44243402806508");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-49.9256570144866L, 58.5949159751332L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-49.9256570144866L, 58.5949131874644L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-49.9256554602755L, 58.5949173689676L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-49.9256554602755L, 58.59491179363L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-49.9256539060644L, 58.5949159751332L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-49.9256539060644L, 58.5949131874644L), "bottom.left");
+  }
+  {
+    note("geohex: OY01571576207503");
+    geohex_t zone = geohex_get_zone_by_code("OY01571576207503");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-8.40717250671703L, -2.81249854082963L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-8.40717250671703L, -2.8125013284984L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-8.40717011846787L, -2.81249714699524L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-8.40717011846787L, -2.81250272233279L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-8.40716773021867L, -2.81249854082963L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-8.40716773021867L, -2.8125013284984L), "bottom.left");
+  }
+  {
+    note("geohex: OY56733420402656");
+    geohex_t zone = geohex_get_zone_by_code("OY56733420402656");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(4.07923776129672L, -1.17070659110133L), "top.right");
+    location_is(polygon.top.left,     geohex_location(4.07923776129672L, -1.1707093787701L), "top.left");
+    location_is(polygon.middle.right, geohex_location(4.07924016937264L, -1.17070519726694L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(4.07924016937264L, -1.17071077260449L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(4.07924257744855L, -1.17070659110133L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(4.07924257744855L, -1.1707093787701L), "bottom.left");
+  }
+  {
+    note("geohex: GH84065825033010");
+    geohex_t zone = geohex_get_zone_by_code("GH84065825033010");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-15.9613294348549L, -159.609375125227L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-15.9613294348549L, -159.609377912896L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-15.961327113736L, -159.609373731393L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-15.961327113736L, -159.60937930673L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-15.9613247926171L, -159.609375125227L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-15.9613247926171L, -159.609377912896L), "bottom.left");
+  }
+  {
+    note("geohex: GI50342481388451");
+    geohex_t zone = geohex_get_zone_by_code("GI50342481388451");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-10.6215694798815L, 173.907417477861L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-10.6215694798815L, 173.907414690192L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-10.6215671070542L, 173.907418871695L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-10.6215671070542L, 173.907413296358L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-10.6215647342269L, 173.907417477861L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-10.6215647342269L, 173.907414690192L), "bottom.left");
+  }
+  {
+    note("geohex: GI78081171860100");
+    geohex_t zone = geohex_get_zone_by_code("GI78081171860100");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-5.75138044098571L, -173.436334906903L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-5.75138044098571L, -173.436337694571L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-5.75137803894653L, -173.436333513068L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-5.75137803894653L, -173.436339088406L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-5.75137563690732L, -173.436334906903L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-5.75137563690732L, -173.436337694571L), "bottom.left");
+  }
+  {
+    note("geohex: QU30541311610415");
+    geohex_t zone = geohex_get_zone_by_code("QU30541311610415");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(5.48056155037216L, -174.139458845193L), "top.right");
+    location_is(polygon.top.left,     geohex_location(5.48056155037216L, -174.139461632862L), "top.left");
+    location_is(polygon.middle.right, geohex_location(5.48056395352803L, -174.139457451359L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(5.48056395352803L, -174.139463026696L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(5.4805663566839L, -174.139458845193L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(5.4805663566839L, -174.139461632862L), "bottom.left");
+  }
+  {
+    note("geohex: QU44828780263624");
+    geohex_t zone = geohex_get_zone_by_code("QU44828780263624");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(12.4217205816691L, 179.532417347189L), "top.right");
+    location_is(polygon.top.left,     geohex_location(12.4217205816691L, 179.53241455952L), "top.left");
+    location_is(polygon.middle.right, geohex_location(12.4217229393468L, 179.532418741023L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(12.4217229393468L, 179.532413165686L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(12.4217252970244L, 179.532417347189L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(12.4217252970244L, 179.53241455952L), "bottom.left");
+  }
+  {
+    note("geohex: PA07571045254517");
+    geohex_t zone = geohex_get_zone_by_code("PA07571045254517");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(5.61598312589296L, -58.3593732958197L), "top.right");
+    location_is(polygon.top.left,     geohex_location(5.61598312589296L, -58.3593760834885L), "top.left");
+    location_is(polygon.middle.right, geohex_location(5.61598552849713L, -58.3593719019853L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(5.61598552849713L, -58.3593774773228L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(5.61598793110131L, -58.3593732958197L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(5.61598793110131L, -58.3593760834885L), "bottom.left");
+  }
+  {
+    note("geohex: PS38383877824230");
+    geohex_t zone = geohex_get_zone_by_code("PS38383877824230");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(21.1625434410625L, 127.501166465153L), "top.right");
+    location_is(polygon.top.left,     geohex_location(21.1625434410625L, 127.501163677484L), "top.left");
+    location_is(polygon.middle.right, geohex_location(21.1625456924414L, 127.501167858987L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(21.1625456924414L, 127.50116228365L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(21.1625479438202L, 127.501166465153L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(21.1625479438202L, 127.501163677484L), "bottom.left");
+  }
+  {
+    note("geohex: XM31385143063872");
+    geohex_t zone = geohex_get_zone_by_code("XM31385143063872");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(28.1845178609554L, 145.079290011427L), "top.right");
+    location_is(polygon.top.left,     geohex_location(28.1845178609554L, 145.079287223759L), "top.left");
+    location_is(polygon.middle.right, geohex_location(28.1845199888993L, 145.079291405262L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(28.1845199888993L, 145.079285829924L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.1845221168432L, 145.079290011427L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.1845221168432L, 145.079287223759L), "bottom.left");
+  }
+  {
+    note("geohex: XL82447011727335");
+    geohex_t zone = geohex_get_zone_by_code("XL82447011727335");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(29.4167782950752L, 155.626165811793L), "top.right");
+    location_is(polygon.top.left,     geohex_location(29.4167782950752L, 155.626163024124L), "top.left");
+    location_is(polygon.middle.right, geohex_location(29.4167803980054L, 155.626167205628L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(29.4167803980054L, 155.62616163029L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(29.4167825009356L, 155.626165811793L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(29.4167825009356L, 155.626163024124L), "bottom.left");
+  }
+  {
+    note("geohex: XP22503400845082");
+    geohex_t zone = geohex_get_zone_by_code("XP22503400845082");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(41.9318312593417L, 141.563666138473L), "top.right");
+    location_is(polygon.top.left,     geohex_location(41.9318312593417L, 141.563663350804L), "top.left");
+    location_is(polygon.middle.right, geohex_location(41.9318330553567L, 141.563667532308L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(41.9318330553567L, 141.56366195697L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(41.9318348513716L, 141.563666138473L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(41.9318348513716L, 141.563663350804L), "bottom.left");
+  }
+  {
+    note("geohex: PZ13526267300787");
+    geohex_t zone = geohex_get_zone_by_code("PZ13526267300787");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(38.2726877926382L, 34.4531245480928L), "top.right");
+    location_is(polygon.top.left,     geohex_location(38.2726877926382L, 34.453121760424L), "top.left");
+    location_is(polygon.middle.right, geohex_location(38.2726896879521L, 34.4531259419271L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(38.2726896879521L, 34.4531203665896L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(38.2726915832658L, 34.4531245480928L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(38.2726915832658L, 34.453121760424L), "bottom.left");
+  }
+  {
+    note("geohex: OI78437338044154");
+    geohex_t zone = geohex_get_zone_by_code("OI78437338044154");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(28.1845178609554L, -112.967584220875L), "top.right");
+    location_is(polygon.top.left,     geohex_location(28.1845178609554L, -112.967587008544L), "top.left");
+    location_is(polygon.middle.right, geohex_location(28.1845199888993L, -112.96758282704L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(28.1845199888993L, -112.967588402378L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.1845221168432L, -112.967584220875L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.1845221168432L, -112.967587008544L), "bottom.left");
+  }
+  {
+    note("geohex: RU68880348017456");
+    geohex_t zone = geohex_get_zone_by_code("RU68880348017456");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(44.4934902390889L, -106.639460413257L), "top.right");
+    location_is(polygon.top.left,     geohex_location(44.4934902390889L, -106.639463200925L), "top.left");
+    location_is(polygon.middle.right, geohex_location(44.4934919612047L, -106.639459019422L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(44.4934919612047L, -106.63946459476L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(44.4934936833203L, -106.639460413257L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(44.4934936833203L, -106.639463200925L), "bottom.left");
+  }
+  {
+    note("geohex: SV13411223332736");
+    geohex_t zone = geohex_get_zone_by_code("SV13411223332736");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(65.3100634041072L, -84.8425848742347L), "top.right");
+    location_is(polygon.top.left,     geohex_location(65.3100634041072L, -84.8425876619035L), "top.left");
+    location_is(polygon.middle.right, geohex_location(65.3100644125332L, -84.8425834804003L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(65.3100644125332L, -84.8425890557379L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(65.3100654209593L, -84.8425848742347L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(65.3100654209593L, -84.8425876619035L), "bottom.left");
+  }
+  {
+    note("geohex: aX38226176387034");
+    geohex_t zone = geohex_get_zone_by_code("aX38226176387034");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(77.2826021304896L, 24.844916759165L), "top.right");
+    location_is(polygon.top.left,     geohex_location(77.2826021304896L, 24.8449139714962L), "top.left");
+    location_is(polygon.middle.right, geohex_location(77.2826026619556L, 24.8449181529994L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(77.2826026619556L, 24.8449125776619L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(77.2826031934216L, 24.844916759165L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(77.2826031934216L, 24.8449139714962L), "bottom.left");
+  }
+  {
+    note("geohex: ZA35122807551718");
+    geohex_t zone = geohex_get_zone_by_code("ZA35122807551718");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(74.0195430326641L, 123.046874580761L), "top.right");
+    location_is(polygon.top.left,     geohex_location(74.0195430326641L, 123.046871793092L), "top.left");
+    location_is(polygon.middle.right, geohex_location(74.019543697314L, 123.046875974595L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(74.019543697314L, 123.046870399258L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(74.0195443619639L, 123.046874580761L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(74.0195443619639L, 123.046871793092L), "bottom.left");
+  }
+  {
+    note("geohex: bD32858648748733");
+    geohex_t zone = geohex_get_zone_by_code("bD32858648748733");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.8533818659949L, -37.9687498148814L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.8533818659949L, -37.9687526025501L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.8533821663417L, -37.968748421047L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.8533821663417L, -37.9687539963845L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.8533824666885L, -37.9687498148814L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.8533824666885L, -37.9687526025501L), "bottom.left");
+  }
+  {
+    note("geohex: TK18678460283758");
+    geohex_t zone = geohex_get_zone_by_code("TK18678460283758");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.518271803227L, 175.078125462797L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.518271803227L, 175.078122675128L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.5182721593058L, 175.078126856631L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.5182721593058L, 175.078121281293L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.5182725153846L, 175.078125462797L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.5182725153846L, 175.078122675128L), "bottom.left");
+  }
+  {
+    note("geohex: TK35253726505866");
+    geohex_t zone = geohex_get_zone_by_code("TK35253726505866");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(81.3083204716182L, -177.187498671502L), "top.right");
+    location_is(polygon.top.left,     geohex_location(81.3083204716182L, -177.18750145917L), "top.left");
+    location_is(polygon.middle.right, geohex_location(81.3083208364443L, -177.187497277667L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(81.3083208364443L, -177.187502853005L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(81.3083212012704L, -177.187498671502L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(81.3083212012704L, -177.18750145917L), "bottom.left");
+  }
+  {
+    note("geohex: TO35083224064751");
+    geohex_t zone = geohex_get_zone_by_code("TO35083224064751");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.1110297061606L, -175.545710903277L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.1110297061606L, -175.545713690945L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.1110299538592L, -175.545709509442L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.1110299538592L, -175.54571508478L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.1110302015579L, -175.545710903277L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.1110302015579L, -175.545713690945L), "bottom.left");
+  }
+  {
+    note("geohex: TO45177603556405");
+    geohex_t zone = geohex_get_zone_by_code("TO45177603556405");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.5284024505302L, 177.423041350815L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.5284024505302L, 177.423038563146L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.528402680729L, 177.423042744649L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.528402680729L, 177.423037169312L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.5284029109277L, 177.423041350815L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.5284029109277L, 177.423038563146L), "bottom.left");
+  }
+  {
+    note("geohex: bb33563401287846");
+    geohex_t zone = geohex_get_zone_by_code("bb33563401287846");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0501288281553L, 88.7193219664745L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0501288281553L, 88.7193191788058L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0501290364617L, 88.7193233603089L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0501290364617L, 88.7193177849714L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0501292447681L, 88.7193219664745L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0501292447681L, 88.7193191788058L), "bottom.left");
+  }
+  {
+    note("geohex: bb33563422636071");
+    geohex_t zone = geohex_get_zone_by_code("bb33563422636071");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0511283900934L, 88.7024997792515L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0511283900934L, 88.7024969915827L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0511285983578L, 88.7025011730859L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0511285983578L, 88.7024955977483L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.0511288066223L, 88.7024997792515L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.0511288066223L, 88.7024969915827L), "bottom.left");
+  }
+  {
+    note("geohex: BV801644720107680");
+    geohex_t zone = geohex_get_zone_by_code("BV801644720107680");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0549183966378L, -80.2441407790387L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0549183966378L, -80.2441417082616L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0549183272694L, -80.2441403144272L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0549183272694L, -80.2441421728731L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0549182579009L, -80.2441407790387L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0549182579009L, -80.2441417082616L), "bottom.left");
+  }
+  {
+    note("geohex: BV801672224571144");
+    geohex_t zone = geohex_get_zone_by_code("BV801672224571144");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511288760438L, -80.2441407790386L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511288760438L, -80.2441417082616L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511288066223L, -80.2441403144272L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511288066223L, -80.244142172873L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511287372008L, -80.2441407790386L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511287372008L, -80.2441417082616L), "bottom.left");
+  }
+  {
+    note("geohex: BV752066087034602");
+    geohex_t zone = geohex_get_zone_by_code("BV752066087034602");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0435410033259L, -76.8164065272242L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0435410033259L, -76.8164074564472L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0435409337982L, -76.8164060626128L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0435409337982L, -76.8164079210586L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0435408642705L, -76.8164065272242L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0435408642705L, -76.8164074564472L), "bottom.left");
+  }
+  {
+    note("geohex: CI584051202811030");
+    geohex_t zone = geohex_get_zone_by_code("CI584051202811030");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-84.9283209634337L, 113.203125970965L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-84.9283209634337L, 113.203125041742L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-84.928320892294L, 113.203126435577L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-84.928320892294L, 113.203124577131L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-84.9283208211542L, 113.203125970965L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-84.9283208211542L, 113.203125041742L), "bottom.left");
+  }
+  {
+    note("geohex: DO053702425073344");
+    geohex_t zone = geohex_get_zone_by_code("DO053702425073344");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511288760438L, 178.703613220621L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511288760438L, 178.703612291398L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511288066223L, 178.703613685233L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511288066223L, 178.703611826787L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511287372008L, 178.703613220621L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511287372008L, 178.703612291398L), "bottom.left");
+  }
+  {
+    note("geohex: DO053474671871414");
+    geohex_t zone = geohex_get_zone_by_code("DO053474671871414");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0510103721488L, 178.621216700803L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0510103721488L, 178.62121577158L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0510103027256L, 178.621217165414L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0510103027256L, 178.621215306968L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0510102333025L, 178.621216700803L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0510102333025L, 178.62121577158L), "bottom.left");
+  }
+  {
+    note("geohex: DO048672464801367");
+    geohex_t zone = geohex_get_zone_by_code("DO048672464801367");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0511288066223L, -179.472656233212L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0511288066223L, -179.472657162435L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0511287372008L, -179.472655768601L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0511287372008L, -179.472657627047L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0511286677793L, -179.472656233212L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0511286677793L, -179.472657162435L), "bottom.left");
+  }
+  {
+    note("geohex: DO048680771383421");
+    geohex_t zone = geohex_get_zone_by_code("DO048680771383421");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-85.0492329601514L, -179.494628638497L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-85.0492329601514L, -179.49462956772L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-85.0492328907034L, -179.494628173886L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-85.0492328907034L, -179.494630032332L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-85.0492328212554L, -179.494628638497L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-85.0492328212554L, -179.49462956772L), "bottom.left");
+  }
+  {
+    note("geohex: CZ312460160330640");
+    geohex_t zone = geohex_get_zone_by_code("CZ312460160330640");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-78.6300056424984L, -16.8749991433726L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-78.6300056424984L, -16.8750000725956L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-78.6300054838506L, -16.8749986787612L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-78.6300054838506L, -16.875000537207L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-78.6300053252028L, -16.8749991433726L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-78.6300053252028L, -16.8750000725956L), "bottom.left");
+  }
+  {
+    note("geohex: EU482446631807432");
+    geohex_t zone = geohex_get_zone_by_code("EU482446631807432");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-76.9999352032339L, 178.593749800362L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-76.9999352032339L, 178.593748871139L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-76.999935022208L, 178.593750264974L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-76.999935022208L, 178.593748406528L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-76.9999348411821L, 178.593749800362L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-76.9999348411821L, 178.593748871139L), "bottom.left");
+  }
+  {
+    note("geohex: EU443120677000135");
+    geohex_t zone = geohex_get_zone_by_code("EU443120677000135");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-77.6928705964671L, -179.648436869326L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-77.6928705964671L, -179.648437798549L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-77.6928704249372L, -179.648436404715L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-77.6928704249372L, -179.648438263161L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-77.6928702534072L, -179.648436869326L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-77.6928702534072L, -179.648437798549L), "bottom.left");
+  }
+  {
+    note("geohex: OK486263022716030");
+    geohex_t zone = geohex_get_zone_by_code("OK486263022716030");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-48.2246735549442L, 61.1718750889295L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-48.2246735549442L, 61.1718741597066L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-48.2246730188235L, 61.171875553541L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-48.2246730188235L, 61.1718736950951L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-48.2246724827028L, 61.1718750889295L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-48.2246724827028L, 61.1718741597066L), "bottom.left");
+  }
+  {
+    note("geohex: Fb563137601173436");
+    geohex_t zone = geohex_get_zone_by_code("Fb563137601173436");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-47.754098647381L, -101.601562637024L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-47.754098647381L, -101.601563566247L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-47.7540981063495L, -101.601562172413L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-47.7540981063495L, -101.601564030858L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-47.7540975653179L, -101.601562637024L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-47.7540975653179L, -101.601563566247L), "bottom.left");
+  }
+  {
+    note("geohex: GH405610617770460");
+    geohex_t zone = geohex_get_zone_by_code("GH405610617770460");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-24.5271358232678L, -160.31249999274L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-24.5271358232678L, -160.312500921963L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-24.5271350911522L, -160.312499528129L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-24.5271350911522L, -160.312501386575L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-24.5271343590366L, -160.31249999274L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-24.5271343590366L, -160.312500921963L), "bottom.left");
+  }
+  {
+    note("geohex: GI428447007470857");
+    geohex_t zone = geohex_get_zone_by_code("GI428447007470857");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-10.6278123246667L, 175.584117080602L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-10.6278123246667L, 175.584116151379L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-10.6278115337404L, 175.584117545213L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-10.6278115337404L, 175.584115686767L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-10.6278107428141L, 175.584117080602L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-10.6278107428141L, 175.584116151379L), "bottom.left");
+  }
+  {
+    note("geohex: GI714676472576137");
+    geohex_t zone = geohex_get_zone_by_code("GI714676472576137");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-8.89552078901206L, -174.923695117219L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-8.89552078901206L, -174.923696046442L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-8.89551999396073L, -174.923694652608L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-8.89551999396073L, -174.923696511054L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-8.89551919890941L, -174.923695117219L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-8.89551919890941L, -174.923696046442L), "bottom.left");
+  }
+  {
+    note("geohex: QU430846555413857");
+    geohex_t zone = geohex_get_zone_by_code("QU430846555413857");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(9.6553130166979L, -177.736195051883L), "top.right");
+    location_is(polygon.top.left,     geohex_location(9.6553130166979L, -177.736195981106L), "top.left");
+    location_is(polygon.middle.right, geohex_location(9.65531381002921L, -177.736194587272L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(9.65531381002921L, -177.736196445718L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(9.65531460336053L, -177.736195051883L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(9.65531460336053L, -177.736195981106L), "bottom.left");
+  }
+  {
+    note("geohex: QU455868523435074");
+    geohex_t zone = geohex_get_zone_by_code("QU455868523435074");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(13.4537356716955L, 177.187500529947L), "top.right");
+    location_is(polygon.top.left,     geohex_location(13.4537356716955L, 177.187499600724L), "top.left");
+    location_is(polygon.middle.right, geohex_location(13.4537364543428L, 177.187500994559L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(13.4537364543428L, 177.187499136113L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(13.4537372369901L, 177.187500529947L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(13.4537372369901L, 177.187499600724L), "bottom.left");
+  }
+  {
+    note("geohex: XM314886135481601");
+    geohex_t zone = geohex_get_zone_by_code("XM314886135481601");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(28.61345823854L, 144.492187918332L), "top.right");
+    location_is(polygon.top.left,     geohex_location(28.61345823854L, 144.492186989109L), "top.left");
+    location_is(polygon.middle.right, geohex_location(28.6134589449893L, 144.492188382943L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(28.6134589449893L, 144.492186524497L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(28.6134596514387L, 144.492187918332L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(28.6134596514387L, 144.492186989109L), "bottom.left");
+  }
+  {
+    note("geohex: PS624076167125758");
+    geohex_t zone = geohex_get_zone_by_code("PS624076167125758");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(22.2687631272507L, 129.023437580763L), "top.right");
+    location_is(polygon.top.left,     geohex_location(22.2687631272507L, 129.02343665154L), "top.left");
+    location_is(polygon.middle.right, geohex_location(22.2687638719617L, 129.023438045374L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(22.2687638719617L, 129.023436186928L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(22.2687646166727L, 129.023437580763L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(22.2687646166727L, 129.02343665154L), "bottom.left");
+  }
+  {
+    note("geohex: XL828827023882162");
+    geohex_t zone = geohex_get_zone_by_code("XL828827023882162");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(30.4016602142513L, 155.413219046347L), "top.right");
+    location_is(polygon.top.left,     geohex_location(30.4016602142513L, 155.413218117124L), "top.left");
+    location_is(polygon.middle.right, geohex_location(30.4016609083307L, 155.413219510959L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(30.4016609083307L, 155.413217652513L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(30.4016616024101L, 155.413219046347L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(30.4016616024101L, 155.413218117124L), "bottom.left");
+  }
+  {
+    note("geohex: XP252183615213788");
+    geohex_t zone = geohex_get_zone_by_code("XP252183615213788");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(42.7715127583668L, 142.756970037276L), "top.right");
+    location_is(polygon.top.left,     geohex_location(42.7715127583668L, 142.756969108054L), "top.left");
+    location_is(polygon.middle.right, geohex_location(42.7715133490935L, 142.756970501888L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(42.7715133490935L, 142.756968643442L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(42.7715139398202L, 142.756970037276L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(42.7715139398202L, 142.756969108054L), "bottom.left");
+  }
+  {
+    note("geohex: OY441655876848342");
+    geohex_t zone = geohex_get_zone_by_code("OY441655876848342");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(-0.351560476917739L, -0.351562201450838L), "top.right");
+    location_is(polygon.top.left,     geohex_location(-0.351560476917739L, -0.351563130673762L), "top.left");
+    location_is(polygon.middle.right, geohex_location(-0.351559672202227L, -0.351561736839375L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(-0.351559672202227L, -0.351563595285225L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(-0.351558867486716L, -0.351562201450838L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(-0.351558867486716L, -0.351563130673762L), "bottom.left");
+  }
+  {
+    note("geohex: OY450583438341310");
+    geohex_t zone = geohex_get_zone_by_code("OY450583438341310");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(0.648590206477775L, -2.43834274856847L), "top.right");
+    location_is(polygon.top.left,     geohex_location(0.648590206477775L, -2.43834367779139L), "top.left");
+    location_is(polygon.middle.right, geohex_location(0.648591011156901L, -2.43834228395701L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(0.648591011156901L, -2.43834414240286L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(0.648591815835989L, -2.43834274856847L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(0.648591815835989L, -2.43834367779139L), "bottom.left");
+  }
+  {
+    note("geohex: PA007023204648554");
+    geohex_t zone = geohex_get_zone_by_code("PA007023204648554");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(1.40610795795381L, -59.4140622232295L), "top.right");
+    location_is(polygon.top.left,     geohex_location(1.40610795795381L, -59.4140631524524L), "top.left");
+    location_is(polygon.middle.right, geohex_location(1.40610876244213L, -59.414061758618L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(1.40610876244213L, -59.4140636170639L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(1.40610956693047L, -59.4140622232295L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(1.40610956693047L, -59.4140631524524L), "bottom.left");
+  }
+  {
+    note("geohex: OI754343508378851");
+    geohex_t zone = geohex_get_zone_by_code("OI754343508378851");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(27.0105628580783L, -115.28990558886L), "top.right");
+    location_is(polygon.top.left,     geohex_location(27.0105628580783L, -115.289906518083L), "top.left");
+    location_is(polygon.middle.right, geohex_location(27.0105635750312L, -115.289905124249L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(27.0105635750312L, -115.289906982694L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(27.0105642919841L, -115.28990558886L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(27.0105642919841L, -115.289906518083L), "bottom.left");
+  }
+  {
+    note("geohex: RX153284780083552");
+    geohex_t zone = geohex_get_zone_by_code("RX153284780083552");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(47.9899208387855L, -108.632811776767L), "top.right");
+    location_is(polygon.top.left,     geohex_location(47.9899208387855L, -108.63281270599L), "top.left");
+    location_is(polygon.middle.right, geohex_location(47.9899213773606L, -108.632811312155L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(47.9899213773606L, -108.632813170601L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(47.9899219159357L, -108.632811776767L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(47.9899219159357L, -108.63281270599L), "bottom.left");
+  }
+  {
+    note("geohex: PZ541437131806627");
+    geohex_t zone = geohex_get_zone_by_code("PZ541437131806627");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(44.339564702295L, 32.6953130762271L), "top.right");
+    location_is(polygon.top.left,     geohex_location(44.339564702295L, 32.6953121470042L), "top.left");
+    location_is(polygon.middle.right, geohex_location(44.3395652778466L, 32.6953135408386L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(44.3395652778466L, 32.6953116823927L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(44.3395658533983L, 32.6953130762271L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(44.3395658533983L, 32.6953121470042L), "bottom.left");
+  }
+  {
+    note("geohex: SV081012647253500");
+    geohex_t zone = geohex_get_zone_by_code("SV081012647253500");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(65.0721297192864L, -80.8593737023547L), "top.right");
+    location_is(polygon.top.left,     geohex_location(65.0721297192864L, -80.8593746315777L), "top.left");
+    location_is(polygon.middle.right, geohex_location(65.0721300584619L, -80.8593732377433L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(65.0721300584619L, -80.8593750961891L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(65.0721303976373L, -80.8593737023547L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(65.0721303976373L, -80.8593746315777L), "bottom.left");
+  }
+  {
+    note("geohex: ZA162768706170274");
+    geohex_t zone = geohex_get_zone_by_code("ZA162768706170274");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(73.8248201862528L, 116.71874984392L), "top.right");
+    location_is(polygon.top.left,     geohex_location(73.8248201862528L, 116.718748914697L), "top.left");
+    location_is(polygon.middle.right, geohex_location(73.8248204104306L, 116.718750308531L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(73.8248204104306L, 116.718748450085L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(73.8248206346086L, 116.71874984392L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(73.8248206346086L, 116.718748914697L), "bottom.left");
+  }
+  {
+    note("geohex: aX538661552510561");
+    geohex_t zone = geohex_get_zone_by_code("aX538661552510561");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(78.2782013466401L, 16.1718747404709L), "top.right");
+    location_is(polygon.top.left,     geohex_location(78.2782013466401L, 16.171873811248L), "top.left");
+    location_is(polygon.middle.right, geohex_location(78.278201510129L, 16.1718752050824L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(78.278201510129L, 16.1718733466365L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(78.278201673618L, 16.1718747404709L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(78.278201673618L, 16.171873811248L), "bottom.left");
+  }
+  {
+    note("geohex: bD475537206875044");
+    geohex_t zone = geohex_get_zone_by_code("bD475537206875044");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.400042032239L, -38.6718746823945L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.400042032239L, -38.6718756116175L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.4000421247319L, -38.6718742177831L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.4000421247319L, -38.6718760762289L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.4000422172248L, -38.6718746823945L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.4000422172248L, -38.6718756116175L), "bottom.left");
+  }
+  {
+    note("geohex: TK573170435224014");
+    geohex_t zone = geohex_get_zone_by_code("TK573170435224014");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.3088923049126L, 176.132812531761L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.3088923049126L, 176.132811602538L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.3088924126117L, 176.132812996372L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.3088924126117L, 176.132811137926L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.3088925203107L, 176.132812531761L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.3088925203107L, 176.132811602538L), "bottom.left");
+  }
+  {
+    note("geohex: TK720137660817775");
+    geohex_t zone = geohex_get_zone_by_code("TK720137660817775");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(82.0700281814785L, -177.890624932849L), "top.right");
+    location_is(polygon.top.left,     geohex_location(82.0700281814785L, -177.890625862072L), "top.left");
+    location_is(polygon.middle.right, geohex_location(82.0700282925013L, -177.890624468238L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(82.0700282925013L, -177.890626326684L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(82.0700284035241L, -177.890624932849L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(82.0700284035241L, -177.890625862072L), "bottom.left");
+  }
+  {
+    note("geohex: TO078855632751174");
+    geohex_t zone = geohex_get_zone_by_code("TO078855632751174");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(83.8992664024163L, -177.868030877427L), "top.right");
+    location_is(polygon.top.left,     geohex_location(83.8992664024163L, -177.86803180665L), "top.left");
+    location_is(polygon.middle.right, geohex_location(83.8992664879405L, -177.868030412816L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(83.8992664879405L, -177.868032271262L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(83.8992665734647L, -177.868030877427L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(83.8992665734647L, -177.86803180665L), "bottom.left");
+  }
+  {
+    note("geohex: TO448407012467243");
+    geohex_t zone = geohex_get_zone_by_code("TO448407012467243");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.5025949985764L, -179.977405479967L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.5025949985764L, -179.97740640919L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.5025950756702L, -179.977405015355L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.5025950756702L, -179.977406873801L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.5025951527639L, -179.977405479967L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.5025951527639L, -179.97740640919L), "bottom.left");
+  }
+  {
+    note("geohex: TO801157747467437");
+    geohex_t zone = geohex_get_zone_by_code("TO801157747467437");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(84.8609005635697L, 178.967906521846L), "top.right");
+    location_is(polygon.top.left,     geohex_location(84.8609005635697L, 178.967905592623L), "top.left");
+    location_is(polygon.middle.right, geohex_location(84.8609006356526L, 178.967906986458L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(84.8609006356526L, 178.967905128012L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(84.8609007077355L, 178.967906521846L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(84.8609007077355L, 178.967905592623L), "bottom.left");
+  }
+  {
+    note("geohex: bb337184418811744");
+    geohex_t zone = geohex_get_zone_by_code("bb337184418811744");
+    geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);
+    location_is(polygon.top.right,    geohex_location(85.0511249884389L, 89.3795302085843L), "top.right");
+    location_is(polygon.top.left,     geohex_location(85.0511249884389L, 89.3795292793614L), "top.left");
+    location_is(polygon.middle.right, geohex_location(85.0511250578605L, 89.3795306731958L), "middle.right");
+    location_is(polygon.middle.left,  geohex_location(85.0511250578605L, 89.3795288147499L), "middle.left");
+    location_is(polygon.bottom.right, geohex_location(85.051125127282L, 89.3795302085843L), "bottom.right");
+    location_is(polygon.bottom.left,  geohex_location(85.051125127282L, 89.3795292793614L), "bottom.left");
+  }
 }
 

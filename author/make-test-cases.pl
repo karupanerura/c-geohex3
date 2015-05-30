@@ -13,7 +13,12 @@ my @CASES = qw!
     coord2XY
 !;
 
+my @EXTRA = qw!
+    code2coords
+!;
+
 use File::Temp qw/tempdir/;
+use File::Basename qw/dirname/;
 use File::Spec;
 use HTTP::Tiny;
 use JSON::PP;
@@ -48,6 +53,18 @@ sub main {
         push @src => __PACKAGE__->can($subname)->($testdata);
     }
 
+    # generate extra case
+    for my $case (@EXTRA) {
+        my $path = File::Spec->catfile(dirname(__FILE__), 'extra-case', "$case.json");
+        print STDERR "Parse: $path\n";
+        open my $fh, '<', $path or die $!;
+
+        my $content  = do { local $/; <$fh> };
+        my $testdata = $json->decode($content);
+        my $subname  = "gen_$case";
+        push @src => __PACKAGE__->can($subname)->($testdata);
+    }
+
     my $src = join "\n", map s/^\s+$//mr, @src;
     print <<"EOD";
 /* use `make test` to run the test */
@@ -66,6 +83,7 @@ void code2hex (void);
 void code2xy (void);
 void coord2hex (void);
 void coord2xy (void);
+void code2coords (void);
 
 int main (void) {
   subtest("XY2HEX(geohex_get_zone_by_coordinate)",        xy2hex);
@@ -73,27 +91,28 @@ int main (void) {
   subtest("code2XY(geohex_get_zone_by_code)",             code2xy);
   subtest("coord2HEX(geohex_get_zone_by_location)",       coord2hex);
   subtest("coord2XY(geohex_get_coordinate_by_location)",  coord2xy);
+  subtest("code2coords(geohex_get_hex_polygon)",          code2coords);
   return done_testing();
 }
 
-inline bool cmp_num (const long double got, const long double expected) {
+static inline bool cmp_num (const long double got, const long double expected) {
   const static long double diff = 0.000000000001L;
   return got == expected || (expected - diff < got && got < expected + diff);
 }
 
-inline void str_is (const char* got, const char* expected, const char* msg) {
+static inline void str_is (const char* got, const char* expected, const char* msg) {
   const bool ok = strcmp(got, expected) == 0;
   ok(ok);
   if (!ok) note("%s: expected: %s, but got: %s", msg, expected, got);
 }
 
-inline void location_is (const geohex_location_t got, const geohex_location_t expected, const char* msg) {
+static inline void location_is (const geohex_location_t got, const geohex_location_t expected, const char* msg) {
   const bool ok = cmp_num(got.lat, expected.lat) && cmp_num(got.lng, expected.lng);
   ok(ok);
   if (!ok) note("%s: expected: lat:%Lf,lng:%Lf, but got: lat:%Lf,lng:%Lf", msg, expected.lat, expected.lng, got.lat, got.lng);
 }
 
-inline void coordinate_is (const geohex_coordinate_t got, const geohex_coordinate_t expected, const char* msg) {
+static inline void coordinate_is (const geohex_coordinate_t got, const geohex_coordinate_t expected, const char* msg) {
   const bool ok = got.x == expected.x && got.y == expected.y;
   ok(ok);
   if (!ok) note("%s: expected: x:%ld,y:%ld, but got: x:%ld,y:%ld", msg, expected.x, expected.y, got.x, got.y);
@@ -219,3 +238,39 @@ void coord2xy (void) {
 }
 EOD
 }
+
+sub gen_code2coords {
+    my $testdata = shift;
+
+    my @src;
+
+    push @src => '// verify';
+    for my $row (@$testdata) {
+        my ($geohex) = @$row;
+        push @src => qq{ok(geohex_verify_code("$geohex") == GEOHEX3_VERIFY_RESULT_SUCCESS);};
+    }
+    push @src => '';
+
+    push @src => '// code2coords';
+    for my $row (@$testdata) {
+        my ($geohex, $middle_left, $bottom_left, $bottom_right, $middle_right, $top_right, $top_left) = @$row;
+        push @src => '{';
+        push @src => qq{  note("geohex: $geohex");};
+        push @src => qq{  geohex_t zone = geohex_get_zone_by_code("$geohex");};
+        push @src => qq{  geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);};
+        push @src => qq{  location_is(polygon.top.right,    geohex_location($top_right->[0]L, $top_right->[1]L), "top.right");};
+        push @src => qq{  location_is(polygon.top.left,     geohex_location($top_left->[0]L, $top_left->[1]L), "top.left");};
+        push @src => qq{  location_is(polygon.middle.right, geohex_location($middle_right->[0]L, $middle_right->[1]L), "middle.right");};
+        push @src => qq{  location_is(polygon.middle.left,  geohex_location($middle_left->[0]L, $middle_left->[1]L), "middle.left");};
+        push @src => qq{  location_is(polygon.bottom.right, geohex_location($bottom_right->[0]L, $bottom_right->[1]L), "bottom.right");};
+        push @src => qq{  location_is(polygon.bottom.left,  geohex_location($bottom_left->[0]L, $bottom_left->[1]L), "bottom.left");};
+        push @src => '}';
+    }
+
+    return sprintf <<'EOD', join "\n  ", @src;
+void code2coords (void) {
+  %s
+}
+EOD
+}
+
