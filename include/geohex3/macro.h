@@ -1,5 +1,5 @@
-#ifndef _MACRO_H
-#define _MACRO_H
+#ifndef GEOHEX3_MACRO_H
+#define GEOHEX3_MACRO_H
 
 #define GEOHEX3_MACRO_CAT_l(x, y) x##y
 #define GEOHEX3_MACRO_CAT(x, y) GEOHEX3_MACRO_CAT_l(x, y)

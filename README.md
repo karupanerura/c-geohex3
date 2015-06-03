@@ -151,7 +151,7 @@ SEE DETAIL: [geohex3.h](https://github.com/karupanerura/c-geohex3/blob/master/in
 
 ## Constructor
 
-### inline geohex_coordinate_t geohex_coordinate(const long x, const long y);
+### static inline geohex_coordinate_t geohex_coordinate(const long x, const long y);
 
 Creates `geohex_coordinate_t`.
 
@@ -159,7 +159,7 @@ Creates `geohex_coordinate_t`.
 geohex_coordinate_t coordinate = geohex_coordinate(123L, 123L);
 ```
 
-### inline geohex_location_t geohex_location(const double lat, const double lng);
+### static inline geohex_location_t geohex_location(const double lat, const double lng);
 
 Creates `geohex_location_t`.
 
@@ -193,9 +193,13 @@ geohex_t geohex = geohex_get_zone_by_code("XE1234");
 
 ## Utility
 
-### inline geohex_level_t geohex_calc_level_by_code(const char *code);
+### static inline long double geohex_hexsize(const geohex_level_t level);
 
-Calc geohex level.
+Calculate geohex size.
+
+### static inline geohex_level_t geohex_calc_level_by_code(const char *code);
+
+Calculate geohex level.
 
 ```c
 geohex_level_t level = geohex_calc_level_by_code("XE2345"); // => 4

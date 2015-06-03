@@ -3,10 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "macro.h"
 #include "geohex3.h"
+#include "pow.h"
 
-#define GEOHEX3_HASH_BASE 20037508.34L
 static const char*       GEOHEX3_HASH_KEY  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 static const long double GEOHEX3_HASH_DEG  = (long double)M_PI / 6.0L;
 
@@ -49,96 +48,6 @@ static inline geohex_location_t _geohex_coordinate2location(const geohex_coordin
   location.lat = 180.0L * coordinate.y / GEOHEX3_HASH_BASE;
   location.lat = 180.0L * (2.0L * atanl(expl(location.lat * (long double)M_PI / 180.0L)) - (long double)M_PI / 2.0L) / (long double)M_PI;
   return location;
-}
-
-
-static inline long geohex_pow3(int y) {
-  if (y > GEOHEX3_MAX_LEVEL+3) {
-    return (long)pow(3, y);
-  }
-  else {
-    // for performance :)
-    static const long GEOHEX3_CALCED_POW3[] = {
-      GEOHEX3_MACRO_POW(3L,  0),
-      GEOHEX3_MACRO_POW(3L,  1),
-      GEOHEX3_MACRO_POW(3L,  2),
-      GEOHEX3_MACRO_POW(3L,  3),
-      GEOHEX3_MACRO_POW(3L,  4),
-      GEOHEX3_MACRO_POW(3L,  5),
-      GEOHEX3_MACRO_POW(3L,  6),
-      GEOHEX3_MACRO_POW(3L,  7),
-      GEOHEX3_MACRO_POW(3L,  8),
-      GEOHEX3_MACRO_POW(3L,  9),
-      GEOHEX3_MACRO_POW(3L, 10),
-      GEOHEX3_MACRO_POW(3L, 11),
-      GEOHEX3_MACRO_POW(3L, 12),
-      GEOHEX3_MACRO_POW(3L, 13),
-      GEOHEX3_MACRO_POW(3L, 14),
-      GEOHEX3_MACRO_POW(3L, 15),
-      GEOHEX3_MACRO_POW(3L, 16),
-      GEOHEX3_MACRO_POW(3L, 17),
-      GEOHEX3_MACRO_POW(3L, 18)
-    };
-    return GEOHEX3_CALCED_POW3[y];
-  }
-}
-
-static inline long geohex_pow10(int y) {
-  if (y > GEOHEX3_MAX_LEVEL+2) {
-    return (long)pow(10, y);
-  }
-  else {
-    // for performance :)
-    static const long GEOHEX3_CALCED_POW10[] = {
-      GEOHEX3_MACRO_POW(10L,  0),
-      GEOHEX3_MACRO_POW(10L,  1),
-      GEOHEX3_MACRO_POW(10L,  2),
-      GEOHEX3_MACRO_POW(10L,  3),
-      GEOHEX3_MACRO_POW(10L,  4),
-      GEOHEX3_MACRO_POW(10L,  5),
-      GEOHEX3_MACRO_POW(10L,  6),
-      GEOHEX3_MACRO_POW(10L,  7),
-      GEOHEX3_MACRO_POW(10L,  8),
-      GEOHEX3_MACRO_POW(10L,  9),
-      GEOHEX3_MACRO_POW(10L, 10),
-      GEOHEX3_MACRO_POW(10L, 11),
-      GEOHEX3_MACRO_POW(10L, 12),
-      GEOHEX3_MACRO_POW(10L, 13),
-      GEOHEX3_MACRO_POW(10L, 14),
-      GEOHEX3_MACRO_POW(10L, 15),
-      GEOHEX3_MACRO_POW(10L, 16),
-      GEOHEX3_MACRO_POW(10L, 17)
-    };
-    return GEOHEX3_CALCED_POW10[y];
-  }
-}
-
-static inline long double geohex_hexsize(const geohex_level_t level) {
-  if (level > GEOHEX3_MAX_LEVEL) {
-    return GEOHEX3_HASH_BASE / (long double)geohex_pow3(level + 3);
-  }
-  else {
-    // for performance :)
-    static const long double GEOHEX3_CALCED_HEX_SIZE[] = {
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  3), //  0
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  4), //  1
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  5), //  2
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  6), //  3
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  7), //  4
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  8), //  5
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L,  9), //  6
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 10), //  7
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 11), //  8
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 12), //  9
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 13), // 10
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 14), // 11
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 15), // 12
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 16), // 13
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 17), // 14
-      GEOHEX3_HASH_BASE / GEOHEX3_MACRO_POW(3.0L, 18)  // 15
-    };
-    return GEOHEX3_CALCED_HEX_SIZE[level];
-  }
 }
 
 static long double _deg() {
