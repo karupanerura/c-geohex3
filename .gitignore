@@ -7,3 +7,4 @@ libgeohex3.a
 examples-get-zone-by-code
 examples-get-hex-polygon-by-code
 *.t
+/local/
