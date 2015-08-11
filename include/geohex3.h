@@ -19,6 +19,7 @@
 #define GEOHEX3_DEC3_BUFSIZE        64
 
 #define GEOHEX3_HASH_BASE 20037508.34L
+#define GEOHEX3_PI        3.1415926535897932384L
 
 typedef struct _geohex_location_s {
   long double lat;

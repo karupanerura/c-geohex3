@@ -7,7 +7,7 @@
 #include "pow.h"
 
 static const char*       GEOHEX3_HASH_KEY  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-static const long double GEOHEX3_HASH_DEG  = (long double)M_PI / 6.0L;
+static const long double GEOHEX3_HASH_DEG  = GEOHEX3_PI / 6.0L;
 
 // inner functions
 static geohex_coordinate_t geohex_get_coordinate_by_code(const char *code);
@@ -38,15 +38,14 @@ static inline geohex_coordinate_ld_t _geohex_adjust_long_double_coordinate(const
 static inline geohex_coordinate_ld_t _geohex_location2coordinate(const geohex_location_t location) {
   geohex_coordinate_ld_t coordinate;
   coordinate.x = location.lng * GEOHEX3_HASH_BASE / 180.0L;
-  coordinate.y = GEOHEX3_HASH_BASE * logl(tanl(((long double)M_PI / 4.0L) + (location.lat * (long double)M_PI / 360.0L))) / (long double)M_PI;
+  coordinate.y = GEOHEX3_HASH_BASE * logl(tanl((GEOHEX3_PI / 4.0L) + (location.lat * GEOHEX3_PI / 360.0L))) / GEOHEX3_PI;
   return coordinate;
 }
 
 static inline geohex_location_t _geohex_coordinate2location(const geohex_coordinate_ld_t coordinate) {
   geohex_location_t location;
   location.lng = 180.0L * coordinate.x / GEOHEX3_HASH_BASE;
-  location.lat = 180.0L * coordinate.y / GEOHEX3_HASH_BASE;
-  location.lat = 360.0L * atanl(expl(location.lat * (long double)M_PI / 180.0L)) / (long double)M_PI - 90.0L;
+  location.lat = 360.0L * atanl(expl(coordinate.y * GEOHEX3_PI / GEOHEX3_HASH_BASE)) / GEOHEX3_PI - 90.0L;
   return location;
 }
 
@@ -69,7 +68,7 @@ geohex_polygon_t geohex_get_hex_polygon (const geohex_t *geohex) {
   const long double h_x = coordinate.x;
   const long double h_y = coordinate.y;
 
-  const long double h_deg  = tanl(60.0L * (long double)M_PI / 180.0L);
+  const long double h_deg  = tanl(GEOHEX3_PI / 3.0L);
   const long double h_size = geohex->size;
 
   const long double center_lat     = geohex->location.lat;
