@@ -139,8 +139,8 @@ geohex_coordinate_t geohex_get_coordinate_by_location(const geohex_location_t lo
   const long double h_x_q    = h_pos_x - h_x_0;
   const long double h_y_q    = h_pos_y - h_y_0;
 
-  long h_x = (long)roundl(h_pos_x);
-  long h_y = (long)roundl(h_pos_y);
+  long h_x = lroundl(h_pos_x);
+  long h_y = lroundl(h_pos_y);
   if (h_y_q > -h_x_q + 1.0L) {
     if ((h_y_q < 2.0L * h_x_q) && (h_y_q > 0.5L * h_x_q)) {
       h_x = (long)h_x_0 + 1L;
