@@ -38,7 +38,7 @@ static inline geohex_coordinate_ld_t _geohex_adjust_long_double_coordinate(const
 static inline geohex_coordinate_ld_t _geohex_location2coordinate(const geohex_location_t location) {
   geohex_coordinate_ld_t coordinate;
   coordinate.x = location.lng * GEOHEX3_HASH_BASE / 180.0L;
-  coordinate.y = GEOHEX3_HASH_BASE * logl(tanl((90.0L + location.lat) * (long double)M_PI / 360.0L)) / (long double)M_PI;
+  coordinate.y = GEOHEX3_HASH_BASE * logl(tanl(((long double)M_PI / 4.0L) + (location.lat * (long double)M_PI / 360.0L))) / (long double)M_PI;
   return coordinate;
 }
 
@@ -46,7 +46,7 @@ static inline geohex_location_t _geohex_coordinate2location(const geohex_coordin
   geohex_location_t location;
   location.lng = 180.0L * coordinate.x / GEOHEX3_HASH_BASE;
   location.lat = 180.0L * coordinate.y / GEOHEX3_HASH_BASE;
-  location.lat = 180.0L * (2.0L * atanl(expl(location.lat * (long double)M_PI / 180.0L)) - (long double)M_PI / 2.0L) / (long double)M_PI;
+  location.lat = 360.0L * atanl(expl(location.lat * (long double)M_PI / 180.0L)) / (long double)M_PI - 90.0L;
   return location;
 }
 
@@ -275,38 +275,35 @@ geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, con
   const long double h_k    = _deg();
   const long double h_size = geohex_hexsize(level);
 
-  long double h_x = (long double)coordinate.x;
-  long double h_y = (long double)coordinate.y;
+  const long double h_x = (long double)coordinate.x;
+  const long double h_y = (long double)coordinate.y;
 
   const long double unit_x = 6.0L * h_size;
   const long double unit_y = 6.0L * h_size * h_k;
 
-  const long double       h_lat = (h_k * h_x * unit_x + h_y * unit_y) / 2.0L;
-  const long double       h_lon = (h_lat - h_y * unit_y) / h_k;
-  const geohex_location_t z_loc = _geohex_coordinate2location(_geohex_coordinate_ld(h_lon, h_lat));
+  const long double h_lat = (h_k * h_x * unit_x + h_y * unit_y) / 2.0L;
+  const long double h_lon = (h_lat - h_y * unit_y) / h_k;
+  geohex_location_t z_loc = _geohex_coordinate2location(_geohex_coordinate_ld(h_lon, h_lat));
 
-  long double z_loc_x = z_loc.lng;
-  long double z_loc_y = z_loc.lat;
+  long mod_x = coordinate.x;
+  long mod_y = coordinate.y;
 
   const long max_hsteps = geohex_pow3(level + 2);
-  const long hsteps     = (long)floorl(fabsl(h_x - h_y));
+  const long hsteps     = labs(mod_x - mod_y);
   if (hsteps == max_hsteps) {
-    if (h_x > h_y) {
-      const long double tmp = h_x;
-      h_x = h_y;
-      h_y = tmp;
+    if (mod_x > mod_y) {
+      const long tmp = h_x;
+      mod_x = mod_y;
+      mod_y = tmp;
     }
-    z_loc_x = -180.0L;
+    z_loc.lng = -180.0L;
   }
 
   static char code3_x[GEOHEX3_DEC3_BUFSIZE/2];
   static char code3_y[GEOHEX3_DEC3_BUFSIZE/2];
-
-  long mod_x = h_x;
-  long mod_y = h_y;
   for (unsigned int i = 0; i <= level + 2; i++) {
     const long h_pow   = geohex_pow3(level + 2 - i);
-    const long h_pow_c = (long)ceill((long double)h_pow / 2.0L);
+    const long h_pow_c = h_pow / 2 + h_pow % 2;
 
     if (mod_x >= h_pow_c) {
       code3_x[i] = 2;
@@ -332,7 +329,7 @@ geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, con
       code3_y[i] = 1;
     }
 
-    if (i==2 && (z_loc_x == -180.0L || z_loc_x >= 0.0L)) {
+    if (i==2 && (z_loc.lng == -180.0L || z_loc.lng >= 0.0L)) {
       if (code3_x[0] == 2 && code3_y[0] == 1 && code3_x[1] == code3_y[1] && code3_x[2] == code3_y[2]) {
         code3_x[0] = 1;
         code3_y[0] = 2;
@@ -344,35 +341,35 @@ geohex_t geohex_get_zone_by_coordinate(const geohex_coordinate_t coordinate, con
     }
   }
 
-  static char h_code[GEOHEX3_DEC9_BUFSIZE];
-  for (unsigned int i = 0; i <= level + 2; i++) {
-    const static char chr[] = "0123456789";
+  static char h_code[GEOHEX3_DEC9_BUFSIZE - GEOHEX3_GLOBAL_CODE_BUFSIZE - 1];
+  static unsigned int global_code = 0;
+  {
+    const static unsigned int offset = GEOHEX3_GLOBAL_CODE_BUFSIZE - 1;
 
-    static char code3[GEOHEX3_DEC3_BUFSIZE];
-    code3[0] = chr[(unsigned)code3_x[i]];
-    code3[1] = chr[(unsigned)code3_y[i]];
-    code3[2] = '\0';
-
-    const int code9 = (int)strtol(code3, NULL, 3);
-    h_code[i] = chr[code9];
+    global_code = 0;
+    for (unsigned int i = 0, max = level + offset; i < max; i++) {
+      const unsigned int code9 = 3 * (unsigned int)code3_x[i] + (unsigned int)code3_y[i];
+      if (i < offset) {
+        global_code *= 10;
+        global_code += code9;
+      }
+      else {
+        const static char chr[] = "0123456789";
+        h_code[i-offset] = chr[code9];
+      }
+    }
+    h_code[level] = '\0';
   }
-  h_code[level + 3] = '\0';
-
-  static char global_code_buf[GEOHEX3_GLOBAL_CODE_BUFSIZE];
-  strncpy(global_code_buf, h_code, GEOHEX3_GLOBAL_CODE_BUFSIZE);
-  global_code_buf[GEOHEX3_GLOBAL_CODE_BUFSIZE-1] = '\0';
-  const int global_code = atoi(global_code_buf);
 
   geohex_t geohex = {
-    .location   = geohex_location(z_loc_y, z_loc_x),
+    .location   = geohex_location(z_loc.lat, z_loc.lng),
     .coordinate = coordinate,
     .level      = level,
     .size       = h_size
   };
   geohex.code[0] = GEOHEX3_HASH_KEY[(int)floor(global_code/30)];
   geohex.code[1] = GEOHEX3_HASH_KEY[global_code%30];
-  strncpy(geohex.code + 2, h_code + 3, GEOHEX3_MAX_LEVEL);
-  geohex.code[strlen(h_code)] = '\0';
+  strncpy(geohex.code + 2, h_code, level+1);
   return geohex;
 }
 
