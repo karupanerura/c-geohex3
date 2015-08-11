@@ -163,7 +163,7 @@ sub gen_code2HEX {
     push @src => '// code2hex';
     for my $row (@$testdata) {
         my ($geohex, $lat, $lng) = @$row;
-        push @src => qq{location_is(geohex_get_zone_by_code("$geohex").location, geohex_location(${lat}L, ${lng}L), "$geohex: lat:$lat,lng:$lng");};
+        push @src =>_generate_location_is(qq{geohex_get_zone_by_code("$geohex").location}, $lat, $lng, "$geohex: lat:$lat,lng:$lng");
     }
 
     return sprintf <<'EOD', join "\n  ", @src;
@@ -258,12 +258,12 @@ sub gen_code2coords {
         push @src => qq{  note("geohex: $geohex");};
         push @src => qq{  geohex_t zone = geohex_get_zone_by_code("$geohex");};
         push @src => qq{  geohex_polygon_t polygon = geohex_get_hex_polygon(&zone);};
-        push @src => qq{  location_is(polygon.top.right,    geohex_location($top_right->[0]L, $top_right->[1]L), "top.right");};
-        push @src => qq{  location_is(polygon.top.left,     geohex_location($top_left->[0]L, $top_left->[1]L), "top.left");};
-        push @src => qq{  location_is(polygon.middle.right, geohex_location($middle_right->[0]L, $middle_right->[1]L), "middle.right");};
-        push @src => qq{  location_is(polygon.middle.left,  geohex_location($middle_left->[0]L, $middle_left->[1]L), "middle.left");};
-        push @src => qq{  location_is(polygon.bottom.right, geohex_location($bottom_right->[0]L, $bottom_right->[1]L), "bottom.right");};
-        push @src => qq{  location_is(polygon.bottom.left,  geohex_location($bottom_left->[0]L, $bottom_left->[1]L), "bottom.left");};
+        push @src =>  q{  }._generate_location_is('polygon.top.right',    $top_right->[0], $top_right->[1],       "top.right");
+        push @src =>  q{  }._generate_location_is('polygon.top.left',     $top_left->[0], $top_left->[1],         "top.left");
+        push @src =>  q{  }._generate_location_is('polygon.middle.right', $middle_right->[0], $middle_right->[1], "middle.right");
+        push @src =>  q{  }._generate_location_is('polygon.middle.left',  $middle_left->[0], $middle_left->[1],   "middle.left");
+        push @src =>  q{  }._generate_location_is('polygon.bottom.right', $bottom_right->[0], $bottom_right->[1], "bottom.right");
+        push @src =>  q{  }._generate_location_is('polygon.bottom.left',  $bottom_left->[0], $bottom_left->[1],   "bottom.left");
         push @src => '}';
     }
 
@@ -274,3 +274,9 @@ void code2coords (void) {
 EOD
 }
 
+sub _generate_location_is {
+    my ($expr, $lat, $lng, $msg) = @_;
+    $lat .= '.0' if $lat !~ m/\./o;
+    $lng .= '.0' if $lng !~ m/\./o;
+    return qq{location_is(${expr}, geohex_location(${lat}L, ${lng}L), "$msg");};
+}
