@@ -6,5 +6,6 @@ install_manifest.txt
 libgeohex3.a
 examples-get-zone-by-code
 examples-get-hex-polygon-by-code
+examples-get-zone-by-latlng
 *.t
 /local/

@@ -18,6 +18,10 @@ ADD_EXECUTABLE(examples-get-zone-by-code examples/get-zone-by-code.c)
 TARGET_LINK_LIBRARIES(examples-get-zone-by-code geohex3)
 SET_TARGET_PROPERTIES(examples-get-zone-by-code PROPERTIES EXCLUDE_FROM_ALL 1)
 
+ADD_EXECUTABLE(examples-get-zone-by-latlng examples/get-zone-by-latlng.c)
+TARGET_LINK_LIBRARIES(examples-get-zone-by-latlng geohex3)
+SET_TARGET_PROPERTIES(examples-get-zone-by-latlng PROPERTIES EXCLUDE_FROM_ALL 1)
+
 ADD_EXECUTABLE(examples-get-hex-polygon-by-code examples/get-hex-polygon-by-code.c)
 TARGET_LINK_LIBRARIES(examples-get-hex-polygon-by-code geohex3)
 SET_TARGET_PROPERTIES(examples-get-hex-polygon-by-code PROPERTIES EXCLUDE_FROM_ALL 1)
