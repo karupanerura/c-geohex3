@@ -141,12 +141,12 @@ geohex_coordinate_t geohex_get_coordinate_by_location(const geohex_location_t lo
   long h_x = lroundl(h_pos_x);
   long h_y = lroundl(h_pos_y);
   if (h_y_q > -h_x_q + 1.0L) {
-    if ((h_y_q < 2.0L * h_x_q) && (h_y_q > 0.5L * h_x_q)) {
+    if ((h_y_q < 2.0L * h_x_q) && ((h_y_q * 2.0L) > h_x_q)) {
       h_x = (long)h_x_0 + 1L;
       h_y = (long)h_y_0 + 1L;
     }
   } else if (h_y_q < -h_x_q + 1.0L) {
-    if ((h_y_q > (2.0L * h_x_q) - 1.0L) && (h_y_q < (0.5L * h_x_q) + 0.5L)) {
+    if (((h_y_q + 1.0L) > (2.0L * h_x_q)) && ((2.0L * h_y_q) < (h_x_q + 1.0L))) {
       h_x = (long)h_x_0;
       h_y = (long)h_y_0;
     }
