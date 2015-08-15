@@ -4275,7 +4275,7 @@ void coord2hex (void) {
   str_is(geohex_get_zone_by_location(geohex_location(-50.7364551370106L, 63.28125L), 4).code, "OK4362", "lat:-50.7364551370106,lng:63.28125,level:4: OK4362");
   str_is(geohex_get_zone_by_location(geohex_location(-10.3876340301868L, 5.15878793945296L), 4).code, "OX2538", "lat:-10.3876340301868,lng:5.15878793945296,level:4: OX2538");
   str_is(geohex_get_zone_by_location(geohex_location(3.61508745924257L, -0.466212060547036L), 4).code, "OY5663", "lat:3.61508745924257,lng:-0.466212060547036,level:4: OY5663");
-  str_is(geohex_get_zone_by_location(geohex_location(0L, -60.46875L), 4).code, "OG6663", "lat:0,lng:-60.46875,level:4: OG6663");
+  str_is(geohex_get_zone_by_location(geohex_location(-0.00001L, -60.46875L), 4).code, "OG6663", "lat:-0.00001,lng:-60.46875,level:4: OG6663");
   str_is(geohex_get_zone_by_location(geohex_location(35.4606699514953L, 45L), 4).code, "PZ0631", "lat:35.4606699514953,lng:45,level:4: PZ0631");
   str_is(geohex_get_zone_by_location(geohex_location(70.6126142380192L, -82.96875L), 4).code, "SV8518", "lat:70.6126142380192,lng:-82.96875,level:4: SV8518");
   str_is(geohex_get_zone_by_location(geohex_location(81.0932138526084L, -177.1875L), 4).code, "TK3246", "lat:81.0932138526084,lng:-177.1875,level:4: TK3246");
@@ -4857,7 +4857,7 @@ void coord2xy (void) {
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(-50.7364551370106L, 63.28125L), 4), geohex_coordinate(-79L, -335L), "lat:-50.7364551370106,lng:63.28125,level:4: x:-79,y:-335");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(-10.3876340301868L, 5.15878793945296L), 4), geohex_coordinate(-26L, -47L), "lat:-10.3876340301868,lng:5.15878793945296,level:4: x:-26,y:-47");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(3.61508745924257L, -0.466212060547036L), 4), geohex_coordinate(12L, 14L), "lat:3.61508745924257,lng:-0.466212060547036,level:4: x:12,y:14");
-  coordinate_is(geohex_get_coordinate_by_location(geohex_location(0L, -60.46875L), 4), geohex_coordinate(-123L, 122L), "lat:0,lng:-60.46875,level:4: x:-123,y:122");
+  coordinate_is(geohex_get_coordinate_by_location(geohex_location(-0.00001L, -60.46875L), 4), geohex_coordinate(-123L, 122L), "lat:-0.00001,lng:-60.46875,level:4: x:-123,y:122");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(35.4606699514953L, 45L), 4), geohex_coordinate(224L, 42L), "lat:35.4606699514953,lng:45,level:4: x:224,y:42");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(70.6126142380192L, -82.96875L), 4), geohex_coordinate(187L, 523L), "lat:70.6126142380192,lng:-82.96875,level:4: x:187,y:523");
   coordinate_is(geohex_get_coordinate_by_location(geohex_location(81.0932138526084L, -177.1875L), 4), geohex_coordinate(154L, 872L), "lat:81.0932138526084,lng:-177.1875,level:4: x:154,y:872");
