@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <geohex3/macro.h>
 
 #define GEOHEX3_MAJOR_VERSION 1
@@ -27,8 +28,8 @@ typedef struct _geohex_location_s {
 } geohex_location_t;
 
 typedef struct _geohex_coordinate_s {
-  long x;
-  long y;
+  int64_t x;
+  int64_t y;
 } geohex_coordinate_t;
 
 struct _geohex_location_lrpair_s {
@@ -58,7 +59,7 @@ typedef enum _geohex_verify_result_enum {
 
 typedef size_t geohex_level_t;
 
-static inline geohex_coordinate_t geohex_coordinate (const long x, const long y) {
+static inline geohex_coordinate_t geohex_coordinate (const int64_t x, const int64_t y) {
   const geohex_coordinate_t coordinate = { .x = x, .y = y };
   return coordinate;
 }

@@ -11,13 +11,13 @@ int main (int argc, char *argv[]) {
           const geohex_t geohex = geohex_get_zone_by_code(argv[i]);
           printf("code  = %s\n", geohex.code);
           printf("level = %zu\n", geohex.level);
-          printf("size  = %Lf\n", geohex.size);
+          printf("size  = %.32Lf\n", geohex.size);
           printf("[location]\n");
-          printf("lat = %Lf\n", geohex.location.lat);
-          printf("lng = %Lf\n", geohex.location.lng);
+          printf("lat = %.32Lf\n", geohex.location.lat);
+          printf("lng = %.32Lf\n", geohex.location.lng);
           printf("[coordinate]\n");
-          printf("x = %ld\n", geohex.coordinate.x);
-          printf("y = %ld\n", geohex.coordinate.y);
+          printf("x = %lld\n", geohex.coordinate.x);
+          printf("y = %lld\n", geohex.coordinate.y);
         }
         break;
       case GEOHEX3_VERIFY_RESULT_INVALID_CODE:

@@ -115,7 +115,7 @@ static inline void location_is (const geohex_location_t got, const geohex_locati
 static inline void coordinate_is (const geohex_coordinate_t got, const geohex_coordinate_t expected, const char* msg) {
   const bool ok = got.x == expected.x && got.y == expected.y;
   ok(ok);
-  if (!ok) note("%s: expected: x:%ld,y:%ld, but got: x:%ld,y:%ld", msg, expected.x, expected.y, got.x, got.y);
+  if (!ok) note("%s: expected: x:%lld,y:%lld, but got: x:%lld,y:%lld", msg, expected.x, expected.y, got.x, got.y);
 }
 
 $src
