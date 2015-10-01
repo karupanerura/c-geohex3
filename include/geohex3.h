@@ -9,9 +9,9 @@
 #include <geohex3/macro.h>
 
 #define GEOHEX3_MAJOR_VERSION 1
-#define GEOHEX3_MINOR_VERSION 4
+#define GEOHEX3_MINOR_VERSION 5
 #define GEOHEX3_PATCH_VERSION 0
-#define GEOHEX3_VERSION       "1.40"
+#define GEOHEX3_VERSION       "1.50"
 
 #define GEOHEX3_MIN_LEVEL           0
 #define GEOHEX3_MAX_LEVEL           15
