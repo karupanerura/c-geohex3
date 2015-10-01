@@ -16,6 +16,7 @@ http://geohex.net/
 ```c
 #include <geohex3.h>
 #include <stdio.h>
+#include <stdint.h>
 
 int main (int argc, char *argv[]) {
   for (int i = 1; i < argc; i++) {
@@ -101,8 +102,8 @@ Details of struct:
 
 Details of struct:
 
-* x: `long`
-* y: `long`
+* x: `int64_t`
+* y: `int64_t`
 
 ### geohex_polygon_t
 
@@ -151,7 +152,7 @@ SEE DETAIL: [geohex3.h](https://github.com/karupanerura/c-geohex3/blob/master/in
 
 ## Constructor
 
-### static inline geohex_coordinate_t geohex_coordinate(const long x, const long y);
+### static inline geohex_coordinate_t geohex_coordinate(const int64_t x, const int64_t y);
 
 Creates `geohex_coordinate_t`.
 
